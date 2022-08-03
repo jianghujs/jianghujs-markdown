@@ -1,0 +1,363 @@
+{% extends 'template/jhTemplateV3.html'%}
+
+{% block vue_template %}
+
+<jh-layout-v3>
+
+  <!-- 页面主要内容 -->
+  <v-card>
+      <v-row class="ma-0 pa-xs-4 align-center flex-none pt-0 "
+        :class="{'pa-4': !isMobile, 'pb-0': !isMobile, 'pa-2': isMobile}">
+
+        <v-btn color="success" dark class="elevation-0 mr-2"
+        @click="handleTableButton({ text: '<$ constantUiMap.common.add $>', buttonType: 'add' }, null)"><$ constantUiMap.common.add $></v-btn>
+        <span style="margin-right: 10px;">{{serverSearchInput.searchSummary}}</span>  
+        <!-- <span class="body-2">共{{ tableData.length }}条记录</span> -->
+
+        <v-spacer></v-spacer>
+
+        <v-col cols="12" xs="8" sm="3" md="2" xl="2" class="pa-xs-0 pa-xs-2 col-sm-8-flex pl-0">
+          <v-text-field v-model="searchInput" label="<$ constantUiMap.article.queryResultFiltering $>" class="cus-v-input" dense filled single-line color="success"></v-text-field>
+        </v-col>
+      </v-row>
+      <v-data-table fixed-header :headers="headers" :items="tableData" :search="searchInput"
+       mobile-breakpoint="0"
+        :loading="isTableLoading" checkbox-color="success" class="elevation-0"
+        :options="{
+            itemsPerPage: 15
+        }">
+        <template v-slot:item.articlePublishStatus="{ item }">
+          {{ articlePublishStatusMap[item.articlePublishStatus] || item.articlePublishStatus }}
+        </template>
+        <template v-slot:item.action="{ item }">
+          <v-btn small class="mr-2 success" @click="goToArticlePage(item)"><$ constantUiMap.common.view $></v-btn>
+          <v-btn small class="mr-2 success" @click="goToEditPage(item)"><$ constantUiMap.common.modify $></v-btn>
+          <v-btn v-if="item.articlePublishStatus !== 'deleted'" small class="mr-2 error"
+            @click="handleTableButton({ text: '<$ constantUiMap.common.recycle $>', buttonType: 'delete' }, item)">
+            <$ constantUiMap.common.recycle $></v-btn>
+          <v-btn v-if="item.articlePublishStatus === 'deleted'" small class="mr-2 white--text" color="#BDBDBD"
+            @click="handleTableButton({ text: '<$ constantUiMap.common.recover $>', buttonType: 'restore' }, item)"
+            style="min-width: 65px;">
+            <$ constantUiMap.common.recover $></v-btn>
+        </template>
+      </v-data-table>
+      <SingleSelect v-model="selectCategoryDialog" :dataList="constantCollection.category" title="选择分类"
+        @close="selectCategoryDialog=false" @done="onSelectCategory" />
+  </v-card>
+
+</jh-layout-v3>
+
+{% endblock %}
+
+{% block vue_body %}
+
+{% include 'component/singleSelectDialog.html' %}
+
+<script type="module">
+  new Vue({
+    el: '#app',
+    template: '#app-template',
+    vuetify: new Vuetify(),
+    data: () => ({
+      selectCategoryDialog: false,
+      // 表格相关数据
+      isFormValid: true,
+      requireRules: [
+        v => !!v || 'This is required',
+      ],
+      constantCollection: {
+        articlePublishStatus: [
+          { text: "公开", value: "public" },
+          { text: "登录可见", value: "login" },
+          { text: "草稿", value: "draft" },
+          { text: "回收站", value: "deleted" },
+        ],
+        allArticlePublishStatus: [
+          { text: "公开", value: "public" },
+          { text: "登录可见", value: "login" },
+          { text: "草稿", value: "draft" },
+          { text: "回收站", value: "deleted" },
+        ],
+        category: [
+          { text: "全部类目", value: "all" },
+        ],
+      },
+
+      categoryIdToName: {},
+      serverSearchInput: {
+        articleTitle: null,
+        categoryId: "all", 
+        categoryName: "全部类目", 
+        articlePublishStatus: ['public', 'login', 'deleted'],
+        isFirstSearch: true,
+        searchSummary: null,
+      },
+      currentTableGenderType: 'all',
+      isEditDrawerShow: false,
+      searchInput: null,
+      isTableLoading: true,
+      tableDataFromBackend: [],
+      headers: [
+        { text: "ID", value: "id", width: 120, class: 'fixed'},
+        { text: "<$ constantUiMap.article.articleID $>", value: "articleId", width: 120 },
+        { text: "<$ constantUiMap.article.articleTitle $>", value: "articleTitle", width: 250 },
+        // { text: "归属分类", value: "categoryGroupConcat", width: 120 },
+        // { text: "发布状态", value: "articlePublishStatus", width: 120, type: 'select', required: true },
+        { text: "<$ constantUiMap.article.releaseTime $>", value: "articlePublishTime", width: 220 },
+        // { text: "文章标签", value: "articleTagList", width: 220 },
+        { text: "<$ constantUiMap.article.audioURL $>", value: "articleAudioUrl", width: 200 },
+        { text: "<$ constantUiMap.article.videoURL $>", value: "articleVideoUrl", width: 200 },
+        { text: "<$ constantUiMap.article.editor $>", value: "articleUpdateUsername", width: 120, edit: false },
+        { text: "<$ constantUiMap.article.updateTime $>", value: "articleUpdateTime", width: 220, edit: false },
+        { text: "<$ constantUiMap.article.creator $>", value: "articleCreateUsername", width: 120, edit: false },
+        { text: "<$ constantUiMap.article.creationTime $>", value: "articleCreateTime", width: 220, edit: false },
+        { text: '<$ constantUiMap.common.operate $>', value: 'action', align: 'center', sortable: false, width: 350 },
+      ],
+
+      currentClickButton: { title: '新增', action: 'add' },
+      editItem: {},
+      tableButtonList: [
+        { text: '修改', buttonType: 'edit', color: 'success', },
+        { text: '历史版本', buttonType: 'history', color: 'default', },
+        { text: '回收站', buttonType: 'delete', color: 'error', },
+      ],
+    }),
+    computed: {
+      isMobile() {
+        return window.innerWidth < 600;
+      },
+      tableData() {
+        return this.tableDataFromBackend;
+      },
+      computedEditItem() {
+        return this.editItem;
+      },
+      articlePublishStatusMap() {
+        const map = {};
+        this.constantCollection.allArticlePublishStatus.forEach(constantObj => {
+          map[constantObj.value] = constantObj.text;
+        })
+        return map;
+      }
+    },
+    watch: {
+    },
+    async created() {
+      if (!this.isMobile) {
+        this.headers[this.headers.length - 1].class = 'fixed'
+        this.headers[this.headers.length - 1].cellClass = 'fixed'
+      }
+      const urlParams = new URLSearchParams(location.search);
+      const categoryId = urlParams.get('categoryId');
+      if (categoryId) {
+        this.serverSearchInput.categoryId = categoryId;
+      }
+
+      await this.getCategoryData();
+      await this.getTableData();
+    },
+    async mounted() {
+    },
+    methods: {
+      openSelectCategoryDialog() {
+        this.selectCategoryDialog = true
+      },
+      onSelectCategory(item) {
+        this.serverSearchInput.categoryId = item.value;
+        this.serverSearchInput.categoryName = item.text;
+      },
+      /**
+       * 获取表格数据
+       */
+      async getTableData() {
+        this.isTableLoading = true;
+        const serverSearchInput = _.pickBy(this.serverSearchInput, value => !!value);
+        const where = {};
+        if (this.serverSearchInput.categoryId !== 'all') {
+          where.categoryId = this.serverSearchInput.categoryId;
+        }
+        const { rows, count } = (await window.jianghuAxios({
+          data: {
+            appData: {
+              pageId: 'articleManagement',
+              actionId: 'selectItemList',
+              where,
+              whereIn: {
+                articlePublishStatus: this.serverSearchInput.articlePublishStatus
+              },
+              whereLike: {
+                articleTitle: this.serverSearchInput.articleTitle,
+              },
+              limit: (this.serverSearchInput.isFirstSearch && this.serverSearchInput.categoryId === 'all') ? 200 : 99999999,
+              orderBy: [{ column: 'articleUpdateTime', order: 'desc' }, { column: 'categoryGroup', order: 'desc' }, { column: 'categoryGroupSort', order: 'asc' }, { column: 'articleTitle', order: 'asc' }]
+            }
+          }
+        })).data.appData.resultData;
+
+        // 补充 categoryName
+        rows.forEach(item => {
+          item.categoryGroupConcat = item.categoryId && this.categoryIdToName[item.categoryId] || '未分类'
+        })
+
+        this.serverSearchInput.articlePublishStatusText = this.constantCollection.allArticlePublishStatus
+          .filter(item => this.serverSearchInput.articlePublishStatus.indexOf(item.value) > -1)
+          .map(item => item.text);
+        
+        const conditions = [];
+        // if (this.serverSearchInput.articleTitle) {
+        //   conditions.push(`标题包含【${this.serverSearchInput.articleTitle}】`);
+        // }
+        // if (this.serverSearchInput.categoryName) {
+        //   conditions.push(`分类为【${this.serverSearchInput.categoryName}】`);
+        // }
+        // if (this.serverSearchInput.articlePublishStatusText) {
+        //   conditions.push(`状态为【${this.serverSearchInput.articlePublishStatusText}】`);
+        // }
+        if (this.serverSearchInput.isFirstSearch && this.serverSearchInput.categoryId === 'all') {
+          this.serverSearchInput.searchSummary = conditions.join('，') + `<$ constantUiMap.article.numberOfQueryResults $>${count}<$ constantUiMap.article.record $>`;
+        } else {
+          this.serverSearchInput.searchSummary = conditions.join('，') + `共${count}条记录`;
+        }
+        
+        this.tableDataFromBackend = rows;
+        this.isTableLoading = false;
+        // Tip 这个放最后
+        this.serverSearchInput.isFirstSearch  = false;
+      },
+      // 获取分类数据
+      async getCategoryData() {
+        const { rows } = (await window.jianghuAxios({
+          data: {
+            appData: {
+              pageId: 'articleManagement',
+              actionId: 'selectCategoryList',
+              actionData: {},
+              whereIn: { categoryPublishStatus: [ 'public', 'login' ] },
+              orderBy: [{ column: 'categoryGroup', order: 'asc' }, { column: 'categoryGroupSort', order: 'asc' }]
+            }
+          }
+        })).data.appData.resultData;
+        rows.forEach(item => {
+          const text = `${item.categoryGroupConcat || ''}${item.categoryName} [共${item.count}篇]`;
+          this.constantCollection.category.push({ text, value: item.categoryId + "" });
+          this.categoryIdToName[item.categoryId] = `${item.categoryGroupConcat || ''}${item.categoryName}`;
+        })
+        this.serverSearchInput.categoryName = this.categoryIdToName[this.serverSearchInput.categoryId];
+      },
+      /**
+       * 点击表格数据按钮
+       */
+      async handleTableButton(button, item) {
+        const buttonType = button.buttonType;
+        switch (buttonType) {
+          case 'edit':
+            this.currentClickButton = { action: 'edit', title: '修改' };
+            this.editItem = { ...item };
+            this.isEditDrawerShow = true;
+            break;
+          case 'add':
+            this.goToCreatePage();
+            break;
+          case 'history':
+            this.goToHistoryPage();
+            break;
+          case 'delete':
+            this.editItem = { ...item };
+            await this.deleteStudent();
+            break;
+          case 'restore':
+            this.editItem = { ...item };
+            await this.restoreItem();
+            break;
+          case 'path':
+            // todo：请在生成后将下列的 title 参数改成获取你要展示的字段，如 className
+            if (button.path.startsWith('http')) {
+              window.location.href = `${button.path}?articleId=${item.articleId}&title=${item.articleId}`
+            } else {
+              window.location.href = `/${window.appInfo.appId}/page/${button.path}?articleId=${item.articleId}&title=${item.articleId}`
+            }
+            break;
+        }
+      },
+      /**
+       * 删除数据
+       */
+      async deleteStudent() {
+        if (await window.confirmDialog({
+          title: '<$ constantUiMap.common.recycle $>',
+          content: '<$ constantUiMap.article.recyclingConfirmation $>？'
+        })) {
+          const { articleId } = this.editItem;
+          await window.vtoast.loading("<$ constantUiMap.article.recyclingArticles $>");
+          await window.jianghuAxios({
+            data: {
+              appData: {
+                pageId: 'articleEdit',
+                actionId: 'deletedArticle',
+                actionData: { articleId }
+              }
+            }
+          });
+          await window.vtoast.success("<$ constantUiMap.article.recyclingArticlesSuccess $>");
+          this.getTableData();
+        }
+      },
+      async restoreItem() {
+        if (await window.confirmDialog({
+          title: '<$ constantUiMap.common.recover $>',
+          content: '<$ constantUiMap.article.restoreArticleConfirm $>？'
+        })) {
+          const { articleId } = this.editItem;
+          await window.vtoast.loading("<$ constantUiMap.article.recoverArticle $>");
+          await window.jianghuAxios({
+            data: {
+              appData: {
+                pageId: 'articleEdit',
+                actionId: 'restoreArticle',
+                actionData: { articleId }
+              }
+            }
+          });
+          await window.vtoast.success("<$ constantUiMap.article.recoverArticlesSuccessfully $>");
+          this.getTableData();
+        }
+      },
+      /**
+       * 保存数据
+       */
+      async saveInfo() {
+        if (this.currentClickButton.action === 'add') {
+          await this.jhInsertStudent();
+        }
+        if (this.currentClickButton.action === 'edit') {
+          await this.updateStudent();
+        }
+      },
+      getConstantCollectionItemText(key, _value) {
+        const constantCollectionItemFind = this.constantCollection[key].find(({ value }) => value === _value);
+        if (constantCollectionItemFind) {
+          return constantCollectionItemFind.text;
+        }
+        return value;
+      },
+      goToArticlePage(item) {
+        window.open(`/${window.appInfo.appId}/page/article/${item.articleId}`, '_blank');
+      },
+      goToCreatePage() {
+        window.open(`/${window.appInfo.appId}/page/articleEdit?title=未命名`, '_blank');
+      },
+      goToHistoryPage(item) {
+        const { articleId, articleTitle } = item;
+        window.open(`/${window.appInfo.appId}/page/articleHistoryManagement?articleId=${articleId}&title=${articleTitle}`, '_blank');
+      },
+      goToEditPage(item) {
+        const { articleId, articleTitle } = item;
+        window.open(`/${window.appInfo.appId}/page/articleEdit?articleId=${articleId}&title=${articleTitle}`, '_blank');
+      },
+    }
+  })
+</script>
+
+<style scoped>
+</style>
+{% endblock %}

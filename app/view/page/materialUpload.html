@@ -1,0 +1,51 @@
+{% extends 'template/jhTemplateV3.html'%}
+
+{% block vue_template %}
+<jh-layout-v3>
+  <v-card>
+    <file-browser :operation-option="operationOption"/>
+  </v-card>
+</jh-layout-v3>
+{% endblock %}
+
+{% block vue_body %}
+{% include 'component/fileBrowser/FileBrowser.html' %}
+<script type="module">
+  new Vue({
+    el: '#app',
+    template: '#app-template',
+    vuetify: new Vuetify(),
+    data: () => ({
+      operationOption: { delete: false, copy: true, recycle: true, renameFile: true }
+    }),
+    computed: {
+      isMobile() {
+        return window.innerWidth < 600;
+      },
+    },
+    watch: {},
+    async created() {
+    },
+    mounted() { },
+    methods: {
+      async onPasteItem(fromPath, toFolder) {
+        await window.jianghuAxios({
+          data: {
+            appData: {
+              pageId: 'materialManagement',
+              actionId: 'moveFile',
+              actionData: {
+                fromPath, toFolder
+              },
+            }
+          }
+        });
+        window.vtoast.success('<$ constantUiMap.btn.movedSuccess $>');
+      }
+    }
+  })
+</script>
+
+<style scoped>
+</style>
+{% endblock %}
