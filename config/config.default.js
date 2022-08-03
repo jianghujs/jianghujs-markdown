@@ -29,6 +29,8 @@ module.exports = (appInfo) => {
     loginPage: `/${appId}/page/login`,
     helpPage: `/${appId}/page/help`,
     language: 'zh',
+    primaryColor: "#4caf50",
+    primaryColorA80: "#EEF7EE",
     uploadDir,
     uploadDirConfig: [
       "/articleMaterial",
