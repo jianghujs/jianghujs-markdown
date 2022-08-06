@@ -53,7 +53,43 @@
               </v-card-text>
             </v-card>
 
-            <v-card class="pa-2 mt-2" flat>
+            <v-card class="pa-4 mt-2" flat>
+
+              <v-toolbar flat dense>
+                <p class="font-weight-medium mb-0" style="font-size: 16px;">
+                  封面
+                </p>
+                <v-spacer></v-spacer>
+                <v-btn
+                  outlined
+                  small
+                  fab
+                  style="width: 20px;height:20px"
+                  @click="imagePicker"
+                >
+                  <v-icon small>mdi-upload-outline</v-icon>
+                </v-btn>
+                <v-btn
+                  outlined
+                  small
+                  fab
+                  class="ml-2"
+                  color="error"
+                  style="width: 20px;height:20px"
+                  @click.stop="clearImage"
+                  v-if="editItem.articleCoverImage"
+                >
+                  <v-icon small>mdi-trash-can-outline</v-icon>
+                </v-btn>
+              </v-toolbar>    
+              <v-card-text class="pa-0 text-center">
+                <img v-if="editItem.articleCoverImage" :src="upload + editItem.articleCoverImage" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+                <p v-else class="text-center">暂无封面~</p>
+              </v-card-text>
+            </v-card>
+
+
+            <v-card class="pa-4 mt-2" flat>
               <v-toolbar flat dense>
                 <p class="font-weight-medium mb-0" style="font-size: 16px;">
                   音频
@@ -90,7 +126,7 @@
               </v-card-text>
             </v-card>
             
-            <v-card class="pa-2 mt-2" flat>
+            <v-card class="pa-4 mt-2" flat>
               <v-toolbar flat dense>
                 <p class="font-weight-medium mb-0" style="font-size: 16px;">
                   视频
@@ -377,7 +413,7 @@
       closeMaterialPicker() {
         this.isEditDrawerShow = false;
       },
-      async pickerImage() {
+      async imagePicker() {
         if (!await this.articleIdCheck()) {
           window.vtoast.fail("请填写文章信息后,再点击上传文件!");
           return
