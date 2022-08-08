@@ -42,11 +42,11 @@
               </v-toolbar>
               <v-card-text class="px-0">
                 <span class="inputLabel"> <$ constantUiMap.article.articleTitle $></span>
-                <v-text-field 
-                  single-line 
-                  dense 
+                <v-text-field
+                  single-line
+                  dense
                   filled
-                  color="success" label="<$ constantUiMap.article.articleTitle $>" 
+                  color="success" label="<$ constantUiMap.article.articleTitle $>"
                   v-model="editItem.articleTitle"
                   :rules="requireRules" hide-details>
                 </v-text-field>
@@ -81,7 +81,7 @@
                 >
                   <v-icon small>mdi-trash-can-outline</v-icon>
                 </v-btn>
-              </v-toolbar>    
+              </v-toolbar>
               <v-card-text class="pa-0 text-center">
                 <img v-if="editItem.articleCoverImage" :src="upload + editItem.articleCoverImage" alt="" style="width: 100%; height: 100%; object-fit: cover;">
                 <p v-else class="text-center">暂无封面~</p>
@@ -125,7 +125,7 @@
                <p v-else class="text-center">暂无音频~</p>
               </v-card-text>
             </v-card>
-            
+
             <v-card class="pa-4 mt-2" flat>
               <v-toolbar flat dense>
                 <p class="font-weight-medium mb-0" style="font-size: 16px;">
@@ -213,7 +213,6 @@
 {% include 'component/fileBrowser/FileBrowser.html' %}
 {% include 'component/singleSelectDialog.html' %}
 {% include 'component/datetimePicker.html' %}
-<link href="/<$ ctx.app.config.appId $>/public/reset_md.css" rel="stylesheet">
 <link rel="stylesheet" href="/<$ ctx.app.config.appId $>/public/editor.md/css/editormd.css" />
 <link href="/<$ ctx.app.config.appId $>/public/jianghu/jianghudoc.css" rel="stylesheet">
 <script src="/<$ ctx.app.config.appId $>/public/jquery/3.1.1/jquery.min.js"></script>
