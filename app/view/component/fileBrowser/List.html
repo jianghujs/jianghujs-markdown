@@ -22,7 +22,7 @@
                     class="my-10" style="display: block; margin: auto;" controls>
                     <source :src="`/<$ ctx.app.config.appId $>/upload/materialRepo/${path}?v=${new Date().getTime()}`" type="audio/mpeg">
                 </audio>
-                <$ constantUiMap.btn.file $>: {{ path }}
+                <div><$ constantUiMap.btn.file $>：{{ `${host}/<$ ctx.app.config.appId $>/upload/materialRepo/${path}` }}</div>
             </div>
         </v-card-text>
 
@@ -37,11 +37,11 @@
                 }"
             >
                 <template v-slot:item.name="{ item }">
-                    <div v-if="item.type === 'dir'" @click="changePath(item.path)">
+                    <div v-if="item.type === 'dir'" @click="changePath(item.path)" role="button">
                         <v-icon>mdi-folder-outline</v-icon>
                         <span class="ml-2">{{item.basename}}</span>
                     </div>
-                    <div v-else="item.type === 'file'" @click="changePath(item.path)">
+                    <div v-else="item.type === 'file'" @click="changePath(item.path)" role="button">
                         <template>
                             <v-avatar
                             tile
@@ -134,6 +134,7 @@
         },
         data() {
             return {
+                host: window.location.host,
                 items: [],
                 page: 1,
                 pageSize: 20,

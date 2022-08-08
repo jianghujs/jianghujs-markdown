@@ -29,7 +29,7 @@
             <v-breadcrumbs class="py-0 px-4" style="margin-top: 1px;">
                 <v-breadcrumbs-item :input-value="path === '/'" @click="changePath('/')" role="button">
                   <v-icon class="mr-2" color="success">{{storageObject.icon}}</v-icon>
-                  <span>{{storageObject.name}}</span>
+                  <span style="font-size: 14px;" class="font-weight-medium">{{storageObject.name}}</span>
                 </v-breadcrumbs-item>
                 <v-breadcrumbs-item 
                   v-for="(segment, index) in pathSegments"
@@ -37,7 +37,7 @@
                   @click="changePath(segment.path)"
                   role="button">
                   <v-icon color="success">mdi-chevron-right</v-icon>
-                  <span class="ml-2">{{ segment.name }}</span>
+                  <span style="font-size: 14px;" class="ml-2 font-weight-medium">{{ segment.name }}</span>
                 </v-breadcrumbs-item>
           </v-breadcrumbs>
         </v-snackbar>
