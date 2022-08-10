@@ -3,8 +3,6 @@
 {% block title %}<$ article.articleTitle $>{% endblock %}
 {% block keyword %}<$ article.articleTagList $>{% endblock %}
 {% block content %}
-{% include 'util/jianghu/jianghuDocCss.html' %}
-{% include 'util/jianghu/jianghuDocDocsCss.html' %}
 <!-- mobile nav -->
 <div class="VPLocalNav">
   <button id="jianghu-mobile-toggle-docMenu" class="jianghu-nav-mobile-menu" aria-expanded="false" aria-controls="VPSidebarNav">
@@ -135,7 +133,7 @@
         // 点击大纲关闭遮罩
         $(".jianghu-doc-contentDoc-aside-outline-link").on( "click", function(){
             closeBackdrop();
-        }); 
+        });
         // 目录滚动到指定位置
         if($('.jianghu-doc-sidebar-group-link-active')){
           const linkOffsetTop = $('.jianghu-doc-sidebar-group-link-active').position().top;

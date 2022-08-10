@@ -41,43 +41,44 @@
   <!-- OGP分享协议结束 -->
   <title>{% block title %}{% endblock %} - <$ ctx.app.config.appTitle $></title>
   <!-- MDB -->
-  <link href="<$ static $>/mdbootstrap/font-awesome.min.css?v=6.0.0" rel="stylesheet"/>
-  <link href="<$ static $>/mdbootstrap/roboto-font.css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
-  <link href="<$ static $>/mdbootstrap/mdb.min.css?v=4.2.0" rel="stylesheet"/>
+  <link href="<$ static $>/articleViewer/font-awesome.min.css?v=6.0.0" rel="stylesheet"/>
+  <link href="<$ static $>/articleViewer/roboto-font.css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+  <link href="<$ static $>/articleViewer/mdb.min.css" rel="stylesheet"/>
   <!-- css -->
-  {% include 'util/jianghu/jianghuUiCss.html' %}
-  {% include 'util/jianghu/jianghuCommonCss.html' %}
+  {% include 'component/articleViewer/jianghuUiCss.html' %}
+  {% include 'component/articleViewer/jianghuCommonCss.html' %}
+  {% include 'component/articleViewer/jianghuDocCss.html' %}
+  {% include 'component/articleViewer/jianghuDocDocsCss.html' %}
   <!-- js -->
-  <script src="<$ static $>/jquery/3.1.1/jquery.min.js?v=1.0.5"></script>
-  <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js?v=1.0.5"></script>
-  <script src="<$ static $>/js/lib/lodash.min.js?v=1.0.5"></script>
-  <script src="<$ static $>/js/lib/axios.min.js?v=1.0.5"></script>
+  <script src="<$ static $>/js/lib/jquery.min.js"></script>
+  <script src="<$ static $>/js/lib/lodash.min.js"></script>
+  <script src="<$ static $>/js/lib/axios.min.js"></script>
 </head>
 
 <body data-mdb-target="#scrollspy" data-mdb-offset="0" class="grey-bg">
-  <div class="vt-backdrop backdrop"></div>
+<div class="vt-backdrop backdrop"></div>
 
-  {% include 'common/jianghuAxios.html' %}
-  {% block content %}{% endblock %}
-  <!-- js -->
-  <script type="text/javascript" src="<$ static $>/mdbootstrap/mdb.min.js?v=4.2.0"></script>
-  {% include 'util/jianghu/jianghuJs.html' %}
-  <script type="text/javascript">
-    // 全局提示
-    window.vtoast = {
-      success: ({message}) => {
-        showSuccessAlert(message)
-      },
-      fail: ({message}) => {
-        showFailAlert(message)
-      },
-      loading: () => {
-        showLoading()
-      },
-      hideLoading: () => {
-        showLoading()
-      }
-    };
-  </script>
-  {% block javascript %}{% endblock %}
+{% include 'common/jianghuAxios.html' %}
+{% block content %}{% endblock %}
+<!-- js -->
+<script type="text/javascript" src="<$ static $>/articleViewer/mdb.min.js"></script>
+{% include 'component/articleViewer/jianghuJs.html' %}
+<script type="text/javascript">
+  // 全局提示
+  window.vtoast = {
+    success: ({message}) => {
+      showSuccessAlert(message)
+    },
+    fail: ({message}) => {
+      showFailAlert(message)
+    },
+    loading: () => {
+      showLoading()
+    },
+    hideLoading: () => {
+      showLoading()
+    }
+  };
+</script>
+{% block javascript %}{% endblock %}
 </body>

@@ -213,10 +213,11 @@
 {% include 'component/fileBrowser/FileBrowser.html' %}
 {% include 'component/singleSelectDialog.html' %}
 {% include 'component/datetimePicker.html' %}
-<link rel="stylesheet" href="/<$ ctx.app.config.appId $>/public/editor.md/css/editormd.css" />
-<link href="/<$ ctx.app.config.appId $>/public/jianghu/jianghudoc.css" rel="stylesheet">
-<script src="/<$ ctx.app.config.appId $>/public/jquery/3.1.1/jquery.min.js"></script>
-<script src="/<$ ctx.app.config.appId $>/public/editor.md/editormd.js"></script>
+{% include 'component/articleEditor/articleEditorCss.html' %}
+<link rel="stylesheet" href="/<$ ctx.app.config.appId $>/public/plugins/editor.md/css/editormd.min.css" />
+<link href="/<$ ctx.app.config.appId $>/public/articleViewer/font-awesome.min.css?v=6.0.0" />
+<script src="/<$ ctx.app.config.appId $>/public/js/lib/jquery.min.js"></script>
+<script src="/<$ ctx.app.config.appId $>/public/plugins/editor.md/editormd.js"></script>
 
 <script type="module">
   new Vue({
@@ -452,7 +453,7 @@
               // height : "100%",
               watch: false,
               saveHTMLToTextarea: true,    // 保存 HTML 到 Textarea
-              path: '/<$ ctx.app.config.appId $>/public/editor.md/lib/',
+              path: '/<$ ctx.app.config.appId $>/public/plugins/editor.md/lib/',
               toolbarIcons: function () {
                 return [
                   "undo", "redo", "|",
