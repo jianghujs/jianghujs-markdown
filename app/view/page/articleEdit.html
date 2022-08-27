@@ -8,20 +8,20 @@
   <template v-slot:serverSearch>
     <div class="d-flex mt-3">
       <v-spacer></v-spacer>
-      <v-btn v-if="editItem.articleId && editItem.articlePublishStatus !== 'deleted'" @click="deletedArticle"
+      <v-btn v-if="editItem.articleId && editItem.articlePublishStatus !== 'deleted'" @click="doUiAction('deleteArticle') "
         color="error mr-1" depressed>
         <v-icon class="mr-1" small>mdi-trash-can</v-icon>
         <$ constantUiMap.common.moveToRecycleBin $>
       </v-btn>
-      <v-btn v-if="editItem.articlePublishStatus === 'deleted'" @click="restoreArticle" color="error mr-1" depressed>
+      <v-btn v-if="editItem.articlePublishStatus === 'deleted'" @click="doUiAction('restoreArticle') " color="error mr-1" depressed>
         <v-icon class="mr-1" small>mdi-backburger</v-icon>
         <$ constantUiMap.article.recoverArticle $>
       </v-btn>
-      <v-btn @click="saveInfo" color="success" class="mr-1" depressed>
+      <v-btn @click="doUiAction('saveInfo')" color="success" class="mr-1" depressed>
         <v-icon class="mr-1" small>mdi-content-save-all</v-icon>
         <$ constantUiMap.common.save $>
       </v-btn>
-      <v-btn @click="saveInfoAndPreview" color="success" depressed>
+      <v-btn @click="doUiAction('saveInfoAndPreview') " color="success" depressed>
         <v-icon class="mr-1" small>mdi-eye-refresh</v-icon>
         <$ constantUiMap.common.saveAndPreview $>
       </v-btn>
@@ -65,7 +65,7 @@
                   small
                   fab
                   style="width: 20px;height:20px"
-                  @click="imagePicker"
+                  @click="doUiAction('imagePicker') "
                 >
                   <v-icon small>mdi-upload-outline</v-icon>
                 </v-btn>
@@ -76,7 +76,7 @@
                   class="ml-2"
                   color="error"
                   style="width: 20px;height:20px"
-                  @click.stop="clearImage"
+                  @click.stop="doUiAction('clearImage') "
                   v-if="editItem.articleCoverImage"
                 >
                   <v-icon small>mdi-trash-can-outline</v-icon>
@@ -100,7 +100,7 @@
                   small
                   fab
                   style="width: 20px;height:20px"
-                  @click="audioPicker"
+                  @click="doUiAction('audioPicker')"
                 >
                   <v-icon small>mdi-upload-outline</v-icon>
                 </v-btn>
@@ -111,7 +111,7 @@
                   class="ml-2"
                   color="error"
                   style="width: 20px;height:20px"
-                  @click.stop="clearAudio"
+                  @click.stop="doUiAction('clearAudio') "
                   v-if="editItem.articleAudioUrl"
                 >
                   <v-icon small>mdi-trash-can-outline</v-icon>
@@ -137,7 +137,7 @@
                   small
                   fab
                   style="width: 20px;height:20px"
-                  @click="videoPicker"
+                  @click="doUiAction('videoPicker') "
                 >
                   <v-icon small>mdi-upload-outline</v-icon>
                 </v-btn>
@@ -148,7 +148,7 @@
                   class="ml-2"
                   color="error"
                   style="width: 20px;height:20px"
-                  @click.stop="clearVideo"
+                  @click.stop="doUiAction('clearVideo') "
                   v-if="editItem.articleVideoUrl"
                 >
                   <v-icon small>mdi-trash-can-outline</v-icon>
@@ -188,7 +188,7 @@
           <v-toolbar-items>
             <v-btn
               text
-              @click="isEditDrawerShow = false"
+              @click="doUiAction('closeMaterialPicker')"
             >
             <v-icon class="black--text">mdi-close</v-icon>
             </v-btn>
@@ -225,6 +225,8 @@
     template: '#app-template',
     vuetify: new Vuetify(),
     data: () => ({
+      isMobile: window.innerWidth < 600,
+      newArticleId: null,
       articleId: null,
       selectCategoryDialog: false,
       // 表格相关数据
@@ -262,6 +264,7 @@
       editItem: {
         articlePublishStatus: 'public'
       },
+      computedEditItem: {},
       tableButtonList: [{
         text: '修改',
         buttonType: 'edit',
@@ -279,46 +282,16 @@
       mdChanged: false,
     }),
     computed: {
-      isMobile() {
-        return window.innerWidth < 600;
-      },
-      tableData() {
-        return this.tableDataFromBackend;
-      },
-      computedEditItem() {
-        return this.editItem;
+
+    },
+    watch: {
+      editItem(val){
+        this.computedEditItem = val;
       }
     },
-    watch: {},
     async created() {
-      const searchParams = new URLSearchParams(location.search.substring(1));
-      this.articleId = searchParams.get('articleId');
-      if (searchParams.get('categoryId')) {
-        this.editItem.categoryId = searchParams.get('categoryId')
-      }
-      if (searchParams.get('articleGroupName')) {
-        this.editItem.articleGroupName = searchParams.get('articleGroupName')
-      }
-      if (searchParams.get('articlePublishStatus')) {
-        this.editItem.articlePublishStatus = searchParams.get('articlePublishStatus')
-      }
-
-
-      const { rows } = (await window.jianghuAxios({
-        data: {
-          appData: {
-            pageId: 'articleEdit',
-            actionId: 'selectCategoryList',
-            actionData: {},
-            whereIn: { categoryPublishStatus: [ 'public', 'login' ] },
-            orderBy: [{ column: 'categoryGroup', order: 'asc' }, { column: 'categoryGroupSort', order: 'asc' }]
-          }
-        }
-      })).data.appData.resultData;
-      rows.forEach(item => {
-        const text = `${item.categoryGroupConcat || ''}${item.categoryName} [共${item.count}篇]`;
-        this.constantCollection.category.push({ text, value: item.categoryId + "" });
-      })
+      await this.getSearchParams();
+      await this.getCategory();
     },
     async mounted() {
       if (this.articleId) {
@@ -337,6 +310,100 @@
       }
     },
     methods: {
+      async doUiAction(uiActionId, uiActionData) {
+        switch (uiActionId) {
+          case 'deleteArticle':
+            await this.confirmDeleteDialog(uiActionData);
+            await this.deleteArticle(uiActionData);
+            await this.getTableData(uiActionData);
+            break;
+          case 'restoreArticle':
+            await this.confirmRestoreIDialog(uiActionData);
+            await this.restoreArticle(uiActionData);
+            await this.getTableData(uiActionData);
+            break;
+          case 'saveInfo':
+            await this.saveInfo(uiActionData);
+            break;
+          case 'saveInfoAndPreview':
+            await this.saveInfoAndPreview(uiActionData);
+            break;
+          case 'insertItem':
+            await this.prepareFormValidate(uiActionData);
+            await this.insertItem(uiActionData);
+            await this.mdChangedFalse(uiActionData);
+            await this.getNewArticle(uiActionData);
+            await this.getTableData(uiActionData);
+            await this.refreshPage(uiActionData);
+            break;
+          case 'updateItem':
+            await this.prepareFormValidate(uiActionData);
+            await this.updateItem(uiActionData);
+            await this.mdChangedFalse(uiActionData);
+            await this.getTableData(uiActionData);
+            await this.refreshPage(uiActionData);
+            break;
+          case 'imagePicker':
+            await this.prepareValidate(uiActionData);
+            await this.imagePicker(uiActionData);
+            break;
+          case 'clearImage':
+            await this.clearImage(uiActionData);
+            break;
+          case 'audioPicker':
+            await this.prepareValidate(uiActionData);
+            await this.audioPicker(uiActionData);
+            break;
+          case 'clearAudio':
+            await this.clearAudio(uiActionData);
+            break;
+          case 'videoPicker':
+            await this.prepareValidate(uiActionData);
+            await this.videoPicker(uiActionData);
+            break;
+          case 'clearVideo':
+            await this.clearVideo(uiActionData);
+            break;
+          case 'closeMaterialPicker':
+            await this.closeMaterialPicker(uiActionData);
+            break;
+          default:
+            console.error("[doUiAction] uiActionId not find", { uiActionId });
+            break;
+        }
+      },
+      // 获取 URL 参数
+      async getSearchParams(){
+        const searchParams = new URLSearchParams(location.search.substring(1));
+        this.articleId = searchParams.get('articleId');
+        if (searchParams.get('categoryId')) {
+          this.editItem.categoryId = searchParams.get('categoryId')
+        }
+        if (searchParams.get('articleGroupName')) {
+          this.editItem.articleGroupName = searchParams.get('articleGroupName')
+        }
+        if (searchParams.get('articlePublishStatus')) {
+          this.editItem.articlePublishStatus = searchParams.get('articlePublishStatus')
+        }
+      },
+      // 获取分类
+      async getCategory(){
+        const { rows } = (await window.jianghuAxios({
+        data: {
+            appData: {
+              pageId: 'articleEdit',
+              actionId: 'selectCategoryList',
+              actionData: {},
+              whereIn: { categoryPublishStatus: [ 'public', 'login' ] },
+              orderBy: [{ column: 'categoryGroup', order: 'asc' }, { column: 'categoryGroupSort', order: 'asc' }]
+            }
+          }
+        })).data.appData.resultData;
+        rows.forEach(item => {
+          const text = `${item.categoryGroupConcat || ''}${item.categoryName} [共${item.count}篇]`;
+          this.constantCollection.category.push({ text, value: item.categoryId + "" });
+        })
+      },
       openSelectCategoryDialog() {
         this.selectCategoryDialog = true
       },
@@ -413,32 +480,26 @@
       closeMaterialPicker() {
         this.isEditDrawerShow = false;
       },
-      async imagePicker() {
-        if (!await this.articleIdCheck()) {
+      async mdChangedFalse() {
+        this.mdChanged = false;
+      },
+      async prepareValidate(){
+        if (await this.articleIdCheck() === false) {
           window.vtoast.fail("请填写文章信息后,再点击上传文件!");
-          return
+          throw new Error("[prepareValidate] false");
         }
-        // document.getElementById('imageInput').click();
+      },
+      async imagePicker() {
         this.materialType = 'image';
         this.writeBackType = 'attachment';
         this.isEditDrawerShow = true;
       },
       async audioPicker() {
-        if (!await this.articleIdCheck()) {
-          window.vtoast.fail("请填写文章信息后,再点击上传文件!");
-          return
-        }
-        // document.getElementById('audioInput').click();
         this.materialType = 'audio';
         this.writeBackType = 'attachment';
         this.isEditDrawerShow = true;
       },
       async videoPicker() {
-        if (!await this.articleIdCheck()) {
-          window.vtoast.fail("请填写文章信息后,再点击上传文件!");
-          return
-        }
-        // document.getElementById('videoInput').click();
         this.materialType = 'video';
         this.writeBackType = 'attachment';
         this.isEditDrawerShow = true;
@@ -532,18 +593,20 @@
       },
       async articleIdCheck() {
         if (!this.articleId) {
-          return await this.insertItem();
+          await this.doUiAction('insertItem')
+          return true;
         }
         return true;
+      },
+      async confirmDeleteDialog() {
+        if (await window.confirmDialog({title: "<$ constantUiMap.common.recycle $>", content: "<$ constantUiMap.article.recyclingConfirmation $>？"}) === false) {
+          throw new Error("[confirmDeleteDialog] 否");
+        }
       },
       /**
        * 移除到回收站
        */
-      async deletedArticle() {
-        if (await window.confirmDialog({
-          title: '<$ constantUiMap.common.recycle $>',
-          content: '<$ constantUiMap.article.recyclingConfirmation $>？'
-        })) {
+      async deleteArticle() {
           await window.vtoast.loading("<$ constantUiMap.article.recyclingArticles $>");
           await window.jianghuAxios({
             data: {
@@ -555,14 +618,13 @@
             }
           });
           await window.vtoast.success("<$ constantUiMap.article.recyclingArticlesSuccess $>");
-          this.getTableData();
+      },
+      async confirmRestoreIDialog() {
+        if (await window.confirmDialog({title: "<$ constantUiMap.common.recover $>", content: "<$ constantUiMap.article.restoreArticleConfirm $>？"}) === false) {
+          throw new Error("[confirmRestoreIDialog] 否");
         }
       },
       async restoreArticle() {
-        if (await window.confirmDialog({
-          title: '<$ constantUiMap.common.recover $>',
-          content: '<$ constantUiMap.article.restoreArticleConfirm $>？'
-        })) {
           await window.vtoast.loading("<$ constantUiMap.article.recoverArticle $>");
           await window.jianghuAxios({
             data: {
@@ -574,8 +636,6 @@
             }
           });
           await window.vtoast.success("<$ constantUiMap.article.recoverArticlesSuccessfully $>");
-          this.getTableData();
-        }
       },
       /**
        * 保存数据
@@ -587,21 +647,26 @@
         this.editItem.articleTagList = parts.map(item => item.trim()).join(',')
         this.editItem.articlePublishTime = dayjs(this.editItem.articlePublishTime).format();
         if (this.computedEditItem.id) {
-          await this.updateItem();
+          this.doUiAction('updateItem');
         } else {
-          await this.insertItem();
+          this.doUiAction('insertItem');
         }
       },
       // 保存并预览
       async saveInfoAndPreview() {
-        await this.saveInfo();
+        this.doUiAction('saveInfo');
         window.location.href = `/${window.appInfo.appId}/page/article/${this.computedEditItem.articleId}`;
+      },
+      // 表单验证
+      async prepareFormValidate() {
+        if (await this.$refs.form.validate() === false) {
+          throw new Error("[prepareFormValidate] false");
+        }
       },
       /**
        * 新增文章
        */
       async insertItem() {
-        if (!this.$refs.form.validate()) return false;
         const { id, articleList, categoryName, ...saveInfo } = this.computedEditItem;
         await window.vtoast.loading("新增文章");
         const result = await window.jianghuAxios({
@@ -614,31 +679,29 @@
           }
         });
         await window.vtoast.success("新增文章成功");
-        // 按id获取新文章并跳转新 url
+        this.newArticleId = result.data.appData.resultData.rows[0];
+      },
+      // 获取新文章
+      async getNewArticle(){
         const { rows } = (await window.jianghuAxios({
           data: {
             appData: {
               pageId: 'articleEdit',
               actionId: 'selectItemList',
               actionData: {},
-              where: { id: result.data.appData.resultData.rows[0] },
+              where: { id: this.newArticleId },
             }
           }
         })).data.appData.resultData;
         const newArticle = rows[0];
         const { articleId, articleTitle } = newArticle
         this.articleId = articleId;
-        this.mdChanged = false;
-        await this.getTableData();
-        const newUrl = `/${window.appInfo.appId}/page/articleEdit?articleId=${articleId}&title=${articleTitle}`;
-        history.pushState({}, null, newUrl);
-        return true;
+        this.editItem = newArticle;
       },
       /**
        * 保存文章
        */
       async updateItem() {
-        if (!this.$refs.form.validate()) return false;
         const { id, articleList, categoryName, ...saveInfo } = this.computedEditItem;
         await window.vtoast.loading("修改文章");
         await window.jianghuAxios({
@@ -654,8 +717,8 @@
           }
         })
         await window.vtoast.success("修改文章成功");
-        this.mdChanged = false;
-        await this.getTableData();
+      },
+      async refreshPage(){
         const newUrl = `/${window.appInfo.appId}/page/articleEdit?articleId=${this.computedEditItem.articleId}&title=${this.computedEditItem.articleTitle}`;
         history.pushState({}, null, newUrl);
       },

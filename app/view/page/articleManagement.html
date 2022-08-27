@@ -10,7 +10,7 @@
         :class="{'pa-4': !isMobile, 'pb-0': !isMobile, 'pa-2': isMobile}">
 
         <v-btn color="success" dark class="elevation-0 mr-2"
-        @click="handleTableButton({ text: '<$ constantUiMap.common.add $>', buttonType: 'add' }, null)"><$ constantUiMap.common.add $></v-btn>
+        @click="doUiAction('add', null)"><$ constantUiMap.common.add $></v-btn>
         <span style="margin-right: 10px;">{{serverSearchInput.searchSummary}}</span>  
         <!-- <span class="body-2">共{{ tableData.length }}条记录</span> -->
 
@@ -30,13 +30,13 @@
           {{ articlePublishStatusMap[item.articlePublishStatus] || item.articlePublishStatus }}
         </template>
         <template v-slot:item.action="{ item }">
-          <v-btn small class="mr-2 success" @click="goToArticlePage(item)"><$ constantUiMap.common.view $></v-btn>
-          <v-btn small class="mr-2 success" @click="goToEditPage(item)"><$ constantUiMap.common.modify $></v-btn>
+          <v-btn small class="mr-2 success" @click="doUiAction('view', item)"><$ constantUiMap.common.view $></v-btn>
+          <v-btn small class="mr-2 success" @click="doUiAction('modify', item)"><$ constantUiMap.common.modify $></v-btn>
           <v-btn v-if="item.articlePublishStatus !== 'deleted'" small class="mr-2 error"
-            @click="handleTableButton({ text: '<$ constantUiMap.common.recycle $>', buttonType: 'delete' }, item)">
+            @click="doUiAction('delete', item)">
             <$ constantUiMap.common.recycle $></v-btn>
           <v-btn v-if="item.articlePublishStatus === 'deleted'" small class="mr-2 white--text" color="#BDBDBD"
-            @click="handleTableButton({ text: '<$ constantUiMap.common.recover $>', buttonType: 'restore' }, item)"
+            @click="doUiAction('restore', item)"
             style="min-width: 65px;">
             <$ constantUiMap.common.recover $></v-btn>
         </template>
@@ -59,6 +59,7 @@
     template: '#app-template',
     vuetify: new Vuetify(),
     data: () => ({
+      isMobile: window.innerWidth < 600,
       selectCategoryDialog: false,
       // 表格相关数据
       isFormValid: true,
@@ -82,7 +83,7 @@
           { text: "全部类目", value: "all" },
         ],
       },
-
+      articlePublishStatusMap: {},
       categoryIdToName: {},
       serverSearchInput: {
         articleTitle: null,
@@ -97,6 +98,7 @@
       searchInput: null,
       isTableLoading: true,
       tableDataFromBackend: [],
+      tableData: [],
       headers: [
         { text: "ID", value: "id", width: 120, class: 'fixed'},
         { text: "<$ constantUiMap.article.articleID $>", value: "articleId", width: 120 },
@@ -123,42 +125,70 @@
       ],
     }),
     computed: {
-      isMobile() {
-        return window.innerWidth < 600;
-      },
-      tableData() {
-        return this.tableDataFromBackend;
-      },
-      computedEditItem() {
-        return this.editItem;
-      },
-      articlePublishStatusMap() {
+     
+    },
+    watch: {
+      constantCollection(val){
         const map = {};
         this.constantCollection.allArticlePublishStatus.forEach(constantObj => {
           map[constantObj.value] = constantObj.text;
         })
-        return map;
+        this.articlePublishStatusMap = map;
       }
-    },
-    watch: {
     },
     async created() {
-      if (!this.isMobile) {
-        this.headers[this.headers.length - 1].class = 'fixed'
-        this.headers[this.headers.length - 1].cellClass = 'fixed'
-      }
-      const urlParams = new URLSearchParams(location.search);
-      const categoryId = urlParams.get('categoryId');
-      if (categoryId) {
-        this.serverSearchInput.categoryId = categoryId;
-      }
-
+      await this.prepareData();
       await this.getCategoryData();
       await this.getTableData();
     },
     async mounted() {
     },
     methods: {
+      async doUiAction(uiActionId, uiActionData) {
+        switch (uiActionId) {
+          case 'add':
+            await this.goToCreatePage(uiActionData);
+            break;
+          case 'view':
+            await this.goToArticlePage(uiActionData);
+            break;
+          case 'modify':
+            await this.goToEditPage(uiActionData);
+            break;
+          case 'history':
+            await this.goToHistoryPage(uiActionData);
+            break;
+          case 'delete':
+            await this.confirmDeleteDialog(uiActionData);
+            await this.prepareItemData(uiActionData);
+            await this.deleteArticle(uiActionData);
+            await this.getTableData(uiActionData);
+            break;
+          case 'restore':
+            await this.confirmRestoreIDialog(uiActionData);
+            await this.prepareItemData(uiActionData);
+            await this.restoreItem(uiActionData);
+            await this.getTableData(uiActionData);
+            break;
+          default:
+            console.error("[doUiAction] uiActionId not find", { uiActionId });
+            break;
+        }
+      },
+      async prepareData(){
+        if (!this.isMobile) {
+          this.headers[this.headers.length - 1].class = 'fixed'
+          this.headers[this.headers.length - 1].cellClass = 'fixed'
+        }
+        const urlParams = new URLSearchParams(location.search);
+        const categoryId = urlParams.get('categoryId');
+        if (categoryId) {
+          this.serverSearchInput.categoryId = categoryId;
+        }
+      },
+      async prepareItemData(item) {
+        this.editItem = {...item};
+      },
       openSelectCategoryDialog() {
         this.selectCategoryDialog = true
       },
@@ -220,6 +250,7 @@
         }
         
         this.tableDataFromBackend = rows;
+        this.tableData = rows;
         this.isTableLoading = false;
         // Tip 这个放最后
         this.serverSearchInput.isFirstSearch  = false;
@@ -244,49 +275,15 @@
         })
         this.serverSearchInput.categoryName = this.categoryIdToName[this.serverSearchInput.categoryId];
       },
-      /**
-       * 点击表格数据按钮
-       */
-      async handleTableButton(button, item) {
-        const buttonType = button.buttonType;
-        switch (buttonType) {
-          case 'edit':
-            this.currentClickButton = { action: 'edit', title: '修改' };
-            this.editItem = { ...item };
-            this.isEditDrawerShow = true;
-            break;
-          case 'add':
-            this.goToCreatePage();
-            break;
-          case 'history':
-            this.goToHistoryPage();
-            break;
-          case 'delete':
-            this.editItem = { ...item };
-            await this.deleteStudent();
-            break;
-          case 'restore':
-            this.editItem = { ...item };
-            await this.restoreItem();
-            break;
-          case 'path':
-            // todo：请在生成后将下列的 title 参数改成获取你要展示的字段，如 className
-            if (button.path.startsWith('http')) {
-              window.location.href = `${button.path}?articleId=${item.articleId}&title=${item.articleId}`
-            } else {
-              window.location.href = `/${window.appInfo.appId}/page/${button.path}?articleId=${item.articleId}&title=${item.articleId}`
-            }
-            break;
+      async confirmDeleteDialog() {
+        if (await window.confirmDialog({title: "<$ constantUiMap.common.recycle $>", content: "<$ constantUiMap.article.recyclingConfirmation $>？"}) === false) {
+          throw new Error("[confirmDeleteDialog] 否");
         }
       },
       /**
        * 删除数据
        */
-      async deleteStudent() {
-        if (await window.confirmDialog({
-          title: '<$ constantUiMap.common.recycle $>',
-          content: '<$ constantUiMap.article.recyclingConfirmation $>？'
-        })) {
+      async deleteArticle() {
           const { articleId } = this.editItem;
           await window.vtoast.loading("<$ constantUiMap.article.recyclingArticles $>");
           await window.jianghuAxios({
@@ -299,14 +296,16 @@
             }
           });
           await window.vtoast.success("<$ constantUiMap.article.recyclingArticlesSuccess $>");
-          this.getTableData();
+      },
+      async confirmRestoreIDialog() {
+        if (await window.confirmDialog({title: "<$ constantUiMap.common.recover $>", content: "<$ constantUiMap.article.restoreArticleConfirm $>？"}) === false) {
+          throw new Error("[confirmRestoreIDialog] 否");
         }
       },
+      /**
+       * 恢复
+       */
       async restoreItem() {
-        if (await window.confirmDialog({
-          title: '<$ constantUiMap.common.recover $>',
-          content: '<$ constantUiMap.article.restoreArticleConfirm $>？'
-        })) {
           const { articleId } = this.editItem;
           await window.vtoast.loading("<$ constantUiMap.article.recoverArticle $>");
           await window.jianghuAxios({
@@ -319,19 +318,6 @@
             }
           });
           await window.vtoast.success("<$ constantUiMap.article.recoverArticlesSuccessfully $>");
-          this.getTableData();
-        }
-      },
-      /**
-       * 保存数据
-       */
-      async saveInfo() {
-        if (this.currentClickButton.action === 'add') {
-          await this.jhInsertStudent();
-        }
-        if (this.currentClickButton.action === 'edit') {
-          await this.updateStudent();
-        }
       },
       getConstantCollectionItemText(key, _value) {
         const constantCollectionItemFind = this.constantCollection[key].find(({ value }) => value === _value);
