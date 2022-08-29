@@ -655,7 +655,7 @@
       // 保存并预览
       async saveInfoAndPreview() {
         this.doUiAction('saveInfo');
-        window.location.href = `/${window.appInfo.appId}/page/article/${this.computedEditItem.articleId}`;
+        window.location.href = `/${window.appInfo.appId}/page/article?id=${this.computedEditItem.articleId}`;
       },
       // 表单验证
       async prepareFormValidate() {

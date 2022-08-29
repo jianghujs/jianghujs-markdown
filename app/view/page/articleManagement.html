@@ -11,7 +11,7 @@
 
         <v-btn color="success" dark class="elevation-0 mr-2"
         @click="doUiAction('add', null)"><$ constantUiMap.common.add $></v-btn>
-        <span style="margin-right: 10px;">{{serverSearchInput.searchSummary}}</span>  
+        <span style="margin-right: 10px;">{{serverSearchInput.searchSummary}}</span>
         <!-- <span class="body-2">共{{ tableData.length }}条记录</span> -->
 
         <v-spacer></v-spacer>
@@ -87,8 +87,8 @@
       categoryIdToName: {},
       serverSearchInput: {
         articleTitle: null,
-        categoryId: "all", 
-        categoryName: "全部类目", 
+        categoryId: "all",
+        categoryName: "全部类目",
         articlePublishStatus: ['public', 'login', 'deleted'],
         isFirstSearch: true,
         searchSummary: null,
@@ -125,7 +125,7 @@
       ],
     }),
     computed: {
-     
+
     },
     watch: {
       constantCollection(val){
@@ -232,7 +232,7 @@
         this.serverSearchInput.articlePublishStatusText = this.constantCollection.allArticlePublishStatus
           .filter(item => this.serverSearchInput.articlePublishStatus.indexOf(item.value) > -1)
           .map(item => item.text);
-        
+
         const conditions = [];
         // if (this.serverSearchInput.articleTitle) {
         //   conditions.push(`标题包含【${this.serverSearchInput.articleTitle}】`);
@@ -248,7 +248,7 @@
         } else {
           this.serverSearchInput.searchSummary = conditions.join('，') + `共${count}条记录`;
         }
-        
+
         this.tableDataFromBackend = rows;
         this.tableData = rows;
         this.isTableLoading = false;
@@ -327,7 +327,7 @@
         return value;
       },
       goToArticlePage(item) {
-        window.open(`/${window.appInfo.appId}/page/article/${item.articleId}`, '_blank');
+        window.open(`/${window.appInfo.appId}/page/article?id=${item.articleId}`, '_blank');
       },
       goToCreatePage() {
         window.open(`/${window.appInfo.appId}/page/articleEdit?title=未命名`, '_blank');
