@@ -139,8 +139,7 @@ class ArticleService extends Service {
   async getArticleAndFillArticles() {
     const { ctx, app } = this;
     const { jianghuKnex } = app;
-    const articleId = ctx.pathParams && ctx.pathParams[0]
-      || this.ctx.request.body.appData.actionData.articleId;
+    const {articleId} = this.ctx.request.body.appData.actionData;
     const article = await jianghuKnex(tableEnum.article)
       .where({ articleId })
       .first();
@@ -197,6 +196,7 @@ class ArticleService extends Service {
     article.articleList = newArticleList;
     return article;
   }
+
 
 }
 

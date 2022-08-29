@@ -327,7 +327,7 @@
         return value;
       },
       goToArticlePage(item) {
-        window.open(`/${window.appInfo.appId}/page/article/${item.articleId}`, '_blank');
+        window.open(`/${window.appInfo.appId}/page/article?id=${item.articleId}`, '_blank');
       },
       goToCreatePage() {
         window.open(`/${window.appInfo.appId}/page/articleEdit?title=未命名`, '_blank');
