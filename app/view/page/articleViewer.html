@@ -111,16 +111,21 @@
           <div class="jianghu-doc-contentDoc-main">
             <div class="jianghu-doc-contentDoc-main-edit-links">
               <span>
+
                 <a :href="pageUrl + 'articleEdit?articleId=' + article.articleId + '&title=' + article.articleTitle"
                    class="jianghu-doc-contentDoc-main-edit-link">
                   <i class="far fa-edit jianghu-doc-contentDoc-main-edit-icon"></i><$ constantUiMap.common.modify $></a>
-                <a :href="pageUrl + 'articleEdit?&title=未命名'" target="_blank"
+                
+                  <a :href="pageUrl + 'articleEdit?&title=未命名'" target="_blank"
                    class="jianghu-doc-contentDoc-main-edit-link">
                   <i class="far fa-plus-square jianghu-doc-contentDoc-main-edit-icon"></i><$ constantUiMap.common.add $></a>
-                <a :href="pageUrl + 'articleManagement?categoryId=' + article.categoryId"
+                
+                  <!-- <a :href="pageUrl + 'articleManagement?categoryId=' + article.categoryId" -->
+                  <a :href="pageUrl + 'articleManagement'"
                    class="jianghu-doc-contentDoc-main-edit-link">
                   <i class="fas fa-th-list jianghu-doc-contentDoc-main-edit-icon"></i><$ constantUiMap.common.manage $></a>
-              </span>
+              
+                </span>
               <span class="jianghu-doc-contentDoc-main-update-time"><i class="far fa-user"></i> {{ article.articleUpdateUsername }}  <i
                   class="far fa-clock" style="margin-left: 5px;"></i>  {{ article.articleUpdateTime }}</span>
             </div>
