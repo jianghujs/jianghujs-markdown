@@ -13,7 +13,7 @@ CREATE TABLE `_cache` (
   `operationByUser` varchar(255) DEFAULT NULL COMMENT '操作者用户名',
   `operationAt` varchar(255) DEFAULT NULL COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00 ',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '缓存表';
+) ENGINE = InnoDB COMMENT = '缓存表';
 
 
 
@@ -34,12 +34,9 @@ CREATE TABLE `_constant` (
   `operationByUser` varchar(255) DEFAULT NULL COMMENT '操作者用户名',
   `operationAt` varchar(255) DEFAULT NULL COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00 ',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 66 DEFAULT CHARSET = utf8mb4 COMMENT = '常量表;';
+) ENGINE = InnoDB AUTO_INCREMENT = 66 COMMENT = '常量表;';
 
 
-# ------------------------------------------------------------
-# DATA DUMP FOR TABLE: _constant
-# ------------------------------------------------------------
 
 INSERT INTO `_constant` (`id`,`constantKey`,`constantType`,`desc`,`constantValue`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (6,'notice','object','','{\"title\":\"4.3.7 版本发布\",\"content\":\"快来使用吧！\\n测试12123123\\n快来使用吧！\\n测试12123123\\n快来使用吧！\\n测试12123123\\n快来使用吧！\\n测试12123123\\n\",\"imageSrc\":\"/noticeImage/1647076649263_719911_noticeImage.jpeg\",\"isImageShown\":false,\"isTextShown\":true}','update','admin01','admin01','2022-03-12T17:19:50+08:00');
 INSERT INTO `_constant` (`id`,`constantKey`,`constantType`,`desc`,`constantValue`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (59,'userStatus','array',NULL,'[{\"value\": \"active\", \"text\": \"正常\"}, {\"value\": \"banned\", \"text\": \"禁用\"}]','insert',NULL,NULL,NULL);
@@ -70,12 +67,9 @@ CREATE TABLE `_constant_ui` (
   `operationAt` varchar(255) DEFAULT NULL COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00 ',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `pageId_constantKey_unique` (`constantKey`, `pageId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 DEFAULT CHARSET = utf8mb4 COMMENT = '常量表;';
+) ENGINE = InnoDB AUTO_INCREMENT = 4 COMMENT = '常量表;';
 
 
-# ------------------------------------------------------------
-# DATA DUMP FOR TABLE: _constant_ui
-# ------------------------------------------------------------
 
 INSERT INTO `_constant_ui` (`id`,`constantKey`,`constantType`,`pageId`,`desc`,`en`,`zh`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (1,'btn','object','all','按钮','{\"upload\":\"upload\", \"createFolder\":\"folder\",\"material\":\"material\",\"materialManagement\":\"material management\",\"logout\":\"logout\",\"logoutSuccess\":\"logout succeeded\",\"fileName\":\"file name\",\"rename\":\"rename\",\"cancel\":\"cancel\",\"paste\":\"paste\",\"create\":\"create\",\"fileName\":\"file name\",\"use\":\"use\",\"selectFile\":\"Please select a folder or file\",\"file\":\"file\",\"fileNotFound\":\"File or folder not found\",\"folderEmpty\":\"folder is empty\",\"enterFileName\":\"Please enter a file name\",\"fileRename\":\"file rename\",\"renamedSuccess\":\"File renamed successfully\",\"uploadProgress\":\"upload progress\",\"movedSuccess\":\"File moved successfully\",\"uploadTo\":\"upload to\",\"maxFileSize\":\"Max file size\",\"maxFilesCount\":\"Max files count\",\"delete\":\"delete\",\"sureDelete\":\"Are you sure you want to delete this \",\"yes\":\"yes\",\"folder\":\"folder\",,\"uploadAll\":\"upload all\",\"removeAll\":\"remove all\"}','{\"upload\":\"上传\", \"createFolder\":\"创建文件夹\",\"material\":\"素材\",\"materialManagement\":\"素材管理\",\"logout\":\"退出登录\",\"logoutSuccess\":\"退出登录成功\",\"rename\":\"重命名\",\"cancel\":\"取消\",\"paste\":\"粘贴\",\"create\":\"创建\",\"fileName\":\"文件名\",\"use\":\"使用\",\"selectFile\":\"请选择一个文件夹或文件\",\"file\":\"文件\",\"fileNotFound\":\"找不到文件或文件夹\",\"folderEmpty\":\"文件夹为空\",\"enterFileName\":\"请输入文件名\",\"fileRename\":\"文件重命名\",\"renamedSuccess\":\"文件重命名成功\",\"uploadProgress\":\"上传进度\",\"movedSuccess\":\"文件移动成功\",\"uploadTo\":\"上传至\",\"maxFileSize\":\"最大文件大小\",\"maxFilesCount\":\"最大文件数\",\"delete\":\"删除\",\"sureDelete\":\"确定你想要删除这个\",\"yes\":\"是的\",\"folder\":\"文件夹\",\"uploadAll\":\"全部上传\",\"removeAll\":\"全部移除\"}','insert',NULL,NULL,NULL);
 INSERT INTO `_constant_ui` (`id`,`constantKey`,`constantType`,`pageId`,`desc`,`en`,`zh`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (2,'article','object','all','文章','{\n\"recyclingConfirmation\":\"Are you sure you want to move the article to the trash\",\n\"numberOfQueryResults\":\"For the first time, only the latest 200 records are queried, a total of \",\n\"record\":\" records\",\n\"queryResultFiltering\":\"Query result filtering\",\n\"articleID\":\"Article ID\",\n\"articleTitle\":\"article title\",\n\"releaseTime\":\"release time\",\n\"audioURL\":\"Audio URL\",\n\"videoURL\":\"Video URL\",\n\"editor\":\"editor\",\n\"updateTime\":\"update time\",\n\"creator\":\"creator\",\n\"creationTime\":\"creation time\",\n\"recoverArticle\":\"recover article\",\n\"recyclingArticles\":\"Recycling Articles\",\n\"recyclingArticlesSuccess\":\"Recycling Articles Success\",\n\"restoreArticleConfirm\":\"Are you sure you want to restore the article\",\n\"recoverArticlesSuccessfully\":\"Recover articles successfully\"\n}','{\n\"recyclingConfirmation\":\"确定将文章移到回收站吗\",\n\"numberOfQueryResults\":\"首次仅查询最新的200条，共\",\n\"record\":\"条记录\",\n\"queryResultFiltering\":\"查询结果过滤\",\n\"articleID\":\"文章ID\",\n\"articleTitle\":\"文章标题\",\n\"releaseTime\":\"发布时间\",\n\"audioURL\":\"音频URL\",\n\"videoURL\":\"视频URL\",\n\"editor\":\"修改者\",\n\"updateTime\":\"修改时间\",\n\"creator\":\"创建者\",\n\"creationTime\":\"创建时间\",\n\"recoverArticle\":\"恢复文章\",\n\"recyclingArticles\":\"回收文章\",\n\"recyclingArticlesSuccess\":\"回收文章成功\",\n\"restoreArticleConfirm\":\"确定将文章恢复吗\",\n\"recoverArticlesSuccessfully\":\"恢复文章成功\"\n}','insert',NULL,NULL,NULL);
@@ -104,7 +98,7 @@ CREATE TABLE `_file` (
   `operationAt` varchar(255) DEFAULT NULL COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00 ',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `fileId_index` (`fileId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 196 DEFAULT CHARSET = utf8mb4 COMMENT = '文件表; 软删除未启用;';
+) ENGINE = InnoDB AUTO_INCREMENT = 196 COMMENT = '文件表; 软删除未启用;';
 
 
 
@@ -127,12 +121,9 @@ CREATE TABLE `_group` (
   `operationAt` varchar(255) DEFAULT NULL COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00 ',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `groupId_index` (`groupId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 DEFAULT CHARSET = utf8mb4 COMMENT = '群组表; 软删除未启用;';
+) ENGINE = InnoDB AUTO_INCREMENT = 2 COMMENT = '群组表; 软删除未启用;';
 
 
-# ------------------------------------------------------------
-# DATA DUMP FOR TABLE: _group
-# ------------------------------------------------------------
 
 INSERT INTO `_group` (`id`,`groupId`,`groupName`,`groupDesc`,`groupAvatar`,`groupExtend`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (1,'adminGroup','管理组','管理组',NULL,'{}','insert',NULL,NULL,NULL);
 
@@ -156,12 +147,9 @@ CREATE TABLE `_page` (
   `operationByUser` varchar(255) DEFAULT NULL COMMENT '操作者用户名',
   `operationAt` varchar(255) DEFAULT NULL COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00 ',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 60 DEFAULT CHARSET = utf8mb4 COMMENT = '页面表; 软删除未启用;';
+) ENGINE = InnoDB AUTO_INCREMENT = 60 COMMENT = '页面表; 软删除未启用;';
 
 
-# ------------------------------------------------------------
-# DATA DUMP FOR TABLE: _page
-# ------------------------------------------------------------
 
 INSERT INTO `_page` (`id`,`pageId`,`pageName`,`pageFile`,`pageType`,`sort`,`pageHook`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (2,'help','帮助','helpV3','dynamicInMenu','11',NULL,'insert',NULL,NULL,NULL);
 INSERT INTO `_page` (`id`,`pageId`,`pageName`,`pageFile`,`pageType`,`sort`,`pageHook`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (3,'login','登陆','loginV3','','',NULL,'insert',NULL,NULL,NULL);
@@ -170,7 +158,6 @@ INSERT INTO `_page` (`id`,`pageId`,`pageName`,`pageFile`,`pageType`,`sort`,`page
 INSERT INTO `_page` (`id`,`pageId`,`pageName`,`pageFile`,`pageType`,`sort`,`pageHook`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (45,'materialManagement','素材管理',NULL,'showInMenu','5','{\n  \"beforeHook\":[\r\n    {\"field\": \"constantUiMap\", \"service\": \"constantUi\", \"serviceFunc\": \"getConstantUiMap\"},\n\t\t{\"field\": \"userInfo\", \"service\": \"user\", \"serviceFunc\": \"userInfo\"}\n  ]\n}','insert',NULL,NULL,NULL);
 INSERT INTO `_page` (`id`,`pageId`,`pageName`,`pageFile`,`pageType`,`sort`,`pageHook`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (57,'articleEdit','文章编辑',NULL,'dynamicInMenu',NULL,'{\n  \"beforeHook\":[\n    {\"field\": \"constantUiMap\", \"service\": \"constantUi\", \"serviceFunc\": \"getConstantUiMap\"},\n\t\t{\"field\": \"userInfo\", \"service\": \"user\", \"serviceFunc\": \"userInfo\"}\n  ]\n}','insert',NULL,NULL,NULL);
 INSERT INTO `_page` (`id`,`pageId`,`pageName`,`pageFile`,`pageType`,`sort`,`pageHook`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (58,'articleHistoryManagement','文章历史版本管理',NULL,'dynamicInMenu',NULL,'{\n  \"beforeHook\":[\r\n    {\"field\": \"constantUiMap\", \"service\": \"constantUi\", \"serviceFunc\": \"getConstantUiMap\"}\n  ]\n}','insert',NULL,NULL,NULL);
-INSERT INTO `_page` (`id`,`pageId`,`pageName`,`pageFile`,`pageType`,`sort`,`pageHook`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (59,'materialUpload','素材上传',NULL,'showInMenu','6','{\n  \"beforeHook\":[\r\n    {\"field\": \"constantUiMap\", \"service\": \"constantUi\", \"serviceFunc\": \"getConstantUiMap\"}\n  ]\n}','insert',NULL,NULL,NULL);
 
 
 
@@ -192,7 +179,7 @@ CREATE TABLE `_record_history` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `index_record_id` (`recordId`) USING BTREE,
   KEY `index_table_action` (`table`, `operation`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3837 DEFAULT CHARSET = utf8mb4 COMMENT = '数据历史表';
+) ENGINE = InnoDB AUTO_INCREMENT = 3838 COMMENT = '数据历史表';
 
 
 
@@ -219,12 +206,9 @@ CREATE TABLE `_resource` (
   `operationByUser` varchar(255) DEFAULT NULL COMMENT '操作者用户名',
   `operationAt` varchar(255) DEFAULT NULL COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00 ',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 419 DEFAULT CHARSET = utf8mb4 COMMENT = '请求资源表; 软删除未启用; resourceId=`${appId}.${pageId}.${actionId}`';
+) ENGINE = InnoDB AUTO_INCREMENT = 419 COMMENT = '请求资源表; 软删除未启用; resourceId=`${appId}.${pageId}.${actionId}`';
 
 
-# ------------------------------------------------------------
-# DATA DUMP FOR TABLE: _resource
-# ------------------------------------------------------------
 
 INSERT INTO `_resource` (`id`,`accessControlTable`,`resourceHook`,`pageId`,`actionId`,`desc`,`resourceType`,`appDataSchema`,`resourceData`,`requestDemo`,`responseDemo`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (101,NULL,NULL,'allPage','getChunkInfo','✅ 文件分片下载-获取分片信息','service','{}','{ \"service\": \"file\", \"serviceFunction\": \"getChunkInfo\" }','','','update',NULL,NULL,'2022-03-10T22:27:32+08:00');
 INSERT INTO `_resource` (`id`,`accessControlTable`,`resourceHook`,`pageId`,`actionId`,`desc`,`resourceType`,`appDataSchema`,`resourceData`,`requestDemo`,`responseDemo`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (102,NULL,NULL,'allPage','uploadFileDone','✅ 文件分片上传-所有分片上传完毕','service','{}','{ \"service\": \"file\", \"serviceFunction\": \"uploadFileDone\" }','','','insert',NULL,NULL,NULL);
@@ -295,7 +279,7 @@ CREATE TABLE `_resource_request_log` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `resourceId_index` (`resourceId`) USING BTREE,
   KEY `packageId_index` (`packageId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 25816 DEFAULT CHARSET = utf8mb4 COMMENT = '文件表; 软删除未启用;';
+) ENGINE = InnoDB AUTO_INCREMENT = 25826 COMMENT = '文件表; 软删除未启用;';
 
 
 
@@ -315,12 +299,9 @@ CREATE TABLE `_role` (
   `operationByUser` varchar(255) DEFAULT NULL COMMENT '操作者用户名',
   `operationAt` varchar(255) DEFAULT NULL COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00 ',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 DEFAULT CHARSET = utf8mb4 COMMENT = '角色表; 软删除未启用;';
+) ENGINE = InnoDB AUTO_INCREMENT = 10 COMMENT = '角色表; 软删除未启用;';
 
 
-# ------------------------------------------------------------
-# DATA DUMP FOR TABLE: _role
-# ------------------------------------------------------------
 
 INSERT INTO `_role` (`id`,`roleId`,`roleName`,`roleDesc`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (3,'appAdmin','系统管理员','','insert',NULL,NULL,NULL);
 INSERT INTO `_role` (`id`,`roleId`,`roleName`,`roleDesc`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (8,'editor','可编辑',NULL,'insert',NULL,NULL,NULL);
@@ -335,22 +316,19 @@ INSERT INTO `_role` (`id`,`roleId`,`roleName`,`roleDesc`,`operation`,`operationB
 DROP TABLE IF EXISTS `_test_case`;
 CREATE TABLE `_test_case` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `pageId` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '页面Id',
-  `testId` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '测试用例Id; 10000 ++',
-  `testName` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '测试用例名',
-  `uiActionIdList` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'uiAction列表; 一个测试用例对应多个uiActionId',
-  `testOpeartion` text COLLATE utf8mb4_bin COMMENT '测试用例步骤;',
-  `operation` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '操作; jhInsert, jhUpdate, jhDelete jhRestore',
-  `operationByUserId` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '操作者userId; recordContent.operationByUserId',
-  `operationByUser` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '操作者用户名; recordContent.operationByUser',
-  `operationAt` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '操作时间; recordContent.operationAt; E.g: 2021-05-28T10:24:54+08:00 ',
+  `pageId` varchar(255) DEFAULT NULL COMMENT '页面Id',
+  `testId` varchar(255) DEFAULT NULL COMMENT '测试用例Id; 10000 ++',
+  `testName` varchar(255) DEFAULT NULL COMMENT '测试用例名',
+  `uiActionIdList` varchar(255) DEFAULT NULL COMMENT 'uiAction列表; 一个测试用例对应多个uiActionId',
+  `testOpeartion` text COMMENT '测试用例步骤;',
+  `operation` varchar(255) DEFAULT NULL COMMENT '操作; jhInsert, jhUpdate, jhDelete jhRestore',
+  `operationByUserId` varchar(255) DEFAULT NULL COMMENT '操作者userId; recordContent.operationByUserId',
+  `operationByUser` varchar(255) DEFAULT NULL COMMENT '操作者用户名; recordContent.operationByUser',
+  `operationAt` varchar(255) DEFAULT NULL COMMENT '操作时间; recordContent.operationAt; E.g: 2021-05-28T10:24:54+08:00 ',
   PRIMARY KEY (`id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '测试用例表';
+) ENGINE = InnoDB COMMENT = '测试用例表';
 
 
-# ------------------------------------------------------------
-# DATA DUMP FOR TABLE: _test_case
-# ------------------------------------------------------------
 
 
 
@@ -362,23 +340,20 @@ CREATE TABLE `_test_case` (
 DROP TABLE IF EXISTS `_ui`;
 CREATE TABLE `_ui` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `pageId` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'page id; E.g: index',
-  `uiActionType` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'ui 动作类型，如：fetchData, postData, changeUi',
-  `uiActionId` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'action id; E.g: selectXXXByXXX',
-  `desc` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '描述',
-  `uiActionConfig` text COLLATE utf8mb4_bin COMMENT 'ui 动作数据',
-  `appDataSchema` text COLLATE utf8mb4_bin COMMENT 'ui 校验数据',
-  `operation` varchar(255) COLLATE utf8mb4_bin DEFAULT 'insert' COMMENT '操作; insert, update, jhInsert, jhUpdate, jhDelete jhRestore',
-  `operationByUserId` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '操作者userId',
-  `operationByUser` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '操作者用户名',
-  `operationAt` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00 ',
+  `pageId` varchar(255) DEFAULT NULL COMMENT 'page id; E.g: index',
+  `uiActionType` varchar(255) DEFAULT NULL COMMENT 'ui 动作类型，如：fetchData, postData, changeUi',
+  `uiActionId` varchar(255) DEFAULT NULL COMMENT 'action id; E.g: selectXXXByXXX',
+  `desc` varchar(255) DEFAULT NULL COMMENT '描述',
+  `uiActionConfig` text COMMENT 'ui 动作数据',
+  `appDataSchema` text COMMENT 'ui 校验数据',
+  `operation` varchar(255) DEFAULT 'insert' COMMENT '操作; insert, update, jhInsert, jhUpdate, jhDelete jhRestore',
+  `operationByUserId` varchar(255) DEFAULT NULL COMMENT '操作者userId',
+  `operationByUser` varchar(255) DEFAULT NULL COMMENT '操作者用户名',
+  `operationAt` varchar(255) DEFAULT NULL COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00 ',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = 'ui 施工方案';
+) ENGINE = InnoDB COMMENT = 'ui 施工方案';
 
 
-# ------------------------------------------------------------
-# DATA DUMP FOR TABLE: _ui
-# ------------------------------------------------------------
 
 
 
@@ -411,12 +386,9 @@ CREATE TABLE `_user` (
   `operationAt` varchar(255) DEFAULT NULL COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00 ',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `userId_unique` (`userId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 176 DEFAULT CHARSET = utf8mb4 COMMENT = '用户表;';
+) ENGINE = InnoDB AUTO_INCREMENT = 176 COMMENT = '用户表;';
 
 
-# ------------------------------------------------------------
-# DATA DUMP FOR TABLE: _user
-# ------------------------------------------------------------
 
 INSERT INTO `_user` (`id`,`idSequence`,`userId`,`username`,`userAvatar`,`contactNumber`,`gender`,`birthday`,`signature`,`email`,`clearTextPassword`,`password`,`md5Salt`,`userType`,`userStatus`,`config`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (1,NULL,'admin','武林盟主','/userAvatar/2022/4/4//1649055579149_130916_1.gif','17177777001','male','2022-04-15T00:00:00.000Z','FX啊水电费','电饭锅回电话','123456','9d868aad4af212de6a26e39efbdd86ee','4ThJGJbAPe5m','common','active',NULL,'update','m3611F','Colin','2022-05-05T15:55:27+08:00');
 INSERT INTO `_user` (`id`,`idSequence`,`userId`,`username`,`userAvatar`,`contactNumber`,`gender`,`birthday`,`signature`,`email`,`clearTextPassword`,`password`,`md5Salt`,`userType`,`userStatus`,`config`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (5,NULL,'10000Q','伽勒','/userAvatar/2022/4/8//1649422517016_792036_11.jpeg','17177777001','male','2022-04-15T00:00:00.000Z','FX啊水电费','电饭锅回电话','123456','9d868aad4af212de6a26e39efbdd86ee','4ThJGJbAPe5m','common','active',NULL,'jhUpdate','admin','武林盟主','2022-04-08T20:55:17+08:00');
@@ -449,12 +421,9 @@ CREATE TABLE `_user_group_role` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `groupId_index` (`groupId`) USING BTREE,
   KEY `userId_index` (`userId`) USING BTREE
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '用户群组角色关联表; 软删除未启用;';
+) ENGINE = InnoDB COMMENT = '用户群组角色关联表; 软删除未启用;';
 
 
-# ------------------------------------------------------------
-# DATA DUMP FOR TABLE: _user_group_role
-# ------------------------------------------------------------
 
 
 
@@ -477,19 +446,13 @@ CREATE TABLE `_user_group_role_page` (
   `operationByUser` varchar(255) DEFAULT NULL COMMENT '操作者用户名',
   `operationAt` varchar(255) DEFAULT NULL COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00 ',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 54 DEFAULT CHARSET = utf8mb4 COMMENT = '用户群组角色 - 页面 映射表; 软删除未启用;';
+) ENGINE = InnoDB AUTO_INCREMENT = 54 COMMENT = '用户群组角色 - 页面 映射表; 软删除未启用;';
 
 
-# ------------------------------------------------------------
-# DATA DUMP FOR TABLE: _user_group_role_page
-# ------------------------------------------------------------
 
 INSERT INTO `_user_group_role_page` (`id`,`user`,`group`,`role`,`page`,`allowOrDeny`,`desc`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (1,'*','public','*','login','allow','登陆页面; 开放所有用户;','insert',NULL,NULL,NULL);
 INSERT INTO `_user_group_role_page` (`id`,`user`,`group`,`role`,`page`,`allowOrDeny`,`desc`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (2,'*','login','*','help,manual','allow','工具页; 开放给登陆用户;','insert',NULL,NULL,NULL);
 INSERT INTO `_user_group_role_page` (`id`,`user`,`group`,`role`,`page`,`allowOrDeny`,`desc`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (3,'*','login','*','*','allow','所有页面; 开放给登陆用户;','insert',NULL,NULL,NULL);
-
-
-
 
 
 
@@ -511,19 +474,13 @@ CREATE TABLE `_user_group_role_resource` (
   `operationByUser` varchar(255) DEFAULT NULL COMMENT '操作者用户名',
   `operationAt` varchar(255) DEFAULT NULL COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00 ',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 52 DEFAULT CHARSET = utf8mb4 COMMENT = '用户群组角色 - 请求资源 映射表; 软删除未启用;';
+) ENGINE = InnoDB AUTO_INCREMENT = 52 COMMENT = '用户群组角色 - 请求资源 映射表; 软删除未启用;';
 
 
-# ------------------------------------------------------------
-# DATA DUMP FOR TABLE: _user_group_role_resource
-# ------------------------------------------------------------
 
 INSERT INTO `_user_group_role_resource` (`id`,`user`,`group`,`role`,`resource`,`allowOrDeny`,`desc`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (1,'*','public','*','login.passwordLogin','allow','登陆resource, 开放给所有用户','insert',NULL,NULL,NULL);
 INSERT INTO `_user_group_role_resource` (`id`,`user`,`group`,`role`,`resource`,`allowOrDeny`,`desc`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (2,'*','login','*','allPage.*','allow','工具类resource, 开放给所有登陆成功的用户','insert',NULL,NULL,NULL);
 INSERT INTO `_user_group_role_resource` (`id`,`user`,`group`,`role`,`resource`,`allowOrDeny`,`desc`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (3,'*','login','*','*','allow','所有resource, 开放给所有登陆成功的用户','insert',NULL,NULL,NULL);
-
-
-
 
 
 
@@ -550,7 +507,7 @@ CREATE TABLE `_user_session` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `userId_index` (`userId`) USING BTREE,
   KEY `userId_deviceId_unique` (`userId`, `deviceId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 79 DEFAULT CHARSET = utf8mb4 COMMENT = '用户session表; deviceId 维度;软删除未启用;';
+) ENGINE = InnoDB AUTO_INCREMENT = 80 COMMENT = '用户session表; deviceId 维度;软删除未启用;';
 
 
 
@@ -563,44 +520,43 @@ DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `articleId` bigint(20) DEFAULT NULL COMMENT '文章id, 10000 ++',
-  `categoryId` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '分类id',
-  `articleGroupName` varchar(255) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '文章所属分组名',
-  `articleTagList` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci COMMENT '标签; 用, 拼接',
-  `articlePublishStatus` varchar(255) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '文章类型(状态)：public, login, draft, deleted',
-  `articlePublishTime` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci DEFAULT NULL COMMENT '文章发布时间',
-  `articleTitle` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci DEFAULT NULL COMMENT '标题',
-  `articleCoverImage` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci DEFAULT NULL COMMENT '封面',
-  `articleContent` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci COMMENT '编辑的内容',
-  `articleContentForSeo` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci COMMENT 'HTML 用于渲染',
+  `categoryId` varchar(255) DEFAULT NULL COMMENT '分类id',
+  `articleGroupName` varchar(255) DEFAULT '' COMMENT '文章所属分组名',
+  `articleTagList` textmb4_unicode_520_ci COMMENT '标签; 用, 拼接',
+  `articlePublishStatus` varchar(255) DEFAULT '' COMMENT '文章类型(状态)：public, login, draft, deleted',
+  `articlePublishTime` varchar(255)mb4_unicode_520_ci DEFAULT NULL COMMENT '文章发布时间',
+  `articleTitle` varchar(255)mb4_unicode_520_ci DEFAULT NULL COMMENT '标题',
+  `articleCoverImage` varchar(255)mb4_unicode_520_ci DEFAULT NULL COMMENT '封面',
+  `articleContent` longtextmb4_unicode_520_ci COMMENT '编辑的内容',
+  `articleContentForSeo` longtextmb4_unicode_520_ci COMMENT 'HTML 用于渲染',
   `articleAssignmentList` text COMMENT '文章作业 [{ }]',
   `articleAssignmentListWithAnswer` text COMMENT '文章作业答案 [{ }]',
-  `articleAudioUrl` varchar(1023) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci DEFAULT NULL COMMENT '默认音频URL唯一的',
-  `articleVideoUrl` varchar(1023) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '默认视频URL',
-  `articleCreateTime` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci DEFAULT NULL COMMENT '创建时间',
-  `articleCreateUserId` varchar(255) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '创建者用户ID',
-  `articleCreateUsername` varchar(255) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '创建者用户名',
-  `articleUpdateTime` varchar(255) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '更新时间',
-  `articleUpdateUserId` varchar(255) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '更新者用户ID',
-  `articleUpdateUsername` varchar(255) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '更新者用户名',
-  `operation` varchar(255) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '操作: insert, update, jhInsert, jhUpdate, jhDelete jhRestore',
-  `operationByUserId` varchar(255) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '操作者userId',
-  `operationByUser` varchar(255) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '操作者用户名',
-  `operationAt` varchar(255) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00',
+  `articleAudioUrl` varchar(1023)mb4_unicode_520_ci DEFAULT NULL COMMENT '默认音频URL唯一的',
+  `articleVideoUrl` varchar(1023) DEFAULT '' COMMENT '默认视频URL',
+  `articleCreateTime` varchar(255)mb4_unicode_520_ci DEFAULT NULL COMMENT '创建时间',
+  `articleCreateUserId` varchar(255) DEFAULT '' COMMENT '创建者用户ID',
+  `articleCreateUsername` varchar(255) DEFAULT '' COMMENT '创建者用户名',
+  `articleUpdateTime` varchar(255) DEFAULT '' COMMENT '更新时间',
+  `articleUpdateUserId` varchar(255) DEFAULT '' COMMENT '更新者用户ID',
+  `articleUpdateUsername` varchar(255) DEFAULT '' COMMENT '更新者用户名',
+  `operation` varchar(255) DEFAULT '' COMMENT '操作: insert, update, jhInsert, jhUpdate, jhDelete jhRestore',
+  `operationByUserId` varchar(255) DEFAULT '' COMMENT '操作者userId',
+  `operationByUser` varchar(255) DEFAULT '' COMMENT '操作者用户名',
+  `operationAt` varchar(255) DEFAULT '' COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `article_unique` (`articleId`) USING BTREE,
   KEY `categoryId_index` (`categoryId`) USING BTREE,
   KEY `articlePublishTime` (`articlePublishTime`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1572 DEFAULT CHARSET = utf8;
+) ENGINE = InnoDB AUTO_INCREMENT = 1572;
 
--- ----------------------------
--- Records of article
--- ----------------------------
-BEGIN;
-INSERT INTO `article` (`id`, `articleId`, `categoryId`, `articleGroupName`, `articleTagList`, `articlePublishStatus`, `articlePublishTime`, `articleTitle`, `articleCoverImage`, `articleContent`, `articleContentForSeo`, `articleAssignmentList`, `articleAssignmentListWithAnswer`, `articleAudioUrl`, `articleVideoUrl`, `articleCreateTime`, `articleCreateUserId`, `articleCreateUsername`, `articleUpdateTime`, `articleUpdateUserId`, `articleUpdateUsername`, `operation`, `operationByUserId`, `operationByUser`, `operationAt`) VALUES (1414, 10000, '10000', '测试组', '测试分类', 'public', '2022-04-20T00:00:00+08:00', '快速入门', NULL, '## 江湖JS的愿景？\n\n> 小白也容易学习的企业级的框架\n\n## 帮助小白，系统学习企业应用开发的整体框架\n\n* 先从整体框架入手，便于小白学习\n* 先入门，基本概念清楚了，需要其他的工具就可以自行探索了\n\n## 构建能够开发系统的最短学习路径\n\n* 用到的学，不用的先放一放\n* 学制要缩短，教育要革命\n\n## 应用协议统一，不同通讯通道无缝切换\n\n* 长连接，短连接\n* http, websocket, ftp, ...\n* 自主可扩展\n\n## 适合企业的登录与权限模型\n\n* 用户，组织，角色，符合企业实际尝试的三种维度，在权限配置灵活使用\n\n## 数据库配置驱动程序，接口自动生成\n\n## 江湖代码生成器，页面自动生成\n\n## 接口与页面权限，通过数据库配置，快速实现\n\n## 数据访问权限，通过数据库配置，快速实现\n\n## 数据历史，每条数据的每一个版本进行存档\n\n## 应用间物理级的隔离与解耦\n\n## 基于江湖JS的生态体系，开箱即用的江湖应用\n\n', '<h2 id=\"h2-u6C5Fu6E56jsu7684u613Fu666FuFF1F\"><a class=\"reference-link\" name=\"江湖JS的愿景？\"></a><span class=\"header-link octicon octicon-link\"></span>江湖JS的愿景？</h2><blockquote class=\"default\">\n<p>小白也容易学习的企业级的框架</p>\n</blockquote>\n<h2 id=\"h2-u5E2Eu52A9u5C0Fu767DuFF0Cu7CFBu7EDFu5B66u4E60u4F01u4E1Au5E94u7528u5F00u53D1u7684u6574u4F53u6846u67B6\"><a class=\"reference-link\" name=\"帮助小白，系统学习企业应用开发的整体框架\"></a><span class=\"header-link octicon octicon-link\"></span>帮助小白，系统学习企业应用开发的整体框架</h2><ul>\n<li>先从整体框架入手，便于小白学习</li><li>先入门，基本概念清楚了，需要其他的工具就可以自行探索了</li></ul>\n<h2 id=\"h2-u6784u5EFAu80FDu591Fu5F00u53D1u7CFBu7EDFu7684u6700u77EDu5B66u4E60u8DEFu5F84\"><a class=\"reference-link\" name=\"构建能够开发系统的最短学习路径\"></a><span class=\"header-link octicon octicon-link\"></span>构建能够开发系统的最短学习路径</h2><ul>\n<li>用到的学，不用的先放一放</li><li>学制要缩短，教育要革命</li></ul>\n<h2 id=\"h2-u5E94u7528u534Fu8BAEu7EDFu4E00uFF0Cu4E0Du540Cu901Au8BAFu901Au9053u65E0u7F1Du5207u6362\"><a class=\"reference-link\" name=\"应用协议统一，不同通讯通道无缝切换\"></a><span class=\"header-link octicon octicon-link\"></span>应用协议统一，不同通讯通道无缝切换</h2><ul>\n<li>长连接，短连接</li><li>http, websocket, ftp, …</li><li>自主可扩展</li></ul>\n<h2 id=\"h2-u9002u5408u4F01u4E1Au7684u767Bu5F55u4E0Eu6743u9650u6A21u578B\"><a class=\"reference-link\" name=\"适合企业的登录与权限模型\"></a><span class=\"header-link octicon octicon-link\"></span>适合企业的登录与权限模型</h2><ul>\n<li>用户，组织，角色，符合企业实际尝试的三种维度，在权限配置灵活使用</li></ul>\n<h2 id=\"h2-u6570u636Eu5E93u914Du7F6Eu9A71u52A8u7A0Bu5E8FuFF0Cu63A5u53E3u81EAu52A8u751Fu6210\"><a class=\"reference-link\" name=\"数据库配置驱动程序，接口自动生成\"></a><span class=\"header-link octicon octicon-link\"></span>数据库配置驱动程序，接口自动生成</h2><h2 id=\"h2-u6C5Fu6E56u4EE3u7801u751Fu6210u5668uFF0Cu9875u9762u81EAu52A8u751Fu6210\"><a class=\"reference-link\" name=\"江湖代码生成器，页面自动生成\"></a><span class=\"header-link octicon octicon-link\"></span>江湖代码生成器，页面自动生成</h2><h2 id=\"h2-u63A5u53E3u4E0Eu9875u9762u6743u9650uFF0Cu901Au8FC7u6570u636Eu5E93u914Du7F6EuFF0Cu5FEBu901Fu5B9Eu73B0\"><a class=\"reference-link\" name=\"接口与页面权限，通过数据库配置，快速实现\"></a><span class=\"header-link octicon octicon-link\"></span>接口与页面权限，通过数据库配置，快速实现</h2><h2 id=\"h2-u6570u636Eu8BBFu95EEu6743u9650uFF0Cu901Au8FC7u6570u636Eu5E93u914Du7F6EuFF0Cu5FEBu901Fu5B9Eu73B0\"><a class=\"reference-link\" name=\"数据访问权限，通过数据库配置，快速实现\"></a><span class=\"header-link octicon octicon-link\"></span>数据访问权限，通过数据库配置，快速实现</h2><h2 id=\"h2-u6570u636Eu5386u53F2uFF0Cu6BCFu6761u6570u636Eu7684u6BCFu4E00u4E2Au7248u672Cu8FDBu884Cu5B58u6863\"><a class=\"reference-link\" name=\"数据历史，每条数据的每一个版本进行存档\"></a><span class=\"header-link octicon octicon-link\"></span>数据历史，每条数据的每一个版本进行存档</h2><h2 id=\"h2-u5E94u7528u95F4u7269u7406u7EA7u7684u9694u79BBu4E0Eu89E3u8026\"><a class=\"reference-link\" name=\"应用间物理级的隔离与解耦\"></a><span class=\"header-link octicon octicon-link\"></span>应用间物理级的隔离与解耦</h2><h2 id=\"h2-u57FAu4E8Eu6C5Fu6E56jsu7684u751Fu6001u4F53u7CFBuFF0Cu5F00u7BB1u5373u7528u7684u6C5Fu6E56u5E94u7528\"><a class=\"reference-link\" name=\"基于江湖JS的生态体系，开箱即用的江湖应用\"></a><span class=\"header-link octicon octicon-link\"></span>基于江湖JS的生态体系，开箱即用的江湖应用</h2>', NULL, NULL, NULL, '', '2022-04-21T21:03:42+08:00', 'm3611F', '刘计', '2022-04-23T13:35:07+08:00', 'm3611F', '刘计', 'jhUpdate', 'm3611F', '刘计', '2022-04-23T13:35:07+08:00');
-INSERT INTO `article` (`id`, `articleId`, `categoryId`, `articleGroupName`, `articleTagList`, `articlePublishStatus`, `articlePublishTime`, `articleTitle`, `articleCoverImage`, `articleContent`, `articleContentForSeo`, `articleAssignmentList`, `articleAssignmentListWithAnswer`, `articleAudioUrl`, `articleVideoUrl`, `articleCreateTime`, `articleCreateUserId`, `articleCreateUsername`, `articleUpdateTime`, `articleUpdateUserId`, `articleUpdateUsername`, `operation`, `operationByUserId`, `operationByUser`, `operationAt`) VALUES (1415, 10001, '10000', '测试组', '测试分类', 'public', '2022-04-20T00:00:00+08:00', '测试分类01-文章02', NULL, '## 1\n\n## 2\n\n## 3\n\n> 1111', '<h2 id=\"h2-1\"><a class=\"reference-link\" name=\"1\"></a><span class=\"header-link octicon octicon-link\"></span>1</h2><h2 id=\"h2-2\"><a class=\"reference-link\" name=\"2\"></a><span class=\"header-link octicon octicon-link\"></span>2</h2><h2 id=\"h2-3\"><a class=\"reference-link\" name=\"3\"></a><span class=\"header-link octicon octicon-link\"></span>3</h2><blockquote class=\"default\">\n<p>1111</p>\n</blockquote>\n', NULL, NULL, NULL, '', '2022-04-21T21:03:42+08:00', 'm3611F', '刘计', '2022-04-21T21:05:55+08:00', 'm3611F', '刘计', 'jhUpdate', 'm3611F', '刘计', '2022-04-21T21:05:55+08:00');
-INSERT INTO `article` (`id`, `articleId`, `categoryId`, `articleGroupName`, `articleTagList`, `articlePublishStatus`, `articlePublishTime`, `articleTitle`, `articleCoverImage`, `articleContent`, `articleContentForSeo`, `articleAssignmentList`, `articleAssignmentListWithAnswer`, `articleAudioUrl`, `articleVideoUrl`, `articleCreateTime`, `articleCreateUserId`, `articleCreateUsername`, `articleUpdateTime`, `articleUpdateUserId`, `articleUpdateUsername`, `operation`, `operationByUserId`, `operationByUser`, `operationAt`) VALUES (1416, 10002, '10000', '', '测试分类', 'public', '2022-04-20T00:00:00+08:00', '测试分类01-文章03', NULL, '## 1\n\n## 2\n\n## 3\n\n> 1111', '<h2 id=\"h2-1\"><a class=\"reference-link\" name=\"1\"></a><span class=\"header-link octicon octicon-link\"></span>1</h2><h2 id=\"h2-2\"><a class=\"reference-link\" name=\"2\"></a><span class=\"header-link octicon octicon-link\"></span>2</h2><h2 id=\"h2-3\"><a class=\"reference-link\" name=\"3\"></a><span class=\"header-link octicon octicon-link\"></span>3</h2><blockquote class=\"default\">\n<p>1111</p>\n</blockquote>\n', NULL, NULL, NULL, '', '2022-04-21T21:03:42+08:00', 'm3611F', '刘计', '2022-04-21T21:05:55+08:00', 'm3611F', '刘计', 'jhUpdate', 'm3611F', '刘计', '2022-04-21T21:05:55+08:00');
-INSERT INTO `article` (`id`, `articleId`, `categoryId`, `articleGroupName`, `articleTagList`, `articlePublishStatus`, `articlePublishTime`, `articleTitle`, `articleCoverImage`, `articleContent`, `articleContentForSeo`, `articleAssignmentList`, `articleAssignmentListWithAnswer`, `articleAudioUrl`, `articleVideoUrl`, `articleCreateTime`, `articleCreateUserId`, `articleCreateUsername`, `articleUpdateTime`, `articleUpdateUserId`, `articleUpdateUsername`, `operation`, `operationByUserId`, `operationByUser`, `operationAt`) VALUES (1417, 10003, '10000', '', '分类测试01-文章04', 'public', '2022-04-22T14:00:05+08:00', '江湖JS白皮书', NULL, '江湖JS的愿景？\n--------\n \n> 小白也容易学习的企业级的框架\n \n帮助小白，系统学习企业应用开发的整体框架\n--------------------\n \n*   先从整体框架入手，便于小白学习\n    \n*   先入门，基本概念清楚了，需要其他的工具就可以自行探索了\n    \n \n构建能够开发系统的最短学习路径\n---------------\n \n*   用到的学，不用的先放一放\n    \n*   学制要缩短，教育要革命\n    \n \n应用协议统一，不同通讯通道无缝切换\n-----------------\n \n*   长连接，短连接\n    \n*   http, websocket, ftp, …\n    \n*   自主可扩展\n    \n \n适合企业的登录与权限模型\n------------\n \n*   用户，组织，角色，符合企业实际尝试的三种维度，在权限配置灵活使用\n    \n \n数据库配置驱动程序，接口自动生成\n----------------\n \n江湖代码生成器，页面自动生成\n--------------\n \n接口与页面权限，通过数据库配置，快速实现\n--------------------\n \n数据访问权限，通过数据库配置，快速实现\n-------------------\n \n数据历史，每条数据的每一个版本进行存档\n-------------------\n \n应用间物理级的隔离与解耦\n------------\n \n基于江湖JS的生态体系，开箱即用的江湖应用\n---------------------\n', '<h2 id=\"h2-u6C5Fu6E56jsu7684u613Fu666FuFF1F\"><a class=\"reference-link\" name=\"江湖JS的愿景？\"></a><span class=\"header-link octicon octicon-link\"></span>江湖JS的愿景？</h2><blockquote class=\"default\">\n<p>小白也容易学习的企业级的框架</p>\n</blockquote>\n<h2 id=\"h2-u5E2Eu52A9u5C0Fu767DuFF0Cu7CFBu7EDFu5B66u4E60u4F01u4E1Au5E94u7528u5F00u53D1u7684u6574u4F53u6846u67B6\"><a class=\"reference-link\" name=\"帮助小白，系统学习企业应用开发的整体框架\"></a><span class=\"header-link octicon octicon-link\"></span>帮助小白，系统学习企业应用开发的整体框架</h2><ul>\n<li>先从整体框架入手，便于小白学习</li><li>  先入门，基本概念清楚了，需要其他的工具就可以自行探索了</li></ul>\n<h2 id=\"h2-u6784u5EFAu80FDu591Fu5F00u53D1u7CFBu7EDFu7684u6700u77EDu5B66u4E60u8DEFu5F84\"><a class=\"reference-link\" name=\"构建能够开发系统的最短学习路径\"></a><span class=\"header-link octicon octicon-link\"></span>构建能够开发系统的最短学习路径</h2><ul>\n<li>用到的学，不用的先放一放</li><li>  学制要缩短，教育要革命</li></ul>\n<h2 id=\"h2-u5E94u7528u534Fu8BAEu7EDFu4E00uFF0Cu4E0Du540Cu901Au8BAFu901Au9053u65E0u7F1Du5207u6362\"><a class=\"reference-link\" name=\"应用协议统一，不同通讯通道无缝切换\"></a><span class=\"header-link octicon octicon-link\"></span>应用协议统一，不同通讯通道无缝切换</h2><ul>\n<li>长连接，短连接</li><li>http, websocket, ftp, …</li><li>  自主可扩展</li></ul>\n<h2 id=\"h2-u9002u5408u4F01u4E1Au7684u767Bu5F55u4E0Eu6743u9650u6A21u578B\"><a class=\"reference-link\" name=\"适合企业的登录与权限模型\"></a><span class=\"header-link octicon octicon-link\"></span>适合企业的登录与权限模型</h2><ul>\n<li>  用户，组织，角色，符合企业实际尝试的三种维度，在权限配置灵活使用</li></ul>\n<h2 id=\"h2-u6570u636Eu5E93u914Du7F6Eu9A71u52A8u7A0Bu5E8FuFF0Cu63A5u53E3u81EAu52A8u751Fu6210\"><a class=\"reference-link\" name=\"数据库配置驱动程序，接口自动生成\"></a><span class=\"header-link octicon octicon-link\"></span>数据库配置驱动程序，接口自动生成</h2><h2 id=\"h2-u6C5Fu6E56u4EE3u7801u751Fu6210u5668uFF0Cu9875u9762u81EAu52A8u751Fu6210\"><a class=\"reference-link\" name=\"江湖代码生成器，页面自动生成\"></a><span class=\"header-link octicon octicon-link\"></span>江湖代码生成器，页面自动生成</h2><h2 id=\"h2-u63A5u53E3u4E0Eu9875u9762u6743u9650uFF0Cu901Au8FC7u6570u636Eu5E93u914Du7F6EuFF0Cu5FEBu901Fu5B9Eu73B0\"><a class=\"reference-link\" name=\"接口与页面权限，通过数据库配置，快速实现\"></a><span class=\"header-link octicon octicon-link\"></span>接口与页面权限，通过数据库配置，快速实现</h2><h2 id=\"h2-u6570u636Eu8BBFu95EEu6743u9650uFF0Cu901Au8FC7u6570u636Eu5E93u914Du7F6EuFF0Cu5FEBu901Fu5B9Eu73B0\"><a class=\"reference-link\" name=\"数据访问权限，通过数据库配置，快速实现\"></a><span class=\"header-link octicon octicon-link\"></span>数据访问权限，通过数据库配置，快速实现</h2><h2 id=\"h2-u6570u636Eu5386u53F2uFF0Cu6BCFu6761u6570u636Eu7684u6BCFu4E00u4E2Au7248u672Cu8FDBu884Cu5B58u6863\"><a class=\"reference-link\" name=\"数据历史，每条数据的每一个版本进行存档\"></a><span class=\"header-link octicon octicon-link\"></span>数据历史，每条数据的每一个版本进行存档</h2><h2 id=\"h2-u5E94u7528u95F4u7269u7406u7EA7u7684u9694u79BBu4E0Eu89E3u8026\"><a class=\"reference-link\" name=\"应用间物理级的隔离与解耦\"></a><span class=\"header-link octicon octicon-link\"></span>应用间物理级的隔离与解耦</h2><h2 id=\"h2-u57FAu4E8Eu6C5Fu6E56jsu7684u751Fu6001u4F53u7CFBuFF0Cu5F00u7BB1u5373u7528u7684u6C5Fu6E56u5E94u7528\"><a class=\"reference-link\" name=\"基于江湖JS的生态体系，开箱即用的江湖应用\"></a><span class=\"header-link octicon octicon-link\"></span>基于江湖JS的生态体系，开箱即用的江湖应用</h2>', NULL, NULL, NULL, '', '2022-04-22T14:00:05+08:00', 'm3611F', '刘计', '2022-04-22T22:36:19+08:00', 'W00001', '张三丰', 'jhUpdate', 'W00001', '张三丰', '2022-04-22T22:36:19+08:00');
-INSERT INTO `article` (`id`, `articleId`, `categoryId`, `articleGroupName`, `articleTagList`, `articlePublishStatus`, `articlePublishTime`, `articleTitle`, `articleCoverImage`, `articleContent`, `articleContentForSeo`, `articleAssignmentList`, `articleAssignmentListWithAnswer`, `articleAudioUrl`, `articleVideoUrl`, `articleCreateTime`, `articleCreateUserId`, `articleCreateUsername`, `articleUpdateTime`, `articleUpdateUserId`, `articleUpdateUsername`, `operation`, `operationByUserId`, `operationByUser`, `operationAt`) VALUES (1418, 10004, '10004', '01新手指南', '', 'public', '2022-04-23T13:39:26+08:00', '江湖JS白皮书', NULL, '## 江湖JS的愿景？\n\n> 小白也容易学习的企业级的框架\n> 框架界的五菱宏光\n\n## 帮助小白，系统学习企业应用开发的整体框架\n\n* 先从整体框架入手，便于小白学习\n* 先入门，基本概念清楚了，需要其他的工具就可以自行探索了\n\n## 构建能够开发系统的最短学习路径\n\n* 用到的学，不用的先放一放\n* 学制要缩短，教育要革命\n\n## 应用协议统一，不同通讯通道无缝切换\n\n* 长连接，短连接\n* http, websocket, ftp, ...\n* 自主可扩展\n\n## 适合企业的登录与权限模型\n\n* 用户，组织，角色，符合企业实际尝试的三种维度，在权限配置灵活使用\n\n## 数据库配置驱动程序，接口自动生成\n\n## 江湖代码生成器，页面自动生成\n\n## 接口与页面权限，通过数据库配置，快速实现\n\n## 数据访问权限，通过数据库配置，快速实现\n\n## 数据历史，每条数据的每一个版本进行存档\n\n## 应用间物理级的隔离与解耦\n\n## 基于江湖JS的生态体系，开箱即用的江湖应用\n\n', '<h2 id=\"h2-u6C5Fu6E56jsu7684u613Fu666FuFF1F\"><a class=\"reference-link\" name=\"江湖JS的愿景？\"></a><span class=\"header-link octicon octicon-link\"></span>江湖JS的愿景？</h2><blockquote class=\"default\">\n<p>小白也容易学习的企业级的框架<br>框架界的五菱宏光</p>\n</blockquote>\n<h2 id=\"h2-u5E2Eu52A9u5C0Fu767DuFF0Cu7CFBu7EDFu5B66u4E60u4F01u4E1Au5E94u7528u5F00u53D1u7684u6574u4F53u6846u67B6\"><a class=\"reference-link\" name=\"帮助小白，系统学习企业应用开发的整体框架\"></a><span class=\"header-link octicon octicon-link\"></span>帮助小白，系统学习企业应用开发的整体框架</h2><ul>\n<li>先从整体框架入手，便于小白学习</li><li>先入门，基本概念清楚了，需要其他的工具就可以自行探索了</li></ul>\n<h2 id=\"h2-u6784u5EFAu80FDu591Fu5F00u53D1u7CFBu7EDFu7684u6700u77EDu5B66u4E60u8DEFu5F84\"><a class=\"reference-link\" name=\"构建能够开发系统的最短学习路径\"></a><span class=\"header-link octicon octicon-link\"></span>构建能够开发系统的最短学习路径</h2><ul>\n<li>用到的学，不用的先放一放</li><li>学制要缩短，教育要革命</li></ul>\n<h2 id=\"h2-u5E94u7528u534Fu8BAEu7EDFu4E00uFF0Cu4E0Du540Cu901Au8BAFu901Au9053u65E0u7F1Du5207u6362\"><a class=\"reference-link\" name=\"应用协议统一，不同通讯通道无缝切换\"></a><span class=\"header-link octicon octicon-link\"></span>应用协议统一，不同通讯通道无缝切换</h2><ul>\n<li>长连接，短连接</li><li>http, websocket, ftp, …</li><li>自主可扩展</li></ul>\n<h2 id=\"h2-u9002u5408u4F01u4E1Au7684u767Bu5F55u4E0Eu6743u9650u6A21u578B\"><a class=\"reference-link\" name=\"适合企业的登录与权限模型\"></a><span class=\"header-link octicon octicon-link\"></span>适合企业的登录与权限模型</h2><ul>\n<li>用户，组织，角色，符合企业实际尝试的三种维度，在权限配置灵活使用</li></ul>\n<h2 id=\"h2-u6570u636Eu5E93u914Du7F6Eu9A71u52A8u7A0Bu5E8FuFF0Cu63A5u53E3u81EAu52A8u751Fu6210\"><a class=\"reference-link\" name=\"数据库配置驱动程序，接口自动生成\"></a><span class=\"header-link octicon octicon-link\"></span>数据库配置驱动程序，接口自动生成</h2><h2 id=\"h2-u6C5Fu6E56u4EE3u7801u751Fu6210u5668uFF0Cu9875u9762u81EAu52A8u751Fu6210\"><a class=\"reference-link\" name=\"江湖代码生成器，页面自动生成\"></a><span class=\"header-link octicon octicon-link\"></span>江湖代码生成器，页面自动生成</h2><h2 id=\"h2-u63A5u53E3u4E0Eu9875u9762u6743u9650uFF0Cu901Au8FC7u6570u636Eu5E93u914Du7F6EuFF0Cu5FEBu901Fu5B9Eu73B0\"><a class=\"reference-link\" name=\"接口与页面权限，通过数据库配置，快速实现\"></a><span class=\"header-link octicon octicon-link\"></span>接口与页面权限，通过数据库配置，快速实现</h2><h2 id=\"h2-u6570u636Eu8BBFu95EEu6743u9650uFF0Cu901Au8FC7u6570u636Eu5E93u914Du7F6EuFF0Cu5FEBu901Fu5B9Eu73B0\"><a class=\"reference-link\" name=\"数据访问权限，通过数据库配置，快速实现\"></a><span class=\"header-link octicon octicon-link\"></span>数据访问权限，通过数据库配置，快速实现</h2><h2 id=\"h2-u6570u636Eu5386u53F2uFF0Cu6BCFu6761u6570u636Eu7684u6BCFu4E00u4E2Au7248u672Cu8FDBu884Cu5B58u6863\"><a class=\"reference-link\" name=\"数据历史，每条数据的每一个版本进行存档\"></a><span class=\"header-link octicon octicon-link\"></span>数据历史，每条数据的每一个版本进行存档</h2><h2 id=\"h2-u5E94u7528u95F4u7269u7406u7EA7u7684u9694u79BBu4E0Eu89E3u8026\"><a class=\"reference-link\" name=\"应用间物理级的隔离与解耦\"></a><span class=\"header-link octicon octicon-link\"></span>应用间物理级的隔离与解耦</h2><h2 id=\"h2-u57FAu4E8Eu6C5Fu6E56jsu7684u751Fu6001u4F53u7CFBuFF0Cu5F00u7BB1u5373u7528u7684u6C5Fu6E56u5E94u7528\"><a class=\"reference-link\" name=\"基于江湖JS的生态体系，开箱即用的江湖应用\"></a><span class=\"header-link octicon octicon-link\"></span>基于江湖JS的生态体系，开箱即用的江湖应用</h2>', NULL, NULL, NULL, '', '2022-04-23T13:39:26+08:00', 'm3611F', '刘计', '2022-06-12T15:11:54+08:00', 'm3611F', 'Colin', 'jhUpdate', 'm3611F', 'Colin', '2022-06-12T15:11:55+08:00');
+
+
+INSERT INTO `article` (`id`,`articleId`,`categoryId`,`articleGroupName`,`articleTagList`,`articlePublishStatus`,`articlePublishTime`,`articleTitle`,`articleCoverImage`,`articleContent`,`articleContentForSeo`,`articleAssignmentList`,`articleAssignmentListWithAnswer`,`articleAudioUrl`,`articleVideoUrl`,`articleCreateTime`,`articleCreateUserId`,`articleCreateUsername`,`articleUpdateTime`,`articleUpdateUserId`,`articleUpdateUsername`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (1414,10000,'10000','测试组','测试分类','public','2022-04-20T00:00:00+08:00','快速入门',NULL,'## 江湖JS的愿景？\n\n> 小白也容易学习的企业级的框架\n\n## 帮助小白，系统学习企业应用开发的整体框架\n\n* 先从整体框架入手，便于小白学习\n* 先入门，基本概念清楚了，需要其他的工具就可以自行探索了\n\n## 构建能够开发系统的最短学习路径\n\n* 用到的学，不用的先放一放\n* 学制要缩短，教育要革命\n\n## 应用协议统一，不同通讯通道无缝切换\n\n* 长连接，短连接\n* http, websocket, ftp, ...\n* 自主可扩展\n\n## 适合企业的登录与权限模型\n\n* 用户，组织，角色，符合企业实际尝试的三种维度，在权限配置灵活使用\n\n## 数据库配置驱动程序，接口自动生成\n\n## 江湖代码生成器，页面自动生成\n\n## 接口与页面权限，通过数据库配置，快速实现\n\n## 数据访问权限，通过数据库配置，快速实现\n\n## 数据历史，每条数据的每一个版本进行存档\n\n## 应用间物理级的隔离与解耦\n\n## 基于江湖JS的生态体系，开箱即用的江湖应用\n\n','<h2 id=\"h2-u6C5Fu6E56jsu7684u613Fu666FuFF1F\"><a class=\"reference-link\" name=\"江湖JS的愿景？\"></a><span class=\"header-link octicon octicon-link\"></span>江湖JS的愿景？</h2><blockquote class=\"default\">\n<p>小白也容易学习的企业级的框架</p>\n</blockquote>\n<h2 id=\"h2-u5E2Eu52A9u5C0Fu767DuFF0Cu7CFBu7EDFu5B66u4E60u4F01u4E1Au5E94u7528u5F00u53D1u7684u6574u4F53u6846u67B6\"><a class=\"reference-link\" name=\"帮助小白，系统学习企业应用开发的整体框架\"></a><span class=\"header-link octicon octicon-link\"></span>帮助小白，系统学习企业应用开发的整体框架</h2><ul>\n<li>先从整体框架入手，便于小白学习</li><li>先入门，基本概念清楚了，需要其他的工具就可以自行探索了</li></ul>\n<h2 id=\"h2-u6784u5EFAu80FDu591Fu5F00u53D1u7CFBu7EDFu7684u6700u77EDu5B66u4E60u8DEFu5F84\"><a class=\"reference-link\" name=\"构建能够开发系统的最短学习路径\"></a><span class=\"header-link octicon octicon-link\"></span>构建能够开发系统的最短学习路径</h2><ul>\n<li>用到的学，不用的先放一放</li><li>学制要缩短，教育要革命</li></ul>\n<h2 id=\"h2-u5E94u7528u534Fu8BAEu7EDFu4E00uFF0Cu4E0Du540Cu901Au8BAFu901Au9053u65E0u7F1Du5207u6362\"><a class=\"reference-link\" name=\"应用协议统一，不同通讯通道无缝切换\"></a><span class=\"header-link octicon octicon-link\"></span>应用协议统一，不同通讯通道无缝切换</h2><ul>\n<li>长连接，短连接</li><li>http, websocket, ftp, …</li><li>自主可扩展</li></ul>\n<h2 id=\"h2-u9002u5408u4F01u4E1Au7684u767Bu5F55u4E0Eu6743u9650u6A21u578B\"><a class=\"reference-link\" name=\"适合企业的登录与权限模型\"></a><span class=\"header-link octicon octicon-link\"></span>适合企业的登录与权限模型</h2><ul>\n<li>用户，组织，角色，符合企业实际尝试的三种维度，在权限配置灵活使用</li></ul>\n<h2 id=\"h2-u6570u636Eu5E93u914Du7F6Eu9A71u52A8u7A0Bu5E8FuFF0Cu63A5u53E3u81EAu52A8u751Fu6210\"><a class=\"reference-link\" name=\"数据库配置驱动程序，接口自动生成\"></a><span class=\"header-link octicon octicon-link\"></span>数据库配置驱动程序，接口自动生成</h2><h2 id=\"h2-u6C5Fu6E56u4EE3u7801u751Fu6210u5668uFF0Cu9875u9762u81EAu52A8u751Fu6210\"><a class=\"reference-link\" name=\"江湖代码生成器，页面自动生成\"></a><span class=\"header-link octicon octicon-link\"></span>江湖代码生成器，页面自动生成</h2><h2 id=\"h2-u63A5u53E3u4E0Eu9875u9762u6743u9650uFF0Cu901Au8FC7u6570u636Eu5E93u914Du7F6EuFF0Cu5FEBu901Fu5B9Eu73B0\"><a class=\"reference-link\" name=\"接口与页面权限，通过数据库配置，快速实现\"></a><span class=\"header-link octicon octicon-link\"></span>接口与页面权限，通过数据库配置，快速实现</h2><h2 id=\"h2-u6570u636Eu8BBFu95EEu6743u9650uFF0Cu901Au8FC7u6570u636Eu5E93u914Du7F6EuFF0Cu5FEBu901Fu5B9Eu73B0\"><a class=\"reference-link\" name=\"数据访问权限，通过数据库配置，快速实现\"></a><span class=\"header-link octicon octicon-link\"></span>数据访问权限，通过数据库配置，快速实现</h2><h2 id=\"h2-u6570u636Eu5386u53F2uFF0Cu6BCFu6761u6570u636Eu7684u6BCFu4E00u4E2Au7248u672Cu8FDBu884Cu5B58u6863\"><a class=\"reference-link\" name=\"数据历史，每条数据的每一个版本进行存档\"></a><span class=\"header-link octicon octicon-link\"></span>数据历史，每条数据的每一个版本进行存档</h2><h2 id=\"h2-u5E94u7528u95F4u7269u7406u7EA7u7684u9694u79BBu4E0Eu89E3u8026\"><a class=\"reference-link\" name=\"应用间物理级的隔离与解耦\"></a><span class=\"header-link octicon octicon-link\"></span>应用间物理级的隔离与解耦</h2><h2 id=\"h2-u57FAu4E8Eu6C5Fu6E56jsu7684u751Fu6001u4F53u7CFBuFF0Cu5F00u7BB1u5373u7528u7684u6C5Fu6E56u5E94u7528\"><a class=\"reference-link\" name=\"基于江湖JS的生态体系，开箱即用的江湖应用\"></a><span class=\"header-link octicon octicon-link\"></span>基于江湖JS的生态体系，开箱即用的江湖应用</h2>',NULL,NULL,NULL,'','2022-04-21T21:03:42+08:00','m3611F','刘计','2022-04-23T13:35:07+08:00','m3611F','刘计','jhUpdate','m3611F','刘计','2022-04-23T13:35:07+08:00');
+INSERT INTO `article` (`id`,`articleId`,`categoryId`,`articleGroupName`,`articleTagList`,`articlePublishStatus`,`articlePublishTime`,`articleTitle`,`articleCoverImage`,`articleContent`,`articleContentForSeo`,`articleAssignmentList`,`articleAssignmentListWithAnswer`,`articleAudioUrl`,`articleVideoUrl`,`articleCreateTime`,`articleCreateUserId`,`articleCreateUsername`,`articleUpdateTime`,`articleUpdateUserId`,`articleUpdateUsername`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (1415,10001,'10000','测试组','测试分类','public','2022-04-20T00:00:00+08:00','测试分类01-文章02',NULL,'## 1\n\n## 2\n\n## 3\n\n> 1111','<h2 id=\"h2-1\"><a class=\"reference-link\" name=\"1\"></a><span class=\"header-link octicon octicon-link\"></span>1</h2><h2 id=\"h2-2\"><a class=\"reference-link\" name=\"2\"></a><span class=\"header-link octicon octicon-link\"></span>2</h2><h2 id=\"h2-3\"><a class=\"reference-link\" name=\"3\"></a><span class=\"header-link octicon octicon-link\"></span>3</h2><blockquote class=\"default\">\n<p>1111</p>\n</blockquote>\n',NULL,NULL,NULL,'','2022-04-21T21:03:42+08:00','m3611F','刘计','2022-04-21T21:05:55+08:00','m3611F','刘计','jhUpdate','m3611F','刘计','2022-04-21T21:05:55+08:00');
+INSERT INTO `article` (`id`,`articleId`,`categoryId`,`articleGroupName`,`articleTagList`,`articlePublishStatus`,`articlePublishTime`,`articleTitle`,`articleCoverImage`,`articleContent`,`articleContentForSeo`,`articleAssignmentList`,`articleAssignmentListWithAnswer`,`articleAudioUrl`,`articleVideoUrl`,`articleCreateTime`,`articleCreateUserId`,`articleCreateUsername`,`articleUpdateTime`,`articleUpdateUserId`,`articleUpdateUsername`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (1416,10002,'10000','','测试分类','public','2022-04-20T00:00:00+08:00','测试分类01-文章03',NULL,'## 1\n\n## 2\n\n## 3\n\n> 1111','<h2 id=\"h2-1\"><a class=\"reference-link\" name=\"1\"></a><span class=\"header-link octicon octicon-link\"></span>1</h2><h2 id=\"h2-2\"><a class=\"reference-link\" name=\"2\"></a><span class=\"header-link octicon octicon-link\"></span>2</h2><h2 id=\"h2-3\"><a class=\"reference-link\" name=\"3\"></a><span class=\"header-link octicon octicon-link\"></span>3</h2><blockquote class=\"default\">\n<p>1111</p>\n</blockquote>\n',NULL,NULL,NULL,'','2022-04-21T21:03:42+08:00','m3611F','刘计','2022-04-21T21:05:55+08:00','m3611F','刘计','jhUpdate','m3611F','刘计','2022-04-21T21:05:55+08:00');
+INSERT INTO `article` (`id`,`articleId`,`categoryId`,`articleGroupName`,`articleTagList`,`articlePublishStatus`,`articlePublishTime`,`articleTitle`,`articleCoverImage`,`articleContent`,`articleContentForSeo`,`articleAssignmentList`,`articleAssignmentListWithAnswer`,`articleAudioUrl`,`articleVideoUrl`,`articleCreateTime`,`articleCreateUserId`,`articleCreateUsername`,`articleUpdateTime`,`articleUpdateUserId`,`articleUpdateUsername`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (1417,10003,'10000','','分类测试01-文章04','public','2022-04-22T14:00:05+08:00','江湖JS白皮书',NULL,'江湖JS的愿景？\n--------\n \n> 小白也容易学习的企业级的框架\n \n帮助小白，系统学习企业应用开发的整体框架\n--------------------\n \n*   先从整体框架入手，便于小白学习\n    \n*   先入门，基本概念清楚了，需要其他的工具就可以自行探索了\n    \n \n构建能够开发系统的最短学习路径\n---------------\n \n*   用到的学，不用的先放一放\n    \n*   学制要缩短，教育要革命\n    \n \n应用协议统一，不同通讯通道无缝切换\n-----------------\n \n*   长连接，短连接\n    \n*   http, websocket, ftp, …\n    \n*   自主可扩展\n    \n \n适合企业的登录与权限模型\n------------\n \n*   用户，组织，角色，符合企业实际尝试的三种维度，在权限配置灵活使用\n    \n \n数据库配置驱动程序，接口自动生成\n----------------\n \n江湖代码生成器，页面自动生成\n--------------\n \n接口与页面权限，通过数据库配置，快速实现\n--------------------\n \n数据访问权限，通过数据库配置，快速实现\n-------------------\n \n数据历史，每条数据的每一个版本进行存档\n-------------------\n \n应用间物理级的隔离与解耦\n------------\n \n基于江湖JS的生态体系，开箱即用的江湖应用\n---------------------\n','<h2 id=\"h2-u6C5Fu6E56jsu7684u613Fu666FuFF1F\"><a class=\"reference-link\" name=\"江湖JS的愿景？\"></a><span class=\"header-link octicon octicon-link\"></span>江湖JS的愿景？</h2><blockquote class=\"default\">\n<p>小白也容易学习的企业级的框架</p>\n</blockquote>\n<h2 id=\"h2-u5E2Eu52A9u5C0Fu767DuFF0Cu7CFBu7EDFu5B66u4E60u4F01u4E1Au5E94u7528u5F00u53D1u7684u6574u4F53u6846u67B6\"><a class=\"reference-link\" name=\"帮助小白，系统学习企业应用开发的整体框架\"></a><span class=\"header-link octicon octicon-link\"></span>帮助小白，系统学习企业应用开发的整体框架</h2><ul>\n<li>先从整体框架入手，便于小白学习</li><li>  先入门，基本概念清楚了，需要其他的工具就可以自行探索了</li></ul>\n<h2 id=\"h2-u6784u5EFAu80FDu591Fu5F00u53D1u7CFBu7EDFu7684u6700u77EDu5B66u4E60u8DEFu5F84\"><a class=\"reference-link\" name=\"构建能够开发系统的最短学习路径\"></a><span class=\"header-link octicon octicon-link\"></span>构建能够开发系统的最短学习路径</h2><ul>\n<li>用到的学，不用的先放一放</li><li>  学制要缩短，教育要革命</li></ul>\n<h2 id=\"h2-u5E94u7528u534Fu8BAEu7EDFu4E00uFF0Cu4E0Du540Cu901Au8BAFu901Au9053u65E0u7F1Du5207u6362\"><a class=\"reference-link\" name=\"应用协议统一，不同通讯通道无缝切换\"></a><span class=\"header-link octicon octicon-link\"></span>应用协议统一，不同通讯通道无缝切换</h2><ul>\n<li>长连接，短连接</li><li>http, websocket, ftp, …</li><li>  自主可扩展</li></ul>\n<h2 id=\"h2-u9002u5408u4F01u4E1Au7684u767Bu5F55u4E0Eu6743u9650u6A21u578B\"><a class=\"reference-link\" name=\"适合企业的登录与权限模型\"></a><span class=\"header-link octicon octicon-link\"></span>适合企业的登录与权限模型</h2><ul>\n<li>  用户，组织，角色，符合企业实际尝试的三种维度，在权限配置灵活使用</li></ul>\n<h2 id=\"h2-u6570u636Eu5E93u914Du7F6Eu9A71u52A8u7A0Bu5E8FuFF0Cu63A5u53E3u81EAu52A8u751Fu6210\"><a class=\"reference-link\" name=\"数据库配置驱动程序，接口自动生成\"></a><span class=\"header-link octicon octicon-link\"></span>数据库配置驱动程序，接口自动生成</h2><h2 id=\"h2-u6C5Fu6E56u4EE3u7801u751Fu6210u5668uFF0Cu9875u9762u81EAu52A8u751Fu6210\"><a class=\"reference-link\" name=\"江湖代码生成器，页面自动生成\"></a><span class=\"header-link octicon octicon-link\"></span>江湖代码生成器，页面自动生成</h2><h2 id=\"h2-u63A5u53E3u4E0Eu9875u9762u6743u9650uFF0Cu901Au8FC7u6570u636Eu5E93u914Du7F6EuFF0Cu5FEBu901Fu5B9Eu73B0\"><a class=\"reference-link\" name=\"接口与页面权限，通过数据库配置，快速实现\"></a><span class=\"header-link octicon octicon-link\"></span>接口与页面权限，通过数据库配置，快速实现</h2><h2 id=\"h2-u6570u636Eu8BBFu95EEu6743u9650uFF0Cu901Au8FC7u6570u636Eu5E93u914Du7F6EuFF0Cu5FEBu901Fu5B9Eu73B0\"><a class=\"reference-link\" name=\"数据访问权限，通过数据库配置，快速实现\"></a><span class=\"header-link octicon octicon-link\"></span>数据访问权限，通过数据库配置，快速实现</h2><h2 id=\"h2-u6570u636Eu5386u53F2uFF0Cu6BCFu6761u6570u636Eu7684u6BCFu4E00u4E2Au7248u672Cu8FDBu884Cu5B58u6863\"><a class=\"reference-link\" name=\"数据历史，每条数据的每一个版本进行存档\"></a><span class=\"header-link octicon octicon-link\"></span>数据历史，每条数据的每一个版本进行存档</h2><h2 id=\"h2-u5E94u7528u95F4u7269u7406u7EA7u7684u9694u79BBu4E0Eu89E3u8026\"><a class=\"reference-link\" name=\"应用间物理级的隔离与解耦\"></a><span class=\"header-link octicon octicon-link\"></span>应用间物理级的隔离与解耦</h2><h2 id=\"h2-u57FAu4E8Eu6C5Fu6E56jsu7684u751Fu6001u4F53u7CFBuFF0Cu5F00u7BB1u5373u7528u7684u6C5Fu6E56u5E94u7528\"><a class=\"reference-link\" name=\"基于江湖JS的生态体系，开箱即用的江湖应用\"></a><span class=\"header-link octicon octicon-link\"></span>基于江湖JS的生态体系，开箱即用的江湖应用</h2>',NULL,NULL,NULL,'','2022-04-22T14:00:05+08:00','m3611F','刘计','2022-04-22T22:36:19+08:00','W00001','张三丰','jhUpdate','W00001','张三丰','2022-04-22T22:36:19+08:00');
+INSERT INTO `article` (`id`,`articleId`,`categoryId`,`articleGroupName`,`articleTagList`,`articlePublishStatus`,`articlePublishTime`,`articleTitle`,`articleCoverImage`,`articleContent`,`articleContentForSeo`,`articleAssignmentList`,`articleAssignmentListWithAnswer`,`articleAudioUrl`,`articleVideoUrl`,`articleCreateTime`,`articleCreateUserId`,`articleCreateUsername`,`articleUpdateTime`,`articleUpdateUserId`,`articleUpdateUsername`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (1418,10004,'10004','01新手指南','','public','2022-04-23T13:39:26+08:00','江湖JS白皮书',NULL,'## 江湖JS的愿景？\n\n> 小白也容易学习的企业级的框架\n> 框架界的五菱宏光\n\n## 帮助小白，系统学习企业应用开发的整体框架\n\n* 先从整体框架入手，便于小白学习\n* 先入门，基本概念清楚了，需要其他的工具就可以自行探索了\n\n## 构建能够开发系统的最短学习路径\n\n* 用到的学，不用的先放一放\n* 学制要缩短，教育要革命\n\n## 应用协议统一，不同通讯通道无缝切换\n\n* 长连接，短连接\n* http, websocket, ftp, ...\n* 自主可扩展\n\n## 适合企业的登录与权限模型\n\n* 用户，组织，角色，符合企业实际尝试的三种维度，在权限配置灵活使用\n\n## 数据库配置驱动程序，接口自动生成\n\n## 江湖代码生成器，页面自动生成\n\n## 接口与页面权限，通过数据库配置，快速实现\n\n## 数据访问权限，通过数据库配置，快速实现\n\n## 数据历史，每条数据的每一个版本进行存档\n\n## 应用间物理级的隔离与解耦\n\n## 基于江湖JS的生态体系，开箱即用的江湖应用\n\n','<h2 id=\"h2-u6C5Fu6E56jsu7684u613Fu666FuFF1F\"><a class=\"reference-link\" name=\"江湖JS的愿景？\"></a><span class=\"header-link octicon octicon-link\"></span>江湖JS的愿景？</h2><blockquote class=\"default\">\n<p>小白也容易学习的企业级的框架<br>框架界的五菱宏光</p>\n</blockquote>\n<h2 id=\"h2-u5E2Eu52A9u5C0Fu767DuFF0Cu7CFBu7EDFu5B66u4E60u4F01u4E1Au5E94u7528u5F00u53D1u7684u6574u4F53u6846u67B6\"><a class=\"reference-link\" name=\"帮助小白，系统学习企业应用开发的整体框架\"></a><span class=\"header-link octicon octicon-link\"></span>帮助小白，系统学习企业应用开发的整体框架</h2><ul>\n<li>先从整体框架入手，便于小白学习</li><li>先入门，基本概念清楚了，需要其他的工具就可以自行探索了</li></ul>\n<h2 id=\"h2-u6784u5EFAu80FDu591Fu5F00u53D1u7CFBu7EDFu7684u6700u77EDu5B66u4E60u8DEFu5F84\"><a class=\"reference-link\" name=\"构建能够开发系统的最短学习路径\"></a><span class=\"header-link octicon octicon-link\"></span>构建能够开发系统的最短学习路径</h2><ul>\n<li>用到的学，不用的先放一放</li><li>学制要缩短，教育要革命</li></ul>\n<h2 id=\"h2-u5E94u7528u534Fu8BAEu7EDFu4E00uFF0Cu4E0Du540Cu901Au8BAFu901Au9053u65E0u7F1Du5207u6362\"><a class=\"reference-link\" name=\"应用协议统一，不同通讯通道无缝切换\"></a><span class=\"header-link octicon octicon-link\"></span>应用协议统一，不同通讯通道无缝切换</h2><ul>\n<li>长连接，短连接</li><li>http, websocket, ftp, …</li><li>自主可扩展</li></ul>\n<h2 id=\"h2-u9002u5408u4F01u4E1Au7684u767Bu5F55u4E0Eu6743u9650u6A21u578B\"><a class=\"reference-link\" name=\"适合企业的登录与权限模型\"></a><span class=\"header-link octicon octicon-link\"></span>适合企业的登录与权限模型</h2><ul>\n<li>用户，组织，角色，符合企业实际尝试的三种维度，在权限配置灵活使用</li></ul>\n<h2 id=\"h2-u6570u636Eu5E93u914Du7F6Eu9A71u52A8u7A0Bu5E8FuFF0Cu63A5u53E3u81EAu52A8u751Fu6210\"><a class=\"reference-link\" name=\"数据库配置驱动程序，接口自动生成\"></a><span class=\"header-link octicon octicon-link\"></span>数据库配置驱动程序，接口自动生成</h2><h2 id=\"h2-u6C5Fu6E56u4EE3u7801u751Fu6210u5668uFF0Cu9875u9762u81EAu52A8u751Fu6210\"><a class=\"reference-link\" name=\"江湖代码生成器，页面自动生成\"></a><span class=\"header-link octicon octicon-link\"></span>江湖代码生成器，页面自动生成</h2><h2 id=\"h2-u63A5u53E3u4E0Eu9875u9762u6743u9650uFF0Cu901Au8FC7u6570u636Eu5E93u914Du7F6EuFF0Cu5FEBu901Fu5B9Eu73B0\"><a class=\"reference-link\" name=\"接口与页面权限，通过数据库配置，快速实现\"></a><span class=\"header-link octicon octicon-link\"></span>接口与页面权限，通过数据库配置，快速实现</h2><h2 id=\"h2-u6570u636Eu8BBFu95EEu6743u9650uFF0Cu901Au8FC7u6570u636Eu5E93u914Du7F6EuFF0Cu5FEBu901Fu5B9Eu73B0\"><a class=\"reference-link\" name=\"数据访问权限，通过数据库配置，快速实现\"></a><span class=\"header-link octicon octicon-link\"></span>数据访问权限，通过数据库配置，快速实现</h2><h2 id=\"h2-u6570u636Eu5386u53F2uFF0Cu6BCFu6761u6570u636Eu7684u6BCFu4E00u4E2Au7248u672Cu8FDBu884Cu5B58u6863\"><a class=\"reference-link\" name=\"数据历史，每条数据的每一个版本进行存档\"></a><span class=\"header-link octicon octicon-link\"></span>数据历史，每条数据的每一个版本进行存档</h2><h2 id=\"h2-u5E94u7528u95F4u7269u7406u7EA7u7684u9694u79BBu4E0Eu89E3u8026\"><a class=\"reference-link\" name=\"应用间物理级的隔离与解耦\"></a><span class=\"header-link octicon octicon-link\"></span>应用间物理级的隔离与解耦</h2><h2 id=\"h2-u57FAu4E8Eu6C5Fu6E56jsu7684u751Fu6001u4F53u7CFBuFF0Cu5F00u7BB1u5373u7528u7684u6C5Fu6E56u5E94u7528\"><a class=\"reference-link\" name=\"基于江湖JS的生态体系，开箱即用的江湖应用\"></a><span class=\"header-link octicon octicon-link\"></span>基于江湖JS的生态体系，开箱即用的江湖应用</h2>',NULL,NULL,NULL,'','2022-04-23T13:39:26+08:00','m3611F','刘计','2022-06-12T15:11:54+08:00','m3611F','Colin','jhUpdate','m3611F','Colin','2022-06-12T15:11:55+08:00');
+
 
 
 # ------------------------------------------------------------
@@ -635,12 +591,10 @@ CREATE TABLE `article_history` (
   `operationByUser` varchar(255) DEFAULT NULL COMMENT '操作者用户名',
   `operationAt` varchar(255) DEFAULT NULL COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1170 DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB AUTO_INCREMENT = 1170;
 
 
-# ------------------------------------------------------------
-# DATA DUMP FOR TABLE: article_history
-# ------------------------------------------------------------
+
 
 # ------------------------------------------------------------
 # SCHEMA DUMP FOR TABLE: category
@@ -650,9 +604,9 @@ DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `categoryId` bigint(255) DEFAULT NULL COMMENT '分类id',
-  `categoryName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci DEFAULT '',
+  `categoryName` varchar(255)mb4_unicode_520_ci DEFAULT '',
   `categoryArticleIgnoreTiltle` varchar(255) DEFAULT NULL COMMENT '目录中需要省略的文字',
-  `categoryIntro` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci,
+  `categoryIntro` textmb4_unicode_520_ci,
   `categoryGroup` varchar(255) DEFAULT NULL,
   `categoryGroupSort` varchar(255) DEFAULT NULL,
   `categoryPublishStatus` varchar(255) DEFAULT '',
@@ -669,12 +623,9 @@ CREATE TABLE `category` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `categoryId_unique` (`categoryId`) USING BTREE,
   KEY `categoryName_unique` (`categoryName`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 145 DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB AUTO_INCREMENT = 145;
 
 
-# ------------------------------------------------------------
-# DATA DUMP FOR TABLE: category
-# ------------------------------------------------------------
 
 INSERT INTO `category` (`id`,`categoryId`,`categoryName`,`categoryArticleIgnoreTiltle`,`categoryIntro`,`categoryGroup`,`categoryGroupSort`,`categoryPublishStatus`,`categoryCreateTime`,`categoryCreateUserId`,`categoryCreateUsername`,`categoryUpdateTime`,`categoryUpdateUserId`,`categoryUpdateUsername`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (129,10000,'测试分类01',NULL,'测试分类01','测试分类','1','deleted','2022-04-21T21:01:43+08:00','m3611F','刘计','2022-04-23T13:38:09+08:00','m3611F','刘计','jhUpdate','m3611F','刘计','2022-04-23T13:38:09+08:00');
 INSERT INTO `category` (`id`,`categoryId`,`categoryName`,`categoryArticleIgnoreTiltle`,`categoryIntro`,`categoryGroup`,`categoryGroupSort`,`categoryPublishStatus`,`categoryCreateTime`,`categoryCreateUserId`,`categoryCreateUsername`,`categoryUpdateTime`,`categoryUpdateUserId`,`categoryUpdateUsername`,`operation`,`operationByUserId`,`operationByUser`,`operationAt`) VALUES (130,10001,'测试分类02',NULL,'测试分类02','测试分类','2','deleted','2022-04-21T21:02:03+08:00','m3611F','刘计','2022-04-23T13:38:13+08:00','m3611F','刘计','jhUpdate','m3611F','刘计','2022-04-23T13:38:13+08:00');
@@ -765,6 +716,8 @@ from
     (`article`.`categoryId` = `category`.`categoryId`)
   )
   );
+
+
 
 
 
