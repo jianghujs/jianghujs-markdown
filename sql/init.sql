@@ -228,36 +228,6 @@ INSERT INTO `_resource` (`id`,`accessControlTable`,`resourceHook`,`pageId`,`acti
 
 
 # ------------------------------------------------------------
-# SCHEMA DUMP FOR TABLE: _resource_request_log
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `_resource_request_log`;
-CREATE TABLE `_resource_request_log` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `resourceId` varchar(255) DEFAULT NULL COMMENT 'resource id;',
-  `packageId` varchar(255) DEFAULT NULL COMMENT 'resource package id',
-  `userIp` varchar(255) DEFAULT NULL COMMENT '用户ip;',
-  `userAgent` varchar(255) DEFAULT NULL COMMENT '设备信息',
-  `userId` varchar(255) DEFAULT NULL COMMENT '用户ID',
-  `deviceId` varchar(255) DEFAULT NULL COMMENT '设备id',
-  `userIpRegion` varchar(255) DEFAULT NULL COMMENT '用户Ip区域',
-  `executeSql` varchar(255) DEFAULT NULL COMMENT '执行的sql',
-  `requestBody` mediumtext COMMENT '请求body',
-  `responseBody` mediumtext COMMENT '响应body',
-  `responseStatus` varchar(255) DEFAULT NULL COMMENT '执行的结果;  success, fail',
-  `operation` varchar(255) DEFAULT 'insert' COMMENT '操作; insert, update, jhInsert, jhUpdate, jhDelete jhRestore',
-  `operationByUserId` varchar(255) DEFAULT NULL COMMENT '操作者userId',
-  `operationByUser` varchar(255) DEFAULT NULL COMMENT '操作者用户名',
-  `operationAt` varchar(255) DEFAULT NULL COMMENT '操作时间; E.g: 2021-05-28T10:24:54+08:00 ',
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `resourceId_index` (`resourceId`) USING BTREE,
-  KEY `packageId_index` (`packageId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 25826 COMMENT = '文件表; 软删除未启用;';
-
-
-
-
-# ------------------------------------------------------------
 # SCHEMA DUMP FOR TABLE: _role
 # ------------------------------------------------------------
 
@@ -495,18 +465,18 @@ CREATE TABLE `article` (
   `articleId` bigint(20) DEFAULT NULL COMMENT '文章id, 10000 ++',
   `categoryId` varchar(255) DEFAULT NULL COMMENT '分类id',
   `articleGroupName` varchar(255) DEFAULT '' COMMENT '文章所属分组名',
-  `articleTagList` textmb4_unicode_520_ci COMMENT '标签; 用, 拼接',
+  `articleTagList` text COMMENT '标签; 用, 拼接',
   `articlePublishStatus` varchar(255) DEFAULT '' COMMENT '文章类型(状态)：public, login, draft, deleted',
-  `articlePublishTime` varchar(255)mb4_unicode_520_ci DEFAULT NULL COMMENT '文章发布时间',
-  `articleTitle` varchar(255)mb4_unicode_520_ci DEFAULT NULL COMMENT '标题',
-  `articleCoverImage` varchar(255)mb4_unicode_520_ci DEFAULT NULL COMMENT '封面',
-  `articleContent` longtextmb4_unicode_520_ci COMMENT '编辑的内容',
-  `articleContentForSeo` longtextmb4_unicode_520_ci COMMENT 'HTML 用于渲染',
+  `articlePublishTime` varchar(255) DEFAULT NULL COMMENT '文章发布时间',
+  `articleTitle` varchar(255) DEFAULT NULL COMMENT '标题',
+  `articleCoverImage` varchar(255) DEFAULT NULL COMMENT '封面',
+  `articleContent` longtext COMMENT '编辑的内容',
+  `articleContentForSeo` longtext COMMENT 'HTML 用于渲染',
   `articleAssignmentList` text COMMENT '文章作业 [{ }]',
   `articleAssignmentListWithAnswer` text COMMENT '文章作业答案 [{ }]',
-  `articleAudioUrl` varchar(1023)mb4_unicode_520_ci DEFAULT NULL COMMENT '默认音频URL唯一的',
+  `articleAudioUrl` varchar(1023) DEFAULT NULL COMMENT '默认音频URL唯一的',
   `articleVideoUrl` varchar(1023) DEFAULT '' COMMENT '默认视频URL',
-  `articleCreateTime` varchar(255)mb4_unicode_520_ci DEFAULT NULL COMMENT '创建时间',
+  `articleCreateTime` varchar(255) DEFAULT NULL COMMENT '创建时间',
   `articleCreateUserId` varchar(255) DEFAULT '' COMMENT '创建者用户ID',
   `articleCreateUsername` varchar(255) DEFAULT '' COMMENT '创建者用户名',
   `articleUpdateTime` varchar(255) DEFAULT '' COMMENT '更新时间',
@@ -577,9 +547,9 @@ DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `categoryId` bigint(255) DEFAULT NULL COMMENT '分类id',
-  `categoryName` varchar(255)mb4_unicode_520_ci DEFAULT '',
+  `categoryName` varchar(255) DEFAULT '',
   `categoryArticleIgnoreTiltle` varchar(255) DEFAULT NULL COMMENT '目录中需要省略的文字',
-  `categoryIntro` textmb4_unicode_520_ci,
+  `categoryIntro` text,
   `categoryGroup` varchar(255) DEFAULT NULL,
   `categoryGroupSort` varchar(255) DEFAULT NULL,
   `categoryPublishStatus` varchar(255) DEFAULT '',
