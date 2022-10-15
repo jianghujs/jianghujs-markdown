@@ -28,7 +28,7 @@ module.exports = appInfo => {
           port: 3306,
           user: "root",
           password: "123456",
-          database: "jianghujs-markdown",
+          database: "jianghujs_markdown",
         },
         pool: { min: 0, max: 30 },
         acquireConnectionTimeout: 30000,
