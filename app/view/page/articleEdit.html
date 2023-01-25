@@ -284,7 +284,7 @@
         "watch",
         "preview", "|",
         "h1", "h2", "h3", "h4", "h5", "bold", "del", "italic", "quote", "mark",
-        "imageUpload",
+        "imageUpload", "audioUpload", "videoUpload", "attachmentUpload",
         "list-ul", "list-ol", "hr", "link", "|",
         "toggle", "articleQuery"
       ]
@@ -538,6 +538,15 @@
                 imageUpload: function (cm, icon, cursor, selection) {
                   that.openImageUploadDrawer();
                 },
+                audioUpload: function (cm, icon, cursor, selection) {
+                  that.openAudioUploadDrawer();
+                },
+                videoUpload: function (cm, icon, cursor, selection) {
+                  that.openVideoUploadDrawer();
+                },
+                attachmentUpload: function (cm, icon, cursor, selection) {
+                  that.openAttachmentUploadDrawer();
+                },
                 toggle: function (cm, icon, cursor, selection) {
                   cm.replaceSelection(`\n[jh-toggle title=\"title\" default-open=\"true\"]\n请输入内容\n[/jh-toggle]\n`);
                 },
@@ -573,9 +582,34 @@
           }
         })
       },
+      // 添加图片
       async openImageUploadDrawer() {
         if (await this.articleIdCheck()) {
           this.materialType = 'image';
+          this.writeBackType = 'editor';
+          this.isEditDrawerShow = true;
+        }
+      },
+      // 添加音频
+      async openAudioUploadDrawer() {
+        if (await this.articleIdCheck()) {
+          this.materialType = 'audio';
+          this.writeBackType = 'editor';
+          this.isEditDrawerShow = true;
+        }
+      },
+      // 添加视频
+      async openVideoUploadDrawer() {
+        if (await this.articleIdCheck()) {
+          this.materialType = 'video';
+          this.writeBackType = 'editor';
+          this.isEditDrawerShow = true;
+        }
+      },
+      // 添加附件
+      async openAttachmentUploadDrawer() {
+        if (await this.articleIdCheck()) {
+          this.materialType = 'attachment';
           this.writeBackType = 'editor';
           this.isEditDrawerShow = true;
         }
