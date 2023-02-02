@@ -1,57 +1,134 @@
-{% extends 'template/jhTemplateV3.html'%}
+{% extends 'template/jhTemplateV4.html'%}
 
-{% block vue_template %}
+{% block vueTemplate %}
 
-<jh-layout-v3>
+<script type="text/html" id="app-template">
+    <div>
+        <v-app id="inspire" mobile-breakpoint="sm">
+            <jhMenu />
+            <v-main class="d-flex flex-column" style="margin-top: 60px">
+                <!-- 头部内容 >>>>>>>>>>>>> -->
+                <div class="pageSecondBar d-flex px-8">
+                    <div>
+                        <div class="appTitle pt-3" style="font-size: 18px; font-weight: 700">{{ breadcrumbs[1].fullText }}
+                            <!-- 帮助页按钮 -->
+                            <v-icon @click="isHelpPageDrawerShow = true" small>mdi-help-circle-outline</v-icon>
+                        </div>
+                        <v-breadcrumbs class="pb-3 pt-0 pl-0" :items="breadcrumbs" divider="-"></v-breadcrumbs>
+                    </div>
+                </div>
+                <!-- <<<<<<<<<<<<< 头部内容 -->
 
-  <!-- 页面主要内容 -->
-  <v-card>
-      <v-row class="ma-0 pa-xs-4 align-center flex-none pt-0 "
-        :class="{'pa-4': !isMobile, 'pb-0': !isMobile, 'pa-2': isMobile}">
+                <!-- 页面内容 >>>>>>>>>>>>> -->
+                <div class="pageBodyContainer px-8" style="flex: 1;">
+                    <!-- 页面主要内容 -->
+                    <v-container class="fullScreen d-flex flex-column pa-xs-0 pa-0">
+                        <v-card>
+                            <v-row class="ma-0 pa-xs-4 align-center flex-none pt-0 " :class="{'pa-4': !isMobile, 'pb-0': !isMobile, 'pa-2': isMobile}">
+                                <v-col cols="12" xs="4" sm="4" md="4" xl="4" class="pl-0">
+                                    <v-btn color="success" dark class="elevation-0 mr-2" @click="doUiAction('add', null)" small><$ constantUiMap.common.add $></v-btn>
+                                </v-col>
+                                    <v-spacer></v-spacer>
+                                <v-col cols="12" xs="8" sm="4" md="3" xl="3" class="pa-xs-0 pa-xs-2 col-sm-8-flex">
+                                    <v-text-field v-model="searchInput" prefix="<$ constantUiMap.article.queryResultFiltering $>：" class="cus-v-input" dense filled single-line></v-text-field>
+                                </v-col>
+                            </v-row>
 
-        <v-btn color="success" dark class="elevation-0 mr-2"
-        @click="doUiAction('add', null)"><$ constantUiMap.common.add $></v-btn>
-        <span style="margin-right: 10px;">{{serverSearchInput.searchSummary}}</span>
-        <!-- <span class="body-2">共{{ tableData.length }}条记录</span> -->
+                            <v-data-table 
+                                fixed-header
+                                :headers="headers"
+                                :items="tableData"
+                                :search="searchInput"
+                                :footer-props="{ itemsPerPageOptions: [20, 40, 60, 100, -1], itemsPerPageText: '每页行数', itemsPerPageAllText: '所有'}"
+                                :items-per-page="20"
+                                mobile-breakpoint="0"
+                                :loading="isTableLoading"
+                                checkbox-color="success" 
+                                :class="{'zebraLine': showTableZebraLine }"
+                                class="fixed-table-height elevation-0 mt-0 mb-xs-4 flex-fill d-flex flex-column">
+                                <template v-slot:item.articlePublishStatus="{ item }">
+                                    {{ getConstantCollectionItemText('articlePublishStatus', item.articlePublishStatus) || item.articlePublishStatus }}
+                                </template>
+                                <template v-slot:footer.prepend>
+                                    <span class="ml-2 table-search-hint-text">{{serverSearchInput.searchSummary}}</span>
+                                    <v-menu top offset-y :close-on-content-click="false">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn v-bind="attrs" v-on="on" icon>
+                                                <v-icon>mdi-menu</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <v-list>
+                                            <v-list-item>
+                                                <v-switch v-model="showTableZebraLine" label="显示斑马纹" dense flat></v-switch>
+                                            </v-list-item>
+                                        </v-list>
+                                    </v-menu>
+                                </template>
+                                <template v-slot:footer.page-text="pagination">
+                                    <span>{{pagination.pageStart}}-{{pagination.pageStop}}</span>
+                                    <span class="ml-1">共{{pagination.itemsLength}}条</span>
+                                </template>
+                                <template v-slot:item.action="{ item }">
+                                    <span role="button" class="success--text font-weight-medium font-size-3 pr-2"
+                                        @click="doUiAction('view', item)">
+                                        <v-icon size="14" class="success--text">mdi-text-box-multiple-outline</v-icon><$ constantUiMap.common.view $>
+                                    </span>
+                                    <v-menu offset-y>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <span role="button" class="success--text font-weight-medium font-size-3 pr-2"
+                                                v-bind="attrs" v-on="on">
+                                                操作<v-icon size="14" class="success--text">mdi-chevron-down</v-icon>
+                                            </span>
+                                        </template>
+                                        <v-list dense>
+                                            <v-list-item @click="doUiAction('modify', item)">
+                                                <v-list-item-title><$ constantUiMap.common.modify $></v-list-item-title>
+                                            </v-list-item>
+                                            <v-list-item v-if="item.articlePublishStatus !== 'deleted'" @click="doUiAction('delete', item)">
+                                                <v-list-item-title><$ constantUiMap.common.recycle $></v-list-item-title>
+                                            </v-list-item>
+                                            <v-list-item v-if="item.articlePublishStatus === 'deleted'" @click="doUiAction('restore', item)">
+                                                <v-list-item-title><$ constantUiMap.common.recover $></v-list-item-title>
+                                            </v-list-item>
+                                        </v-list>
+                                    </v-menu>
+                                </template>
+                            </v-data-table>
+                        </v-card>
+                    </v-container>
+                </div>
+                <!-- <<<<<<<<<<<<< 页面内容 -->
 
-        <v-spacer></v-spacer>
+                <!-- 帮助页抽屉 >>>>>>>>>>>>> -->
+                <v-navigation-drawer v-model="isHelpPageDrawerShow" fixed temporary right width="80%" class="elevation-24">
+                    <iframe style="border: 0" :src="`/${appInfo.appId}/pageDoc?markdownPath#1.articleManagement.md`" width="100%"
+                        height="100%"></iframe>
+                    <v-btn elevation="0" color="success" fab absolute top left small tile class="drawer-close-float-btn"
+                        @click="isHelpPageDrawerShow = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-navigation-drawer>
+                <!-- <<<<<<<<<<<<< 帮助页抽屉 -->
+            </v-main>
+        </v-app>
 
-        <v-col cols="12" xs="8" sm="3" md="2" xl="2" class="pa-xs-0 pa-xs-2 col-sm-8-flex pl-0">
-          <v-text-field  prefix="<$ constantUiMap.article.queryResultFiltering $>:" v-model="searchInput" class="cus-v-input" dense filled single-line color="success"></v-text-field>
-        </v-col>
-      </v-row>
-      <v-data-table fixed-header :headers="headers" :items="tableData" :search="searchInput"
-       mobile-breakpoint="0"
-        :loading="isTableLoading" checkbox-color="success" class="elevation-0"
-        :options="{
-            itemsPerPage: 15
-        }">
-        <template v-slot:item.articlePublishStatus="{ item }">
-          {{ articlePublishStatusMap[item.articlePublishStatus] || item.articlePublishStatus }}
-        </template>
-        <template v-slot:item.action="{ item }">
-          <v-btn small class="mr-2 success" @click="doUiAction('view', item)"><$ constantUiMap.common.view $></v-btn>
-          <v-btn small class="mr-2 success" @click="doUiAction('modify', item)"><$ constantUiMap.common.modify $></v-btn>
-          <v-btn v-if="item.articlePublishStatus !== 'deleted'" small class="mr-2 error"
-            @click="doUiAction('delete', item)">
-            <$ constantUiMap.common.recycle $></v-btn>
-          <v-btn v-if="item.articlePublishStatus === 'deleted'" small class="mr-2 white--text" color="#BDBDBD"
-            @click="doUiAction('restore', item)"
-            style="min-width: 65px;">
-            <$ constantUiMap.common.recover $></v-btn>
-        </template>
-      </v-data-table>
-      <SingleSelect v-model="selectCategoryDialog" :dataList="constantCollection.category" title="选择分类"
-        @close="selectCategoryDialog=false" @done="onSelectCategory" />
-  </v-card>
+        <jhToast />
+        <jhMask />
+        <jhConfirmDialog />
+    </div>
+</script>
 
-</jh-layout-v3>
+<div id="app">
+</div>
+
 
 {% endblock %}
 
-{% block vue_body %}
+{% block vueScript %}
 
-{% include 'component/singleSelectDialog.html' %}
+<!-- 加载页面组件 >>>>>>>>>>>>> -->
+{% include 'common/fixedTableHeightV4.html' %}
+<!-- <<<<<<<<<<<<< 加载页面组件 -->
 
 <script type="module">
   new Vue({
@@ -59,8 +136,10 @@
     template: '#app-template',
     vuetify: new Vuetify(),
     data: () => ({
+      breadcrumbs: window.breadcrumbs,
+      isHelpPageDrawerShow: false,
+      showTableZebraLine: true,
       isMobile: window.innerWidth < 600,
-      selectCategoryDialog: false,
       // 表格相关数据
       isFormValid: true,
       requireRules: [
@@ -73,17 +152,10 @@
           { text: "草稿", value: "draft" },
           { text: "回收站", value: "deleted" },
         ],
-        allArticlePublishStatus: [
-          { text: "公开", value: "public" },
-          { text: "登录可见", value: "login" },
-          { text: "草稿", value: "draft" },
-          { text: "回收站", value: "deleted" },
-        ],
         category: [
           { text: "全部类目", value: "all" },
         ],
       },
-      articlePublishStatusMap: {},
       categoryIdToName: {},
       serverSearchInput: {
         articleTitle: null,
@@ -93,49 +165,28 @@
         isFirstSearch: true,
         searchSummary: null,
       },
-      currentTableGenderType: 'all',
-      isEditDrawerShow: false,
       searchInput: null,
       isTableLoading: true,
       tableDataFromBackend: [],
       tableData: [],
       headers: [
-        { text: "ID", value: "id", width: 120, class: 'fixed'},
+        { text: '<$ constantUiMap.common.operate $>', value: 'action', align: 'center', sortable: false, width: 120, class: 'fixed', cellClass: 'fixed' },
+        { text: "ID", value: "id", width: 120},
         { text: "<$ constantUiMap.article.articleID $>", value: "articleId", width: 120 },
         { text: "<$ constantUiMap.article.articleTitle $>", value: "articleTitle", width: 250 },
-        // { text: "归属分类", value: "categoryGroupConcat", width: 120 },
-        // { text: "发布状态", value: "articlePublishStatus", width: 120, type: 'select', required: true },
+        { text: "发布状态", value: "articlePublishStatus", width: 120, type: 'select', required: true },
         { text: "<$ constantUiMap.article.releaseTime $>", value: "articlePublishTime", width: 220 },
-        // { text: "文章标签", value: "articleTagList", width: 220 },
         { text: "<$ constantUiMap.article.audioURL $>", value: "articleAudioUrl", width: 200 },
         { text: "<$ constantUiMap.article.videoURL $>", value: "articleVideoUrl", width: 200 },
         { text: "<$ constantUiMap.article.editor $>", value: "articleUpdateUsername", width: 120, edit: false },
         { text: "<$ constantUiMap.article.updateTime $>", value: "articleUpdateTime", width: 220, edit: false },
         { text: "<$ constantUiMap.article.creator $>", value: "articleCreateUsername", width: 120, edit: false },
         { text: "<$ constantUiMap.article.creationTime $>", value: "articleCreateTime", width: 220, edit: false },
-        { text: '<$ constantUiMap.common.operate $>', value: 'action', align: 'center', sortable: false, width: 350 },
       ],
-
-      currentClickButton: { title: '新增', action: 'add' },
       editItem: {},
-      tableButtonList: [
-        { text: '修改', buttonType: 'edit', color: 'success', },
-        { text: '历史版本', buttonType: 'history', color: 'default', },
-        { text: '回收站', buttonType: 'delete', color: 'error', },
-      ],
     }),
-    computed: {
-
-    },
-    watch: {
-      constantCollection(val){
-        const map = {};
-        this.constantCollection.allArticlePublishStatus.forEach(constantObj => {
-          map[constantObj.value] = constantObj.text;
-        })
-        this.articlePublishStatusMap = map;
-      }
-    },
+    computed: {},
+    watch: {},
     async created() {
       await this.prepareData();
       await this.getCategoryData();
@@ -176,10 +227,6 @@
         }
       },
       async prepareData(){
-        if (!this.isMobile) {
-          this.headers[this.headers.length - 1].class = 'fixed'
-          this.headers[this.headers.length - 1].cellClass = 'fixed'
-        }
         const urlParams = new URLSearchParams(location.search);
         const categoryId = urlParams.get('categoryId');
         if (categoryId) {
@@ -188,13 +235,6 @@
       },
       async prepareItemData(item) {
         this.editItem = {...item};
-      },
-      openSelectCategoryDialog() {
-        this.selectCategoryDialog = true
-      },
-      onSelectCategory(item) {
-        this.serverSearchInput.categoryId = item.value;
-        this.serverSearchInput.categoryName = item.text;
       },
       /**
        * 获取表格数据
@@ -229,7 +269,7 @@
           item.categoryGroupConcat = item.categoryId && this.categoryIdToName[item.categoryId] || '未分类'
         })
 
-        this.serverSearchInput.articlePublishStatusText = this.constantCollection.allArticlePublishStatus
+        this.serverSearchInput.articlePublishStatusText = this.constantCollection.articlePublishStatus
           .filter(item => this.serverSearchInput.articlePublishStatus.indexOf(item.value) > -1)
           .map(item => item.text);
 
@@ -244,9 +284,9 @@
         //   conditions.push(`状态为【${this.serverSearchInput.articlePublishStatusText}】`);
         // }
         if (this.serverSearchInput.isFirstSearch && this.serverSearchInput.categoryId === 'all') {
-          this.serverSearchInput.searchSummary = conditions.join('，') + `<$ constantUiMap.article.numberOfQueryResults $>${count}<$ constantUiMap.article.record $>`;
+          this.serverSearchInput.searchSummary = conditions.join('，') + `<$ constantUiMap.article.numberOfQueryResults $>`;
         } else {
-          this.serverSearchInput.searchSummary = conditions.join('，') + `共${count}条记录`;
+          this.serverSearchInput.searchSummary = conditions.join('，');
         }
 
         this.tableDataFromBackend = rows;
@@ -324,7 +364,7 @@
         if (constantCollectionItemFind) {
           return constantCollectionItemFind.text;
         }
-        return value;
+        return _value;
       },
       goToArticlePage(item) {
         window.open(`/${window.appInfo.appId}/page/article?id=${item.articleId}`, '_blank');

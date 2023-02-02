@@ -1,223 +1,221 @@
-{% extends 'template/jhTemplateV3.html'%}
+{% extends 'template/jhTemplateV4.html'%}
 {% set url = "/" +ctx.app.config.appId + "/page/" %}
 
-{% block vue_template %}
-<!-- 编辑文章页 -->
-<jh-layout-v3>
-  <!-- 操作按钮 -->
-  <template v-slot:serverSearch>
-    <div class="d-flex mt-3">
-      <v-spacer></v-spacer>
-      <v-btn v-if="editItem.articleId && editItem.articlePublishStatus !== 'deleted'" @click="doUiAction('deleteArticle') "
-        color="error mr-1" depressed>
-        <v-icon class="mr-1" small>mdi-trash-can</v-icon>
-        <$ constantUiMap.common.moveToRecycleBin $>
-      </v-btn>
-      <v-btn v-if="editItem.articlePublishStatus === 'deleted'" @click="doUiAction('restoreArticle') " color="error mr-1" depressed>
-        <v-icon class="mr-1" small>mdi-backburger</v-icon>
-        <$ constantUiMap.article.recoverArticle $>
-      </v-btn>
-      <v-btn @click="doUiAction('saveInfo')" color="success" class="mr-1" depressed>
-        <v-icon class="mr-1" small>mdi-content-save-all</v-icon>
-        <$ constantUiMap.common.save $>
-      </v-btn>
-      <v-btn @click="doUiAction('saveInfoAndPreview') " color="success" depressed>
-        <v-icon class="mr-1" small>mdi-eye-refresh</v-icon>
-        <$ constantUiMap.common.saveAndPreview $>
-      </v-btn>
-    </div>
-  </template>
+{% block vueTemplate %}
 
-  <!-- 页面主要内容 -->
-   <v-card style="min-height: calc(100vh - 150px);background-color: #f5f8fa;">
-    <v-form v-model="isFormValid" ref="form">
-      <div class="d-flex flex-column">
-        <v-row dense no-gutters>
-          <v-col cols="12" xs="12" sm="4" md="3" xl="2" class="pr-2">
-            <v-card class="pa-2" flat>
-              <v-toolbar flat dense>
-                <p class="font-weight-medium mb-0" style="font-size: 16px;">
-                  基本信息
-                </p>
-              </v-toolbar>
-              <v-card-text class="px-0">
-                <span class="inputLabel"> <$ constantUiMap.article.articleTitle $></span>
-                <v-text-field
-                  single-line
-                  dense
-                  filled
-                  color="success" label="<$ constantUiMap.article.articleTitle $>"
-                  v-model="editItem.articleTitle"
-                  :rules="requireRules" hide-details>
-                </v-text-field>
-              </v-card-text>
-            </v-card>
-
-            <v-card class="pa-4 mt-2" flat>
-
-              <v-toolbar flat dense>
-                <p class="font-weight-medium mb-0" style="font-size: 16px;">
-                  封面
-                </p>
-                <v-spacer></v-spacer>
-                <v-btn
-                  outlined
-                  small
-                  fab
-                  style="width: 20px;height:20px"
-                  @click="doUiAction('imagePicker') "
-                >
-                  <v-icon small>mdi-upload-outline</v-icon>
-                </v-btn>
-                <v-btn
-                  outlined
-                  small
-                  fab
-                  class="ml-2"
-                  color="error"
-                  style="width: 20px;height:20px"
-                  @click.stop="doUiAction('clearImage') "
-                  v-if="editItem.articleCoverImage"
-                >
-                  <v-icon small>mdi-trash-can-outline</v-icon>
-                </v-btn>
-              </v-toolbar>
-              <v-card-text class="pa-0 text-center">
-                <img v-if="editItem.articleCoverImage" :src="upload + editItem.articleCoverImage" alt="" style="width: 100%; height: 100%; object-fit: cover;">
-                <p v-else class="text-center">暂无封面~</p>
-              </v-card-text>
-            </v-card>
-
-
-            <v-card class="pa-4 mt-2" flat>
-              <v-toolbar flat dense>
-                <p class="font-weight-medium mb-0" style="font-size: 16px;">
-                  音频
-                </p>
-                <v-spacer></v-spacer>
-                <v-btn
-                  outlined
-                  small
-                  fab
-                  style="width: 20px;height:20px"
-                  @click="doUiAction('audioPicker')"
-                >
-                  <v-icon small>mdi-upload-outline</v-icon>
-                </v-btn>
-                <v-btn
-                  outlined
-                  small
-                  fab
-                  class="ml-2"
-                  color="error"
-                  style="width: 20px;height:20px"
-                  @click.stop="doUiAction('clearAudio') "
-                  v-if="editItem.articleAudioUrl"
-                >
-                  <v-icon small>mdi-trash-can-outline</v-icon>
-                </v-btn>
-              </v-toolbar>
-              <v-card-text class="px-0 text-center">
-                <audio style="max-width: 100%;" v-if="editItem.articleAudioUrl"
-                  :src="`/<$ ctx.app.config.appId $>/upload/${editItem.articleAudioUrl}?v=${new Date().getTime()}`" controls>
-                  <source :src="`/<$ ctx.app.config.appId $>/upload/${editItem.articleAudioUrl}?v=${new Date().getTime()}`" type="audio/mpeg">
-               </audio>
-               <p v-else class="text-center">暂无音频~</p>
-              </v-card-text>
-            </v-card>
-
-            <v-card class="pa-4 mt-2" flat>
-              <v-toolbar flat dense>
-                <p class="font-weight-medium mb-0" style="font-size: 16px;">
-                  视频
-                </p>
-                <v-spacer></v-spacer>
-                <v-btn
-                  outlined
-                  small
-                  fab
-                  style="width: 20px;height:20px"
-                  @click="doUiAction('videoPicker') "
-                >
-                  <v-icon small>mdi-upload-outline</v-icon>
-                </v-btn>
-                <v-btn
-                  outlined
-                  small
-                  fab
-                  class="ml-2"
-                  color="error"
-                  style="width: 20px;height:20px"
-                  @click.stop="doUiAction('clearVideo') "
-                  v-if="editItem.articleVideoUrl"
-                >
-                  <v-icon small>mdi-trash-can-outline</v-icon>
-                </v-btn>
-              </v-toolbar>
-              <v-card-text class="px-0">
-                  <video style="max-width: 100%;" v-if="editItem.articleVideoUrl"
-                      :src="`/<$ ctx.app.config.appId $>/upload/${editItem.articleVideoUrl}?v=${new Date().getTime()}`" controls>
-                      <source :src="`/<$ ctx.app.config.appId $>/upload/${editItem.articleVideoUrl}?v=${new Date().getTime()}`" type="video/mp4">
-                  </video>
-                  <p v-else class="text-center">暂无视频~</p>
-              </v-card-text>
-            </v-card>
-          </v-col>
-
-          <v-col cols="12" xs="12" sm="8" md="9" xl="10">
-            <v-card flat style="height: 98.5%;">
-                <div id="editorMdContainer">
-                  <textarea style="display:none;">{{ editItem.articleContent }}</textarea>
+<script type="text/html" id="app-template">
+    <div>
+        <v-app id="inspire" mobile-breakpoint="sm">
+            <jhMenu />
+            <v-main class="d-flex flex-column" style="margin-top: 60px">
+                <!-- 头部内容 >>>>>>>>>>>>> -->
+                <div class="pageSecondBar d-flex px-8 align-center">
+                    <div>
+                        <div class="appTitle pt-3" style="font-size: 18px; font-weight: 700">{{ breadcrumbs[1].fullText }}
+                            <!-- 帮助页按钮 -->
+                            <v-icon @click="isHelpPageDrawerShow = true" small>mdi-help-circle-outline</v-icon>
+                        </div>
+                        <v-breadcrumbs class="pb-3 pt-0 pl-0" :items="breadcrumbs" divider="-"></v-breadcrumbs>
+                    </div>
+                    <v-spacer></v-spacer>
+                    <!-- 操作按钮组 -->
+                    <div class="d-flex">
+                        <v-spacer></v-spacer>
+                        <v-btn v-if="editItem.articleId && editItem.articlePublishStatus !== 'deleted'"
+                            @click="doUiAction('deleteArticle') " color="error mr-1" depressed small>
+                            <v-icon class="mr-1" small>mdi-trash-can</v-icon>
+                            <$ constantUiMap.common.moveToRecycleBin $>
+                        </v-btn>
+                        <v-btn v-if="editItem.articlePublishStatus === 'deleted'" @click="doUiAction('restoreArticle') " color="error mr-1"
+                            depressed small>
+                            <v-icon class="mr-1" small>mdi-backburger</v-icon>
+                            <$ constantUiMap.article.recoverArticle $>
+                        </v-btn>
+                        <v-btn @click="doUiAction('saveInfo')" color="success" class="mr-1" depressed small>
+                            <v-icon class="mr-1" small>mdi-content-save-all</v-icon>
+                            <$ constantUiMap.common.save $>
+                        </v-btn>
+                        <v-btn @click="doUiAction('saveInfoAndPreview') " color="success" depressed small>
+                            <v-icon class="mr-1" small>mdi-eye-refresh</v-icon>
+                            <$ constantUiMap.common.saveAndPreview $>
+                        </v-btn>
+                    </div>
                 </div>
-            </v-card>
-          </v-col>
-        </v-row>
-      </div>
-    </v-form>
+                <!-- <<<<<<<<<<<<< 头部内容 -->
 
-    <!-- 选择素材 -->
-    <v-dialog v-model="isEditDrawerShow" hide-overlay fullscreen transition="dialog-bottom-transition">
-      <v-card>
-        <v-toolbar
-          dark
-          width="100%"
-          style="background-color: #fff;"
-        >
-          <div class="black--text ml-2" style="font-size: 16px;">选择素材</div>
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-btn
-              text
-              @click="doUiAction('closeMaterialPicker')"
-            >
-            <v-icon class="black--text">mdi-close</v-icon>
-            </v-btn>
-          </v-toolbar-items>
-        </v-toolbar>
-        <v-divider style="border-color: #eff2f5;opacity:0.8;"></v-divider>
-        <file-browser v-if="isEditDrawerShow" v-on:use-material="useMaterial"
-        v-on:close-material-picker="closeMaterialPicker" :material-type="materialType">
-        </file-browser>
-      </v-card>
-    </v-dialog>
-    <SingleSelect v-model="selectCategoryDialog" :dataList="constantCollection.category" title="选择分类"
-      @close="selectCategoryDialog=false" @done="onSelectCategory" />
-   </v-card>
-</jh-layout-v3>
+                <!-- 页面内容 >>>>>>>>>>>>> -->
+                <div class="pageBodyContainer px-8" style="flex: 1;">
+                    <!-- 页面主要内容 -->
+                    <v-container class="fullScreen d-flex flex-column pa-xs-0 pa-0">
+                        <v-card style="min-height: calc(100vh - 150px);background-color: #f5f8fa;">
+                            <v-form v-model="isFormValid" ref="form">
+                                <div class="d-flex flex-column">
+                                    <v-row dense no-gutters>
+                                        <v-col cols="12" xs="12" sm="4" md="3" xl="2" class="pr-2">
+                                            <v-card class="pa-2" flat>
+                                                <v-toolbar flat dense>
+                                                    <p class="font-weight-medium mb-0" style="font-size: 16px;">
+                                                        基本信息
+                                                    </p>
+                                                </v-toolbar>
+                                                <v-card-text class="px-0">
+                                                    <span class="inputLabel">
+                                                        <$ constantUiMap.article.articleTitle $>
+                                                    </span>
+                                                    <v-text-field single-line dense filled color="success"
+                                                        label="<$ constantUiMap.article.articleTitle $>" v-model="editItem.articleTitle"
+                                                        :rules="requireRules" hide-details>
+                                                    </v-text-field>
+                                                </v-card-text>
+                                            </v-card>
+                        
+                                            <v-card class="pa-4 mt-2" flat>
+                                                <v-toolbar flat dense>
+                                                    <p class="font-weight-medium mb-0" style="font-size: 16px;">
+                                                        封面
+                                                    </p>
+                                                    <v-spacer></v-spacer>
+                                                    <v-btn outlined small fab style="width: 20px;height:20px"
+                                                        @click="doUiAction('imagePicker') ">
+                                                        <v-icon small>mdi-upload-outline</v-icon>
+                                                    </v-btn>
+                                                    <v-btn outlined small fab class="ml-2" color="error" style="width: 20px;height:20px"
+                                                        @click.stop="doUiAction('clearImage') " v-if="editItem.articleCoverImage">
+                                                        <v-icon small>mdi-trash-can-outline</v-icon>
+                                                    </v-btn>
+                                                </v-toolbar>
+                                                <v-card-text class="pa-0 text-center">
+                                                    <img v-if="editItem.articleCoverImage" :src="upload + editItem.articleCoverImage" alt=""
+                                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                                    <p v-else class="text-center">暂无封面~</p>
+                                                </v-card-text>
+                                            </v-card>
+
+                                            <v-card class="pa-4 mt-2" flat>
+                                                <v-toolbar flat dense>
+                                                    <p class="font-weight-medium mb-0" style="font-size: 16px;">
+                                                        音频
+                                                    </p>
+                                                    <v-spacer></v-spacer>
+                                                    <v-btn outlined small fab style="width: 20px;height:20px"
+                                                        @click="doUiAction('audioPicker')">
+                                                        <v-icon small>mdi-upload-outline</v-icon>
+                                                    </v-btn>
+                                                    <v-btn outlined small fab class="ml-2" color="error" style="width: 20px;height:20px"
+                                                        @click.stop="doUiAction('clearAudio') " v-if="editItem.articleAudioUrl">
+                                                        <v-icon small>mdi-trash-can-outline</v-icon>
+                                                    </v-btn>
+                                                </v-toolbar>
+                                                <v-card-text class="px-0 text-center">
+                                                    <audio style="max-width: 100%;" v-if="editItem.articleAudioUrl"
+                                                        :src="`/<$ ctx.app.config.appId $>/upload/${editItem.articleAudioUrl}?v=${new Date().getTime()}`"
+                                                        controls>
+                                                        <source
+                                                            :src="`/<$ ctx.app.config.appId $>/upload/${editItem.articleAudioUrl}?v=${new Date().getTime()}`"
+                                                            type="audio/mpeg">
+                                                    </audio>
+                                                    <p v-else class="text-center">暂无音频~</p>
+                                                </v-card-text>
+                                            </v-card>
+                        
+                                            <v-card class="pa-4 mt-2" flat>
+                                                <v-toolbar flat dense>
+                                                    <p class="font-weight-medium mb-0" style="font-size: 16px;">
+                                                        视频
+                                                    </p>
+                                                    <v-spacer></v-spacer>
+                                                    <v-btn outlined small fab style="width: 20px;height:20px"
+                                                        @click="doUiAction('videoPicker') ">
+                                                        <v-icon small>mdi-upload-outline</v-icon>
+                                                    </v-btn>
+                                                    <v-btn outlined small fab class="ml-2" color="error" style="width: 20px;height:20px"
+                                                        @click.stop="doUiAction('clearVideo') " v-if="editItem.articleVideoUrl">
+                                                        <v-icon small>mdi-trash-can-outline</v-icon>
+                                                    </v-btn>
+                                                </v-toolbar>
+                                                <v-card-text class="px-0">
+                                                    <video style="max-width: 100%;" v-if="editItem.articleVideoUrl"
+                                                        :src="`/<$ ctx.app.config.appId $>/upload/${editItem.articleVideoUrl}?v=${new Date().getTime()}`"
+                                                        controls>
+                                                        <source
+                                                            :src="`/<$ ctx.app.config.appId $>/upload/${editItem.articleVideoUrl}?v=${new Date().getTime()}`"
+                                                            type="video/mp4">
+                                                    </video>
+                                                    <p v-else class="text-center">暂无视频~</p>
+                                                </v-card-text>
+                                            </v-card>
+                                        </v-col>
+                        
+                                        <v-col cols="12" xs="12" sm="8" md="9" xl="10">
+                                            <v-card flat style="height: 98.5%;">
+                                                <div id="editorMdContainer">
+                                                    <textarea style="display:none;">{{ editItem.articleContent }}</textarea>
+                                                </div>
+                                            </v-card>
+                                        </v-col>
+                                    </v-row>
+                                </div>
+                            </v-form>
+                        </v-card>
+                    </v-container>
+
+                    <!-- 选择素材弹窗 -->
+                    <v-dialog v-model="isEditDrawerShow" hide-overlay fullscreen transition="dialog-bottom-transition">
+                        <v-card>
+                            <v-toolbar dark width="100%" style="background-color: #fff;">
+                                <div class="black--text ml-2" style="font-size: 16px;">选择素材</div>
+                                <v-spacer></v-spacer>
+                                <v-toolbar-items>
+                                    <v-btn text @click="doUiAction('closeMaterialPicker')">
+                                        <v-icon class="black--text">mdi-close</v-icon>
+                                    </v-btn>
+                                </v-toolbar-items>
+                            </v-toolbar>
+                            <v-divider style="border-color: #eff2f5;opacity:0.8;"></v-divider>
+                            <file-browser v-if="isEditDrawerShow" v-on:use-material="useMaterial"
+                                v-on:close-material-picker="closeMaterialPicker" :material-type="materialType">
+                            </file-browser>
+                        </v-card>
+                    </v-dialog>
+                </div>
+                <!-- <<<<<<<<<<<<< 页面内容 -->
+
+                <!-- 帮助页抽屉 >>>>>>>>>>>>> -->
+                <v-navigation-drawer v-model="isHelpPageDrawerShow" fixed temporary right width="80%" class="elevation-24">
+                    <iframe style="border: 0" :src="`/${appInfo.appId}/pageDoc?markdownPath#2.articleEdit.md`" width="100%"
+                        height="100%"></iframe>
+                    <v-btn elevation="0" color="success" fab absolute top left small tile class="drawer-close-float-btn"
+                        @click="isHelpPageDrawerShow = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-navigation-drawer>
+                <!-- <<<<<<<<<<<<< 帮助页抽屉 -->
+            </v-main>
+        </v-app>
+
+        <jhToast />
+        <jhMask />
+        <jhConfirmDialog />
+    </div>
+</script>
+
+<div id="app">
+</div>
+
 
 {% endblock %}
 
-{% block vue_body %}
+{% block vueScript %}
 
-
+<!-- 加载页面组件 >>>>>>>>>>>>> -->
 {% include 'component/fileBrowser/FileBrowser.html' %}
-{% include 'component/singleSelectDialog.html' %}
-{% include 'component/datetimePicker.html' %}
 {% include 'component/articleEditor/articleEditorCss.html' %}
+
 <link rel="stylesheet" href="/<$ ctx.app.config.appId $>/public/plugins/editor.md/css/editormd.min.css" />
 <link href="/<$ ctx.app.config.appId $>/public/articleViewer/font-awesome.min.css?v=6.0.0" />
 <script src="/<$ ctx.app.config.appId $>/public/js/lib/jquery.min.js"></script>
 <script src="/<$ ctx.app.config.appId $>/public/plugins/editor.md/editormd.js"></script>
+<!-- <<<<<<<<<<<<< 加载页面组件 -->
 
 <script type="module">
   new Vue({
@@ -225,10 +223,11 @@
     template: '#app-template',
     vuetify: new Vuetify(),
     data: () => ({
+      breadcrumbs: window.breadcrumbs,
+      isHelpPageDrawerShow: false,
       isMobile: window.innerWidth < 600,
       newArticleId: null,
       articleId: null,
-      selectCategoryDialog: false,
       // 表格相关数据
       isFormValid: true,
       requireRules: [
@@ -411,9 +410,6 @@
           const text = `${item.categoryGroupConcat || ''}${item.categoryName} [共${item.count}篇]`;
           this.constantCollection.category.push({ text, value: item.categoryId + "" });
         })
-      },
-      openSelectCategoryDialog() {
-        this.selectCategoryDialog = true
       },
       onSelectCategory(item) {
         this.editItem.categoryName = "";
