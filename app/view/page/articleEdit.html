@@ -19,7 +19,7 @@
                     </div>
                     <v-spacer></v-spacer>
                     <!-- 操作按钮组 -->
-                    <div class="d-flex">
+                    <div class="d-flex mb-2 mb-sm-0">
                         <v-spacer></v-spacer>
                         <v-btn v-if="editItem.articleId && editItem.articlePublishStatus !== 'deleted'"
                             @click="doUiAction('deleteArticle') " color="error mr-1" depressed small>
@@ -52,8 +52,8 @@
                                 <div class="d-flex flex-column">
                                     <v-row dense no-gutters>
                                         <!-- 左边栏 -->
-                                        <v-col cols="12" xs="12" sm="4" md="3" xl="2" class="pr-2">
-                                            <v-card class="pa-2" flat>
+                                        <v-col cols="12" xs="12" sm="4" md="3" xl="2" class="pr-sm-2">
+                                            <v-card flat style="padding: 16px !important;">
                                                 <v-toolbar flat dense>
                                                     <p class="font-weight-medium mb-0" style="font-size: 14px;">
                                                         基本信息
@@ -70,7 +70,7 @@
                                                 </v-card-text>
                                             </v-card>
                         
-                                            <v-card class="pa-4 mt-2" flat>
+                                            <v-card class="mt-2" flat style="padding: 16px !important;">
                                                 <v-toolbar flat dense>
                                                     <p class="font-weight-medium mb-0" style="font-size: 14px;">
                                                         封面
@@ -92,7 +92,7 @@
                                                 </v-card-text>
                                             </v-card>
 
-                                            <v-card class="pa-4 mt-2" flat>
+                                            <v-card class="mt-2" flat style="padding: 16px !important;">
                                                 <v-toolbar flat dense>
                                                     <p class="font-weight-medium mb-0" style="font-size: 14px;">
                                                         音频
@@ -119,7 +119,7 @@
                                                 </v-card-text>
                                             </v-card>
                         
-                                            <v-card class="pa-4 mt-2" flat>
+                                            <v-card class="mt-2" flat style="padding: 16px !important;">
                                                 <v-toolbar flat dense>
                                                     <p class="font-weight-medium mb-0" style="font-size: 14px;">
                                                         视频
@@ -147,8 +147,8 @@
                                             </v-card>
                                         </v-col>
                                         <!-- markdown编辑 -->
-                                        <v-col cols="12" xs="12" sm="8" md="9" xl="10">
-                                            <v-card flat style="height: 98.5%;">
+                                        <v-col cols="12" xs="12" sm="8" md="9" xl="10" class="mt-2 mt-sm-0">
+                                            <v-card flat style="height: 98.5%;" >
                                                 <div id="editorMdContainer">
                                                     <textarea style="display:none;">{{ editItem.articleContent }}</textarea>
                                                 </div>
