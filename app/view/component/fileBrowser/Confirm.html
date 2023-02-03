@@ -14,8 +14,8 @@
                 <p v-html="message"></p>
             </v-card-text>
             <v-card-actions class="pt-0 pb-10 justify-center">
-                <v-btn depressed :color="options.color" @click="agree" style="width: 100px;"><$ constantUiMap.common.sure $></v-btn>
-                <v-btn text @click="cancel" style="width: 100px;"><$ constantUiMap.btn.cancel $></v-btn>
+                <v-btn depressed :color="options.color" @click="agree" style="width: 100px;" small><$ constantUiMap.common.sure $></v-btn>
+                <v-btn @click="cancel" style="width: 100px;" small><$ constantUiMap.btn.cancel $></v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

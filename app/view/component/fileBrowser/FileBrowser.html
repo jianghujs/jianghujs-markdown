@@ -33,7 +33,7 @@
             </toolbar>
             <template v-if="path && isDir">
                 <div class="flex-grow-1"></div>
-                <div style="width: 300px;">
+                <div style="width: 300px;" :class="{'mt-2': isMobile}">
                     <v-text-field 
                         dense
                         filled 
@@ -43,7 +43,7 @@
                 </div>
             </template>
         </v-toolbar>
-        <v-row no-gutters>
+        <v-row no-gutters :class="{'mt-5': isMobile}">
             <v-col v-if="tree && $vuetify.breakpoint.smAndUp" sm="auto">
                 <tree
                     ref="tree"
@@ -380,5 +380,10 @@ Vue.component("file-browser", {
 <style scoped>
     .table-toolbar .v-toolbar__content{
         height: 30px !important;
+    }
+    @media (max-width: 500px)  {
+        .v-toolbar .v-toolbar__content{
+            flex-wrap: wrap;
+        }
     }
 </style>

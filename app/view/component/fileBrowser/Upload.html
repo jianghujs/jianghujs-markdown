@@ -1,13 +1,13 @@
 <template id="fileBrowser-upload">
     <v-overlay>
-      <v-card flat light class="mx-auto" :loading="loading" style="width: 600px;">
+      <v-card flat light class="mx-auto uploadCard" :loading="loading">
         <!-- header -->
         <v-toolbar
             flat
             dense
             dark
             style="background-color: #fff;">
-          <div class="black--text ml-2" style="font-size: 16px;"><$ constantUiMap.btn.upload $><$ constantUiMap.btn.file
+          <div class="black--text ml-2 font-weight-medium" style="font-size: 14px;"><$ constantUiMap.btn.upload $><$ constantUiMap.btn.file
             $>
           </div>
           <v-spacer></v-spacer>
@@ -31,18 +31,18 @@
               multiple
               @change="add"
           />
-          <v-btn color="success" depressed @click="$refs.inputUpload.click()"
-                 title="<$ constantUiMap.common.select $><$ constantUiMap.btn.file $>">
+          <v-btn color="success" depressed @click="$refs.inputUpload.click()" class="mr-1 mb-2 mb-sm-0"
+                 title="<$ constantUiMap.common.select $><$ constantUiMap.btn.file $>" small>
             <v-icon class="mr-1" small>mdi-file-plus</v-icon>
             <$ constantUiMap.common.select $><$ constantUiMap.btn.file $>
           </v-btn>
-          <v-btn depressed @click="upload" class="ml-1" :disabled="!files || files.length === 0"
-                 title="<$ constantUiMap.btn.uploadAll $>">
+          <v-btn depressed @click="upload" class="mr-1 mb-2 mb-sm-0" :disabled="!files || files.length === 0"
+                 title="<$ constantUiMap.btn.uploadAll $>" small>
             <v-icon class="mr-1" small>mdi-file-upload</v-icon>
             <$ constantUiMap.btn.uploadAll $>
           </v-btn>
-          <v-btn depressed @click="clear" class="ml-1" :disabled="!files || files.length === 0"
-                 title="<$ constantUiMap.btn.removeAll $>">
+          <v-btn depressed @click="clear" class="mr-1 mb-2 mb-sm-0" :disabled="!files || files.length === 0"
+                 title="<$ constantUiMap.btn.removeAll $>" small>
             <v-icon class="mr-1" small>mdi-file-remove</v-icon>
             <$ constantUiMap.btn.removeAll $>
           </v-btn>
@@ -224,5 +224,13 @@
     max-height: 250px;
     overflow-y: auto;
   }
+  .uploadCard{
+    width: 600px;
+  }
+    @media (max-width: 500px)  {
+        .uploadCard{
+            width: 95%;
+        }
+    }
   </style>
   

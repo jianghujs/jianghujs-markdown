@@ -47,14 +47,15 @@
                 <div class="pageBodyContainer px-8" style="flex: 1;">
                     <!-- 页面主要内容 -->
                     <v-container class="fullScreen d-flex flex-column pa-xs-0 pa-0">
-                        <v-card style="min-height: calc(100vh - 150px);background-color: #f5f8fa;">
+                        <v-card style="min-height: calc(100vh - 126px);background-color: #f5f8fa;">
                             <v-form v-model="isFormValid" ref="form">
                                 <div class="d-flex flex-column">
                                     <v-row dense no-gutters>
+                                        <!-- 左边栏 -->
                                         <v-col cols="12" xs="12" sm="4" md="3" xl="2" class="pr-2">
                                             <v-card class="pa-2" flat>
                                                 <v-toolbar flat dense>
-                                                    <p class="font-weight-medium mb-0" style="font-size: 16px;">
+                                                    <p class="font-weight-medium mb-0" style="font-size: 14px;">
                                                         基本信息
                                                     </p>
                                                 </v-toolbar>
@@ -71,7 +72,7 @@
                         
                                             <v-card class="pa-4 mt-2" flat>
                                                 <v-toolbar flat dense>
-                                                    <p class="font-weight-medium mb-0" style="font-size: 16px;">
+                                                    <p class="font-weight-medium mb-0" style="font-size: 14px;">
                                                         封面
                                                     </p>
                                                     <v-spacer></v-spacer>
@@ -93,7 +94,7 @@
 
                                             <v-card class="pa-4 mt-2" flat>
                                                 <v-toolbar flat dense>
-                                                    <p class="font-weight-medium mb-0" style="font-size: 16px;">
+                                                    <p class="font-weight-medium mb-0" style="font-size: 14px;">
                                                         音频
                                                     </p>
                                                     <v-spacer></v-spacer>
@@ -120,7 +121,7 @@
                         
                                             <v-card class="pa-4 mt-2" flat>
                                                 <v-toolbar flat dense>
-                                                    <p class="font-weight-medium mb-0" style="font-size: 16px;">
+                                                    <p class="font-weight-medium mb-0" style="font-size: 14px;">
                                                         视频
                                                     </p>
                                                     <v-spacer></v-spacer>
@@ -145,7 +146,7 @@
                                                 </v-card-text>
                                             </v-card>
                                         </v-col>
-                        
+                                        <!-- markdown编辑 -->
                                         <v-col cols="12" xs="12" sm="8" md="9" xl="10">
                                             <v-card flat style="height: 98.5%;">
                                                 <div id="editorMdContainer">
@@ -163,7 +164,7 @@
                     <v-dialog v-model="isEditDrawerShow" hide-overlay fullscreen transition="dialog-bottom-transition">
                         <v-card>
                             <v-toolbar dark width="100%" style="background-color: #fff;">
-                                <div class="black--text ml-2" style="font-size: 16px;">选择素材</div>
+                                <div class="black--text ml-2 font-weight-medium" style="font-size: 14px;">选择素材</div>
                                 <v-spacer></v-spacer>
                                 <v-toolbar-items>
                                     <v-btn text @click="doUiAction('closeMaterialPicker')">
@@ -208,14 +209,17 @@
 {% block vueScript %}
 
 <!-- 加载页面组件 >>>>>>>>>>>>> -->
+{% include 'common/fixedTableHeightV4.html' %}
 {% include 'component/fileBrowser/FileBrowser.html' %}
 {% include 'component/articleEditor/articleEditorCss.html' %}
+<!-- <<<<<<<<<<<<< 加载页面组件 -->
 
+<!-- 加载页面静态资源 >>>>>>>>>>>>> -->
 <link rel="stylesheet" href="/<$ ctx.app.config.appId $>/public/plugins/editor.md/css/editormd.min.css" />
 <link href="/<$ ctx.app.config.appId $>/public/articleViewer/font-awesome.min.css?v=6.0.0" />
 <script src="/<$ ctx.app.config.appId $>/public/js/lib/jquery.min.js"></script>
 <script src="/<$ ctx.app.config.appId $>/public/plugins/editor.md/editormd.js"></script>
-<!-- <<<<<<<<<<<<< 加载页面组件 -->
+<!-- <<<<<<<<<<<<< 加载页面静态资源 -->
 
 <script type="module">
   new Vue({
