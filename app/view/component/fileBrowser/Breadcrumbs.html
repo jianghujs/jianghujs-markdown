@@ -25,7 +25,8 @@
             color="success"
             left
             text
-            class="ml-2 pa-0">
+            class="pa-0"
+            style="position: relative;height: initial;">
             <v-breadcrumbs class="py-0 px-4" style="margin-top: 1px;">
                 <v-breadcrumbs-item :input-value="path === '/'" @click="changePath('/')" role="button">
                   <v-icon class="mr-2" color="success">{{storageObject.icon}}</v-icon>
@@ -109,8 +110,9 @@
         font-size: 12px;
     }
     .v-snack__wrapper{
-        margin-top: 0;
-        margin-bottom: 0;
+        margin: 0;
+        overflow: hidden;
+        word-break: break-word;
     }
     .v-snack__content{
         padding: 0;

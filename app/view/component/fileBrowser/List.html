@@ -22,7 +22,7 @@
                     class="my-10" style="display: block; margin: auto;" controls>
                     <source :src="`/<$ ctx.app.config.appId $>/upload/materialRepo/${path}?v=${new Date().getTime()}`" type="audio/mpeg">
                 </audio>
-                <div><$ constantUiMap.btn.file $>：{{ `${host}/<$ ctx.app.config.appId $>/upload/materialRepo/${path}` }}</div>
+                <div><$ constantUiMap.btn.file $>：{{ `${host}/<$ ctx.app.config.appId $>/upload/materialRepo${path}` }}</div>
             </div>
         </v-card-text>
 

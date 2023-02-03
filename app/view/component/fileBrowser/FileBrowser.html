@@ -1,6 +1,6 @@
 <template id="fileBrowser">
     <v-card class="d-flex flex-column" flat>
-        <v-toolbar flat dense class="px-4 mt-2">
+        <div class="px-4 mt-3 d-flex flex-wrap flex-sm-nowrap align-center">
             <template v-if="!(path && isDir)">
                 <breadcrumbs
                 :path="path"
@@ -42,8 +42,8 @@
                         label="Search Files & Folders" v-model="filter" prepend-inner-icon="mdi-magnify" color="success"></v-text-field>
                 </div>
             </template>
-        </v-toolbar>
-        <v-row no-gutters :class="{'mt-5': isMobile}">
+        </div>
+        <v-row no-gutters>
             <v-col v-if="tree && $vuetify.breakpoint.smAndUp" sm="auto">
                 <tree
                     ref="tree"
@@ -63,7 +63,7 @@
                 ></tree>
             </v-col>
             <v-col class="mt-2">
-                <v-toolbar flat dense v-if="(path && isDir)" class="pr-4 table-toolbar" style="height: 30px;">
+                <div v-if="(path && isDir)" class="px-4 d-flex flex-wrap flex-sm-nowrap">
                     <breadcrumbs
                     :path="path"
                     :storages="storagesArray"
@@ -85,7 +85,7 @@
                             <v-icon>mdi-refresh</v-icon>
                         </v-btn>
                     </template>
-                </v-toolbar>
+                </div>
                 <list
                     ref="list"
                     :operation-option="operationOption"
