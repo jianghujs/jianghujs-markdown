@@ -1,6 +1,6 @@
 {
   "name": "jianghujs-markdown",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "private": true,
   "egg": {
@@ -8,7 +8,7 @@
     "framework": "@jianghujs/jianghu"
   },
   "dependencies": {
-    "@jianghujs/jianghu": "^4.0.12",
+    "@jianghujs/jianghu": "^4.0.14",
     "egg": "^2.15.1",
     "egg-scripts": "^2.11.0"
   },
@@ -23,12 +23,12 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon  --workers=1 --port=8318 --title=markdown",
+    "start": "egg-scripts start --daemon  --workers=1 --port=8318 --title=jianghujs-markdown",
     "stop": "egg-scripts stop --title=openjianghu_admin",
     "dev": "egg-bin dev --port=8318",
     "restart": "npm run stop && npm run start",
-    "start:cn": "egg-scripts start --daemon  --port=9306 --title=markdown",
-    "stop:cn": "egg-scripts stop --title=markdown",
+    "start:cn": "egg-scripts start --daemon  --port=9306 --title=jianghujs-markdown",
+    "stop:cn": "egg-scripts stop --title=jianghujs-markdown",
     "dev:cn": "egg-bin dev --port=9306",
     "restart:cn": "npm run stop:cn && npm run start:cn",
     "debug": "egg-bin debug",
