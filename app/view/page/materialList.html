@@ -9,7 +9,7 @@
   <v-main class="mt-15">
     <!-- 头部内容 >>>>>>>>>>>>> -->
     <div class="jh-page-second-bar px-8">
-      <div class="pt-3 text-h7 font-weight-bold">素材管理
+      <div class="pt-3 text-h7 font-weight-bold">素材列表
         <!-- 帮助页按钮 -->
         <v-icon @click="isHelpPageDrawerShown = true" color="success" small>mdi-help-circle-outline</v-icon>
       </div>
@@ -17,20 +17,16 @@
     </div>
     <!-- <<<<<<<<<<<<< 头部内容 -->
 
+    <!-- 页面主体内容 >>>>>>>>>>>>> -->
     <div class="jh-page-body-container px-8">
-      <!-- 页面内容 >>>>>>>>>>>>> -->
-      <v-container class="pa-0">
-        <v-card>
-            <file-browser :operation-option="operationOption"/>
-        </v-card>
-      </v-container>
-      <!-- <<<<<<<<<<<<< 页面内容 -->
+      <file-browser :option="operationOption"></file-browser>
     </div>
+    <!-- <<<<<<<<<<<<< 页面主体内容 -->
 
     <!-- 帮助页抽屉 >>>>>>>>>>>>> -->
     <v-navigation-drawer v-model="isHelpPageDrawerShown" v-click-outside="drawerClickOutside" fixed temporary right width="80%" class="elevation-24">
       <iframe
-        style="border: 0" :src="`/${appInfo.appId}/pageDoc#3.materialManagement.md`" width="100%"
+        style="border: 0" :src="`/${appInfo.appId}/pageDoc#3.materialList.md`" width="100%"
         height="100%"></iframe>
 
       <v-btn
@@ -77,14 +73,16 @@ new Vue({
         disabled: true,
       },
       {
-        text: '素材管理',
+        text: '素材列表',
         disabled: true,
       }
     ],
     isHelpPageDrawerShown: false,
 
-    // file-browser 文件操作权限
-    operationOption: { delete: true, copy: true, recycle: true, renameFile: true }
+    // file-browser 操作权限
+    operationOption: {
+      'markdown': false,
+    }
   }
 })
 </script>

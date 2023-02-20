@@ -1,36 +1,27 @@
-"use strict";
+'use strict';
 
-const path = require("path");
-const assert = require("assert");
+const path = require('path');
 
-const {
-  middleware,
-  middlewareMatch,
-} = require("@jianghujs/jianghu/config/middlewareConfig");
+const { middleware, middlewareMatch } = require('@jianghujs/jianghu/config/middlewareConfig');
 
-const jianghuPathTemp = require.resolve('@jianghujs/jianghu');
-const jianghuPath = path.join(jianghuPathTemp, "../");
+const eggJianghuDirResolve = require.resolve('@jianghujs/jianghu');
+const eggJianghuDir = path.join(eggJianghuDirResolve, '../');
 
-module.exports = (appInfo) => {
-  assert(appInfo);
+module.exports = appInfo => {
 
-  const appId = "admin";
+  const appId = 'jianghujs-markdown';
   const uploadDir = path.join(appInfo.baseDir, "upload");
-  const downloadBasePath = `/${appId}/upload`;
 
   return {
     appId,
-    appTitle: "markdown编辑",
-    appLogo: `${appId}/public/img/logo.png`,
-    appType: "single",
-    appDirectoryLink: "/",
-    indexPage: `/${appId}/page/articleManagement`,
-    adminIndex: `/${appId}/page/articleManagement`,
+    appTitle: 'markdown',
+    appLogo: `${appId}/public/img/logo.svg`,
+    language: 'zh',
+
+    indexPage: `/${appId}/page/articleList`,
     loginPage: `/${appId}/page/login`,
     helpPage: `/${appId}/page/help`,
-    language: 'zh',
-    primaryColor: "#4caf50",
-    primaryColorA80: "#EEF7EE",
+
     uploadDir,
     uploadDirConfig: [
       "/articleMaterial",
@@ -40,38 +31,43 @@ module.exports = (appInfo) => {
       "/materialRepo/attachment",
       "/materialRepo/image",
       "/materialRepo/audio",
-      "/materialRepo/video",
+      "/materialRepo/video"
     ],
+    downloadBasePath: `/${appId}/upload`,
     materialRepoDir: path.join(uploadDir, "materialRepo"),
     articleMaterialDir: path.join(uploadDir, "articleMaterial"),
-    xfPageMaterialDir: path.join(uploadDir, "xfPageMaterial"),
-    downloadBasePath,
+    cloudDriveDir: path.join(uploadDir, "cloudDrive"),
+
+    primaryColor: "#4caf50",
+    primaryColorA80: "#EEF7EE",
+
     static: {
-      maxAge: 0,
-      buffer: false,
+      dynamic: true,
       preload: false,
-      maxFiles: 0,
+      maxAge: 31536000,
+      buffer: true,
       dir: [
-        {
-          prefix: `/${appId}/public/`,
-          dir: path.join(appInfo.baseDir, "app/public"),
-        },
-        {
-          prefix: `/${appId}/public/`,
-          dir: path.join(jianghuPath, "app/public"),
-        },
+        { prefix: `/${appId}/public/`, dir: path.join(appInfo.baseDir, 'app/public') },
+        { prefix: `/${appId}/public/`, dir: path.join(eggJianghuDir, 'app/public') },
       ],
     },
-    view: {
-      defaultViewEngine: "nunjucks",
-      mapping: { ".html": "nunjucks" },
-      root: [
-        path.join(appInfo.baseDir, "app/view"),
-        path.join(jianghuPath, "app/view"),
-      ].join(","),
+    jianghuConfig: {
+      enableUploadStaticFileCache: true,
+      enableUploadStaticFileAuthorization: false,
     },
+
+    view: {
+      defaultViewEngine: 'nunjucks',
+      mapping: { '.html': 'nunjucks' },
+      root: [
+        path.join(appInfo.baseDir, 'app/view'),
+        path.join(eggJianghuDir, 'app/view'),
+      ].join(','),
+    },
+
     middleware,
     ...middlewareMatch,
+
     // 覆盖 downloadUserInfo，适配 /upload/ 开头的路由
     downloadUserInfo: {
       match(ctx) {
@@ -83,4 +79,5 @@ module.exports = (appInfo) => {
       },
     },
   };
+
 };

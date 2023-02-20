@@ -1,389 +1,452 @@
-<template id="fileBrowser">
-    <v-card class="d-flex flex-column" flat>
-        <div class="px-4 mt-3 d-flex flex-wrap flex-sm-nowrap align-center">
-            <template v-if="!(path && isDir)">
-                <breadcrumbs
-                :path="path"
-                :storages="storagesArray"
-                :storage="activeStorage"
-                v-on:storage-changed="storageChanged"
-                v-on:path-changed="pathChanged">
-                </breadcrumbs>
-                <div class="flex-grow-1"></div>
-            </template>
-            <toolbar
-                ref="toolbar"
-                :operation-option="operationOption"
-                :path="path"
-                :storages="storagesArray"
-                :storage="activeStorage"
-                :endpoints="endpoints"
-                :axios="axiosInstance"
-                :current-copy-path="currentCopyPath"
-                v-on:storage-changed="storageChanged"
-                v-on:path-changed="pathChanged"
-                v-on:copy-item="copyItem"
-                v-on:cut-item="cutItem"
-                v-on:paste-item="pasteItem"
-                v-on:add-files="addUploadingFiles"
-                v-on:folder-created="refreshPending = true"
-                v-on:use-material="useMaterial"
-                v-on:close-material-picker="closeMaterialPicker"
-            >
-            </toolbar>
-            <template v-if="path && isDir">
-                <div class="flex-grow-1"></div>
-                <div style="width: 300px;" :class="{'mt-2': isMobile}">
-                    <v-text-field 
-                        dense
-                        filled 
-                        single-line
-                        hide-details="auto"
-                        label="Search Files & Folders" v-model="filter" prepend-inner-icon="mdi-magnify" color="success"></v-text-field>
-                </div>
-            </template>
-        </div>
-        <v-row no-gutters>
-            <v-col v-if="tree && $vuetify.breakpoint.smAndUp" sm="auto">
-                <tree
-                    ref="tree"
-                    :material-type="materialType"
-                    :path="path"
-                    :storage="activeStorage"
-                    :icons="icons"
-                    :endpoints="endpoints"
-                    :axios="axiosInstance"
-                    :refresh-pending="refreshPending"
-                    v-on:path-changed="pathChanged"
-                    v-on:copy-item="copyItem"
-                    v-on:cut-item="cutItem"
-                    v-on:paste-item="pasteItem"
-                    v-on:loading="loadingChanged"
-                    v-on:refreshed="refreshPending = false"
-                ></tree>
-            </v-col>
-            <v-col class="mt-2">
-                <div v-if="(path && isDir)" class="px-4 d-flex flex-wrap flex-sm-nowrap">
-                    <breadcrumbs
-                    :path="path"
-                    :storages="storagesArray"
-                    :storage="activeStorage"
-                    v-on:storage-changed="storageChanged"
-                    v-on:path-changed="pathChanged"
-                    >
-                    </breadcrumbs>
-                    <v-spacer></v-spacer>
-                    <template>
-                        <v-chip
-                            class="ma-2"
-                            color="green"
-                            text-color="white"
-                            small>
-                        {{totalCount}} items
-                        </v-chip>
-                        <v-btn icon @click="refreshPending = true">
-                            <v-icon>mdi-refresh</v-icon>
-                        </v-btn>
-                    </template>
-                </div>
-                <list
-                    ref="list"
-                    :operation-option="operationOption"
-                    :path="path"
-                    :storage="activeStorage"
-                    :icons="icons"
-                    :endpoints="endpoints"
-                    :axios="axiosInstance"
-                    :refresh-pending="refreshPending"
-                    :filter="filter"
-                    v-on:read-folder-by-path="readFolderByPath"
-                    v-on:path-changed="pathChanged"
-                    v-on:copy-item="copyItem"
-                    v-on:cut-item="cutItem"
-                    v-on:paste-item="pasteItem"
-                    v-on:loading="loadingChanged"
-                    v-on:refreshed="refreshPending = false"
-                    v-on:file-deleted="refreshPending = true"
-                    style="width: 100%;"
-                ></list>
-            </v-col>
+<template id="file-browser">
+  <!-- fileBrowser >>>>>>>>>>>>> -->
+  <v-card class="rounded-lg pt-4 file-browser">
+    <!-- 操作按钮 >>>>>>>>>>>>> -->
+    <v-row class="ma-0 px-4 mb-2" v-if="currentPathIsDir">
+      <!-- ✅新建目录 -->
+      <create-new-directory
+        v-if="operation.createDir"
+        :current-path="currentPath"
+        @refresh-directory="doUiAction('getDirectoryData')">
+      </create-new-directory>
+      <!--✅上传文件 -->
+      <file-upload
+        v-if="operation.upload"
+        :current-path="currentPath"
+        :file-icon-list="fileIconList"
+        @refresh-directory="doUiAction('getDirectoryData')"></file-upload>
+      <!--✅新建markdown -->
+      <markdown-editor
+        v-if="operation.markdown"
+        :current-path="currentPath"
+        :current-markdown-item="currentMarkdownItem"
+        @refresh-directory="doUiAction('getDirectoryData')">
+      </markdown-editor>
+      <!-- ✅粘贴 -->
+      <v-btn
+        small v-if="currentPath && currentCopyPath"
+        depressed
+        @click="doUiAction('pasteItem')" class="ml-2"
+        title="<$ constantUiMap.btn.paste $>"
+        :disabled="currentPath === '/'">
+        <v-icon class="mr-1" small>mdi-file-replace</v-icon>
+        <$ constantUiMap.btn.paste $>
+      </v-btn>
+      <!-- ✅分隔 -->
+      <v-spacer></v-spacer>
+      <!--✅搜索 -->
+      <v-col cols="12" xs="8" sm="4" md="3" xl="2" class="pa-0 mt-xs-2">
+        <v-text-field
+          color="success" v-model="tableSearchText" prefix="搜索：" class="jh-v-input" dense filled
+          single-line></v-text-field>
+      </v-col>
+    </v-row>
+    <!-- <<<<<<<<<<<<< 操作按钮 -->
+
+    <!-- 路径导航栏 >>>>>>>>>>>>> -->
+    <v-row class="ma-0 px-4 mb-2 align-center">
+      <!-- ✅路径面包屑栏  -->
+      <breadcrumbs
+        :current-path="currentPath"
+        :current-path-is-dir="currentPathIsDir"
+        @change-path="doUiAction('changeCurrentPath', $event)">
+      </breadcrumbs>
+      <!-- ✅分隔 -->
+      <v-spacer></v-spacer>
+      <template v-if="currentPathIsDir">
+        <v-row class="jh-directory-info ma-0 pa-0 justify-end mt-xs-2">
+          <!--✅目录下文件/文件夹总数 -->
+          <v-chip color="green" text-color="white" small>
+            {{ totalCount }} items
+          </v-chip>
+          <!-- ✅数据刷新状态 -->
+          <v-btn icon @click="doUiAction('getDirectoryData')" small>
+            <v-progress-circular indeterminate v-if="isRefreshDirectory" :size="20" color="primary"></v-progress-circular>
+            <v-icon v-else>mdi-refresh-circle</v-icon>
+          </v-btn>
         </v-row>
-        <upload
-            v-if="uploadingFiles !== false"
-            :path="path"
-            :storage="activeStorage"
-            :files="uploadingFiles"
-            :icons="icons"
-            :axios="axiosInstance"
-            :endpoint="endpoints.upload"
-            :max-upload-files-count="maxUploadFilesCount"
-            :max-upload-file-size="maxUploadFileSize"
-            v-on:add-files="addUploadingFiles"
-            v-on:remove-file="removeUploadingFile"
-            v-on:clear-files="uploadingFiles = []"
-            v-on:cancel="uploadingFiles = false"
-            v-on:uploaded="uploaded"
-        ></upload>
-    </v-card>
+      </template>
+      <!--✅复制路径-->
+      <v-row v-if="!currentPathIsDir && (operation.copyPath || operation.use)" class="justify-end jh-current-file-operation">
+        <template v-if="operation.copyPath">
+          <v-btn class="mr-2" small depressed color="success" @click="copyPath">
+            <v-icon class="mr-1" small>mdi-content-copy</v-icon>
+            复制路径
+          </v-btn>
+        </template>
+        <template v-if="operation.use">
+          <v-btn class="mr-2" small depressed color="success" @click="useFile">
+            <v-icon class="mr-1" small>mdi-check</v-icon>
+            使用文件
+          </v-btn>
+        </template>
+      </v-row>
+    </v-row>
+    <!-- <<<<<<<<<<<<< 路径导航栏 -->
+
+    <!-- 主内容 >>>>>>>>>>>>> -->
+    <v-row class="ma-0">
+      <!--✅文件列表-->
+      <directory-list
+        v-if="currentPathIsDir"
+        ref="directoryList"
+        style="width: 100%;"
+
+        :option="operation"
+        :current-path="currentPath"
+        :file-icon-list="fileIconList"
+        :refreshing="isRefreshDirectory"
+        :item-list="currentDataList"
+        :table-search-text="tableSearchText"
+
+        @path-changed="doUiAction('changeCurrentPath', $event)"
+        @copy-item="doUiAction('copyItem', $event)"
+        @cut-item="doUiAction('cutItem', $event)"
+        @edit-markdown-item="doUiAction('startUpdateMarkdown', $event)"
+        @refresh-directory="doUiAction('getDirectoryData')">
+      </directory-list>
+      <!--✅文件详情-->
+      <file-detail v-else :option="operation" :current-path="currentPath"></file-detail>
+    </v-row>
+    <!-- <<<<<<<<<<<<< 主内容 -->
+  </v-card>
+  <!-- <<<<<<<<<<<<< fileBrowser -->
 </template>
 
-{% include 'component/fileBrowser/Confirm.html' %}
-{% include 'component/fileBrowser/List.html' %}
-{% include 'component/fileBrowser/Toolbar.html' %}
-{% include 'component/fileBrowser/Tree.html' %}
-{% include 'component/fileBrowser/Upload.html' %}
-{% include 'component/fileBrowser/Breadcrumbs.html' %}
+<!-- 加载页面组件 >>>>>>>>>>>>> -->
+{% include 'common/jianghuJs/fixedTableHeightV4.html' %}
+<!-- <<<<<<<<<<<<< 加载页面组件 -->
 
-<!-- [reference](https://github.com/semeniuk/vuetify-file-browser) -->
+<!-- 加载fileBrowser组件 >>>>>>>>>>>>> -->
+{% include 'component/fileBrowser/breadcrumbs.html' %}
+{% include 'component/fileBrowser/createNewDirectory.html' %}
+{% include 'component/fileBrowser/directoryList.html' %}
+{% include 'component/fileBrowser/fileDetail.html' %}
+{% include 'component/fileBrowser/fileUpload.html' %}
+{% include 'component/fileBrowser/markdownEditor.html' %}
+<!-- <<<<<<<<<<<<< 加载fileBrowser组件 -->
+
+<!-- 加载markdown组件 >>>>>>>>>>>>> -->
+{% include 'component/markdown2html/md2html.html' %}
+<!-- <<<<<<<<<<<<< 加载markdown组件 -->
+
 <script>
-/**
- * 关机 api 汇总
- * - list 
- *  - refreshPending watch
- *  - this.$refs.tree.readFolderByPath(path);
- * - tree
- *  - path watch
- *  - this.$refs.list.load();
- */ 
-const availableStorages = [
-    {
-        name: "<$ constantUiMap.btn.material $>",
-        code: "local",
-        icon: "mdi-file-cog"
-    }
-];
-
-const endpoints = {
-    list: { url: "/storage/{storage}/list?path={path}", method: "get" },
-    upload: { url: "/storage/{storage}/upload?path={path}", method: "post" },
-    mkdir: { url: "/storage/{storage}/mkdir?path={path}", method: "post" },
-    delete: { url: "/storage/{storage}/delete?path={path}", method: "post" }
-};
-
-const fileIcons = {
-    zip: "mdi-folder-zip-outline",
-    rar: "mdi-folder-zip-outline",
-    htm: "mdi-language-html5",
-    html: "mdi-language-html5",
-    js: "mdi-nodejs",
-    json: "mdi-json",
-    md: "mdi-markdown",
-    pdf: "mdi-file-pdf",
-    png: "mdi-file-image",
-    jpg: "mdi-file-image",
-    jpeg: "mdi-file-image",
-    mp4: "mdi-filmstrip",
-    mkv: "mdi-filmstrip",
-    avi: "mdi-filmstrip",
-    wmv: "mdi-filmstrip",
-    mov: "mdi-filmstrip",
-    txt: "mdi-file-document-outline",
-    xls: "mdi-file-excel",
-    other: "mdi-file-outline"
-};
-
 Vue.component("file-browser", {
-    vuetify: new Vuetify(),
-    name: 'file-browser',
-    template: '#fileBrowser',
-    model: {
-        prop: "path",
-        event: "change"
+  vuetify: new Vuetify(),
+  name: 'file-browser',
+  template: '#file-browser',
+  props: {
+    option: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  data: () => ({
+    defaultOperation: {
+      'createDir': true,
+      'markdown': true,
+      'upload': true,
+      'copy': true,
+      'copyPath': true,
+      'cut': true,
+      'clearRecycle': true,
+      'delete': true,
+      'edit': true,
+      'rename': true,
+      'use': true,
     },
-    props: {
-        // comma-separated list of active storage codes
-        storages: {
-            type: String,
-            default: () => availableStorages.map(item => item.code).join(",")
-        },
-        // code of default storage
-        storage: { type: String, default: "local" },
-        // show tree view
-        tree: { type: Boolean, default: true },
-        // file icons set
-        icons: { type: Object, default: () => fileIcons },
-        // custom backend endpoints
-        endpoints: { type: Object, default: () => endpoints },
-        // custom axios instance
-        axios: { type: Function },
-        // custom configuration for internal axios instance
-        axiosConfig: { type: Object, default: () => {} },
-        // max files count to upload at once. Unlimited by default
-        maxUploadFilesCount: { type: Number, default: 0 },
-        // max file size to upload. Unlimited by default
-        maxUploadFileSize: { type: Number, default: 1024 * 1024 * 1024 },
-        imageMaxUploadFileSize: { type: Number, default: 700 * 1024 },
+    // 文件icon
+    fileIconList: Object.freeze({
+      // zip: "mdi-folder-zip-outline",
+      // rar: "mdi-folder-zip-outline",
+      // htm: "mdi-language-html5",
+      // html: "mdi-language-html5",
+      // js: "mdi-nodejs",
+      // json: "mdi-json",
+      // pdf: "mdi-file-pdf",
+      // xls: "mdi-file-excel",
+      md: "mdi-sticker-text-outline",
+      png: "mdi-file-image",
+      jpg: "mdi-file-image",
+      jpeg: "mdi-file-image",
+      mp4: "mdi-filmstrip",
+      mkv: "mdi-filmstrip",
+      avi: "mdi-filmstrip",
+      wmv: "mdi-filmstrip",
+      mov: "mdi-filmstrip",
+      txt: "mdi-file-document-outline",
+      other: "mdi-file-outline"
+    }),
 
-        materialType: { type: String, default: '' },
-        operationOption: { type: Object, default: () => {
-                return { delete: false, copy: false, recycle: false, renameFile: false }
+    //目录文件缓存
+    directoryAndFileMap: {},
+
+    //操作相关
+    isRefreshDirectory: false,
+    tableSearchText: "",
+    currentPath: "/cloudDemo/",
+    currentDirectory: 'cloudDrive',
+    currentMarkdownItem: null,
+    currentCopyPath: '',
+    currentPasteMode: null,
+    pasteItemFromDir: null,
+    pasteItemFilename: null,
+  }),
+  computed: {
+    // 文件夹
+    currentPathIsDir() {
+      return this.currentPath.endsWith('/');
+    },
+    // 当前目录的缓存数据key
+    currentPathCacheKey() {
+      const currentPathStr = this.currentPath.replace(/\//g, '_');
+      return 'directoryAndFile_' + currentPathStr;
+    },
+    // 当前目录的数据
+    currentDataList() {
+      const list = this.directoryAndFileMap[this.currentPathCacheKey];
+      return _.cloneDeep(list);
+    },
+    // 当前目录总文件数
+    totalCount() {
+      return this.currentDataList ? this.currentDataList.length : 0
+    },
+    // 配置
+    operation() {
+      return {
+        ...this.defaultOperation,
+        ...this.option,
+      }
+    }
+  },
+  watch: {
+    currentPath() {
+      this.doUiAction('getDirectoryData');
+      // table高度铺满
+      resetTableMaxHeight();
+    }
+  },
+  async created() {
+    this.doUiAction('getDirectoryData');
+  },
+  methods: {
+    async doUiAction(uiActionId, uiActionData) {
+      switch (uiActionId) {
+        case 'getDirectoryData':
+          await this.startRefresh();
+          await this.getDirectoryCacheData();
+          await this.getDirectoryBackendData();
+          await this.saveDirectoryDataToCache();
+          await this.stopRefresh();
+          break;
+        case 'changeCurrentPath':
+          await this.changeCurrentPath(uiActionData);
+          break;
+        case 'startUpdateMarkdown':
+          await this.prepareUpdateMarkdown(uiActionData);
+          break;
+        case 'copyItem':
+          await this.copyItem(uiActionData);
+          break;
+        case 'cutItem':
+          await this.cutItem(uiActionData);
+          break;
+        case 'copyPath':
+          await this.copyPath();
+          break;
+        case 'useFile':
+          await this.useFile();
+          break;
+        case 'pasteItem':
+          await this.preparePasteItem();
+          await this.doPasteItem();
+          await this.clearPasteItem();
+          await this.doUiAction('getDirectoryData');
+          break;
+      }
+    },
+
+    // ---------- 读取数据 uiAction >>>>>>>>>> --------
+    startRefresh() {
+      this.isRefreshDirectory = true;
+    },
+    async getDirectoryCacheData() {
+      let directoryAndFileMapCache = localStorage.getItem('directoryAndFileMapCache');
+      if (!directoryAndFileMapCache) directoryAndFileMapCache = '{}';
+      directoryAndFileMapCache = JSON.parse(directoryAndFileMapCache)
+      if (directoryAndFileMapCache.hasOwnProperty(this.currentPathCacheKey)) {
+        this.directoryAndFileMap[this.currentPathCacheKey] = this.handleDirectoryData(directoryAndFileMapCache[this.currentPathCacheKey]);
+        this.directoryAndFileMap = _.cloneDeep(this.directoryAndFileMap);
+      }
+    },
+    async getDirectoryBackendData() {
+      if (this.currentPath.endsWith('/')) {
+        const cacheKey = this.currentPathCacheKey;
+        const r_fileOrDirList = (await window.jianghuAxios({
+          data: {
+            appData: {
+              pageId: 'cloud_drive',
+              actionId: 'getDirItemList',
+              actionData: {
+                path: this.currentPath
+              },
             }
-        },
-    },
-    data() {
-        return {
-            filter: "",
-            totalCount: 0,
-            loading: 0,
-            path: "/image/",
-            activeStorage: null,
-            uploadingFiles: false, // or an Array of files
-            // 用于让子组件做监听，有变化时对当前目录做刷新
-            refreshPending: false,
-            axiosInstance: null,
-            currentCopyPath: '',
-            moreBtn: [{value: 'mkDir', title: '创建文件夹'}, {value: 'rename', title: '重命名'}, {value: 'cut', title: '剪切'}, {value: 'paste', title: '粘贴'}],
-        };
-    },
-    computed: {
-        storagesArray() {
-            let storageCodes = this.storages.split(","),
-                result = [];
-            storageCodes.forEach(code => {
-                result.push(availableStorages.find(item => item.code == code));
-            });
-            return result;
-        },
-        isMobile() {
-            return window.innerWidth < 500;
-        },
-        isDir() {
-            return this.path[this.path.length - 1] === "/";
-        }
-    },
-    methods: {
-        moreBtnAction(btn) {
-          switch (btn.value) {
-            case 'mkDir':
-              console.log(this.$refs.toolbar);
-              this.$refs.toolbar && this.$refs.toolbar.mkdir();
-              break;
           }
-        },
-        useMaterial({ path }) {
-            this.$emit("use-material", { path: this.path });
-        },
-        closeMaterialPicker() {
-            this.$emit("close-material-picker");
-        },
-        loadingChanged(loading) {
-            if (loading) {
-                this.loading++;
-            } else if (this.loading > 0) {
-                this.loading--;
-            }
-            if(!loading){
-                this.totalCount = this.$refs.list.tableData.length
-            }
-        },
-        storageChanged(storage) {
-            this.activeStorage = storage;
-        },
-        addUploadingFiles(files) {
-            files = Array.from(files);
-
-            if (this.imageMaxUploadFileSize) {
-                if (this.materialType === 'image' && files.find(
-                    file => file.size > this.imageMaxUploadFileSize
-                )) {
-                    window.vtoast.fail('部分图片文件大于 700K, 请重新压缩过后再上传素材');
-                    files = files.filter(
-                        file => file.size <= this.imageMaxUploadFileSize
-                    );
-                }
-            }
-
-            if (this.uploadingFiles === false) {
-                this.uploadingFiles = [];
-            }
-
-            if (this.maxUploadFilesCount && this.uploadingFiles.length + files.length > this.maxUploadFilesCount) {
-                files = files.slice(0, this.maxUploadFilesCount - this.uploadingFiles.length);
-            }
-
-            this.uploadingFiles.push(...files);
-        },
-        removeUploadingFile(index) {
-            this.uploadingFiles.splice(index, 1);
-        },
-        uploaded() {
-            this.uploadingFiles = false;
-            this.refreshPending = true;
-        },
-        pathChanged(path) {
-            this.path = path;
-            this.$emit("change", path);
-        },
-        async pasteItem() {
-            window.vtoast.loading(this.pasteMode === 'cut' ? '文件移动中' : '文件复制中');
-            const fromDir = this.currentCopyPath.substring(0, this.currentCopyPath.lastIndexOf('/')+1);
-            const toDir = this.path;
-            const filename = this.currentCopyPath.substring(this.currentCopyPath.lastIndexOf('/')+1);
-            await window.jianghuAxios({
-                data: {
-                    appData: {
-                        pageId: 'materialManagement',
-                        actionId: this.pasteMode === 'cut' ? 'moveFile' : 'copyFile',
-                        actionData: {
-                            fromDir,
-                            toDir,
-                            filename,
-                        },
-                    }
-                }
-            });
-            window.vtoast.success(this.pasteMode === 'cut' ? '文件移动成功' : '文件复制成功');
-            this.$refs.list.load();
-            if (fromDir.startsWith(toDir)) {
-                this.$refs.tree.readFolderByPath(toDir);
-                setTimeout(()=> {
-                    this.$refs.tree.readFolderByPath(fromDir);
-                }, 2600);                
-            } else if (toDir.startsWith(fromDir)) {
-                this.$refs.tree.readFolderByPath(fromDir);
-                setTimeout(()=> {
-                    this.$refs.tree.readFolderByPath(toDir);
-                }, 2600);
-            } else {
-                this.$refs.tree.readFolderByPath(fromDir);
-                this.$refs.tree.readFolderByPath(toDir);
-            }
-
-
-            if (this.pasteMode === 'cut') {
-                this.currentCopyPath = null
-            }
-        },
-        cutItem(path) {
-            this.currentCopyPath = path
-            this.pasteMode = 'cut'
-            console.log('cutItem', this.currentCopyPath)
-        },
-        copyItem(path) {
-            this.currentCopyPath = path
-            this.pasteMode = 'copy'
-            console.log('copyItem', this.currentCopyPath)
-        },
-        readFolderByPath(path) {
-            this.$refs.tree.readFolderByPath(path);
-        },
+        })).data.appData.resultData.rows;
+        this.directoryAndFileMap[cacheKey] = this.handleDirectoryData(r_fileOrDirList);
+        this.directoryAndFileMap = _.cloneDeep(this.directoryAndFileMap);
+      }
     },
-    created() {
-        this.activeStorage = this.storage;
-        this.axiosInstance = this.axios || axios.create(this.axiosConfig);
+    saveDirectoryDataToCache() {
+      localStorage.setItem('directoryAndFileMapCache', JSON.stringify(this.directoryAndFileMap));
     },
-    mounted() {
+    handleDirectoryData(directoryDataList) {
+      const directoryList = directoryDataList.filter(item => {
+        return item.type === "dir";
+      });
+      // 目录排序，回收站在第一位
+      directoryList.sort((a, b) => {
+        return (b.basename.includes('_recycle')) - (a.basename.includes('_recycle'));
+      })
+      const fileList = directoryDataList.filter(item => {
+        return item.type === "file";
+      });
+      return directoryList.concat(fileList);
+    },
+    stopRefresh() {
+      this.isRefreshDirectory = false;
+    },
+    // ---------- <<<<<<<<<<< 读取数据 uiAction --------
 
-    }
-});
-</script>
-<style scoped>
-    .table-toolbar .v-toolbar__content{
-        height: 30px !important;
-    }
-    @media (max-width: 500px)  {
-        .v-toolbar .v-toolbar__content{
-            flex-wrap: wrap;
+    // ---------- 切换目录 uiAction >>>>>>>>>> --------
+    changeCurrentPath(path) {
+      this.currentPath = path;
+    },
+    // ---------- <<<<<<<<<<< 切换目录 uiAction --------
+
+    // ---------- 编辑文档 uiAction >>>>>>>>>> --------
+    async prepareUpdateMarkdown(funObj) {
+      this.currentMarkdownItem = funObj;
+    },
+    // ---------- <<<<<<<<<<< 编辑文档 uiAction --------
+
+    // ---------- 剪切 uiAction >>>>>>>>>> --------
+    cutItem(path) {
+      this.currentCopyPath = path
+      this.currentPasteMode = 'cut'
+      window.vtoast.success('<$ constantUiMap.btn.cut $>');
+    },
+    // ---------- <<<<<<<<<<< 剪切 uiAction --------
+
+    // ---------- 复制 uiAction >>>>>>>>>> --------
+    copyItem(path) {
+      this.currentCopyPath = path
+      this.currentPasteMode = 'copy'
+      window.vtoast.success('<$ constantUiMap.btn.copied $>');
+    },
+    // ---------- <<<<<<<<<<< 复制 uiAction --------
+
+    // ---------- 复制路径 uiAction >>>>>>>>>> --------
+    async copyPath() {
+      await navigator.clipboard.writeText(`${location.origin}${window.appInfo.upload}/${this.currentDirectory}${this.currentPath}`);
+      window.vtoast.success("文件地址已复制到粘贴板")
+    },
+    // ---------- <<<<<<<<<<< 复制路径 uiAction --------
+
+    // ---------- 使用文件 uiAction >>>>>>>>>> --------
+    useFile() {
+      this.$emit('use-file', `${window.appInfo.upload}/${this.currentDirectory}${this.currentPath}`);
+    },
+    // ---------- <<<<<<<<<<< 使用文件 uiAction --------
+
+    // ---------- 粘贴文件 uiAction >>>>>>>>>> --------
+    async preparePasteItem() {
+      this.pasteItemFromDir = this.currentCopyPath.substring(0, this.currentCopyPath.lastIndexOf('/') + 1);
+      this.pasteItemFilename = this.currentCopyPath.substring(this.currentCopyPath.lastIndexOf('/') + 1);
+    },
+    async doPasteItem() {
+      if (this.isRefreshDirectory) {
+        requestAnimationFrame(async () => {
+          await this.doPasteItem();
+        })
+      } else {
+        if (this.currentPasteMode === 'cut') {
+          await this.doMoveItem();
         }
-    }
+        if (this.currentPasteMode === 'copy') {
+          await this.doCopyItem();
+        }
+      }
+    },
+    async doMoveItem() {
+      window.vtoast.loading({message: '文件移动中', time: -1});
+      await window.jianghuAxios({
+        data: {
+          appData: {
+            pageId: 'cloud_drive',
+            actionId: 'moveFile',
+            actionData: {
+              fromDir: this.pasteItemFromDir,
+              filename: this.pasteItemFilename,
+              toDir: this.currentPath,
+            },
+          }
+        }
+      });
+      window.vtoast.success('文件移动成功');
+    },
+    async doCopyItem() {
+      window.vtoast.loading({message: '文件复制中', time: -1});
+      await window.jianghuAxios({
+        data: {
+          appData: {
+            pageId: 'cloud_drive',
+            actionId: 'copyFile',
+            actionData: {
+              fromDir: this.pasteItemFromDir,
+              filename: this.pasteItemFilename,
+              toDir: this.currentPath,
+            },
+          }
+        }
+      });
+      window.vtoast.success('文件复制成功');
+    },
+    async clearPasteItem() {
+      this.currentCopyPath = null;
+      this.currentPasteMode = null;
+      this.pasteItemFromDir = null;
+      this.pasteItemFilename = null;
+    },
+    // ---------- <<<<<<<<<<< 粘贴文件 uiAction --------
+  }
+})
+</script>
+
+
+<style>
+.jh-directory-info .v-btn {
+  transform: translateY(-1.5px);
+}
+
+@media screen and (max-width: 500px) {
+  .v-application .mt-xs-2 {
+    margin-top: 8px !important;
+  }
+
+  .v-data-table > .v-data-table__wrapper > table > tbody > tr > td:not(:first-child) {
+    white-space: nowrap !important;
+  }
+
+  .jh-directory-info {
+    position: fixed;
+    top: 69px;
+    right: 10px;
+  }
+  .jh-current-file-operation {
+    position: fixed;
+    top: 88px;
+    right: 20px;
+  }
+}
 </style>

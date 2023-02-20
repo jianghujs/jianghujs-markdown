@@ -62,46 +62,6 @@ class JhTagEngine {
     })
   };
 
-
-  // jhPdfViewer [jh-pdf-viewer src="/__appId__/upload\articleMaterial\30009\1668869349745_生态高尔夫与高尔夫球场环境认证_戴子云.pdf"/]
-  async jhPdfViewer() {
-    // 如存在pdf 则把 原有content index 下的 {type: 'text', src: 'xxx'} 替换为 {type: 'text', src: 'xxx'},{type: 'pdfViewer', src: 'xxx'},{type: 'text', src: 'xxx'}
-    // content 数组从后往前替换避免 index 变化问题
-    const replaceArray = [];
-    this.currentArticleContentSection.forEach((articleItem, index) => {
-      let content = articleItem.content;
-      const pdfObj = {
-        contentIndex: index,
-        content: []
-      };
-      const _pdfViewList = articleItem.content.match(/\[jh-pdf-viewer.+\/]/g);
-      if(_pdfViewList && _pdfViewList.length) {
-        _pdfViewList.forEach((query, qIndex) => {
-          pdfObj.content.pop();
-          // 1. 提取标签/src 的内容 {src: 'xxx'}
-          const params = this.extractedPdfViewer(query);
-
-          // 2. 提取 pdf-viewer 前的content text内容 和自己
-          const contentArr = content.split(query);
-          pdfObj.content.push({ type: 'text', content: contentArr[0] });
-          pdfObj.content.push({ type: 'pdfViewer', params });
-
-          // 3. push 暂存剩余文本至最后一个
-          contentArr.splice(0, 1)
-          content = contentArr.join(query);
-          pdfObj.content.push({ type: 'text', content });
-        })
-      }
-      if(pdfObj.content.length) {
-        replaceArray.unshift(pdfObj);
-      }
-    })
-    // replaceArray [{contentIndex: 1, content: [{type: 'text', content: 'xxx'},{type: 'pdfViewer', src: 'xxx'},{type: 'text', content: 'xxx'}]}]
-    replaceArray.forEach((item, index) => {
-      this.currentArticleContentSection.splice(item.contentIndex, 1, ...item.content);
-    })
-  };
-
   lineToUpper(split, str) {
     return str.split(split).map((e, i) => {
       return i ? e.slice(0, 1).toUpperCase() + e.slice(1) : e
@@ -134,7 +94,6 @@ class JhTagEngine {
     }
     // 提取articleQuery
     this.jhArticleQueryTagListHandle();
-    this.jhPdfViewer();
     return this.currentArticleContentSection;
   };
 
@@ -181,25 +140,6 @@ class JhTagEngine {
     this.currentArticleContentSection.splice(this.currentArticleContentSection.length - 1, 0, {
       type: 'toggle', content: this.restoreSpecialChat(toggleContent), params: toggleDom
     });
-  }
-
-  extractedPdfViewer(item) {
-    // 通toggle中提取内容
-    let domStr = item.split('/]')[0].substring('[jh-pdf-viewer '.length);
-    let dom = {};
-
-    const attrList = domStr.match(/['"][\s\S]*?['"]/g);
-    attrList.forEach(e => {
-      e = e.replace(/['"]/g, '');
-      const targetStr = e.replace(/\s/g, '');
-      domStr = domStr.replace(e, targetStr)
-    })
-    domStr.split(' ').forEach(e => {
-      dom = Object.assign(dom, {
-        [this.lineToUpper('-', e.split('=')[0])]: e.split('=')[1].replace(/"/g, '')
-      })
-    })
-    return dom;
   }
 }
 </script>

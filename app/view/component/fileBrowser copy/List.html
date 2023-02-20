@@ -233,7 +233,7 @@
                     const rows = (await window.jianghuAxios({
                         data: {
                             appData: {
-                                pageId: 'materialManagement',
+                                pageId: 'materialList',
                                 actionId: 'list',
                                 actionData: { path },
                             }
@@ -257,7 +257,7 @@
                     await window.jianghuAxios({
                         data: {
                             appData: {
-                                pageId: 'materialManagement',
+                                pageId: 'materialList',
                                 actionId: 'delete',
                                 actionData: { path: item.path },
                             }
@@ -297,7 +297,7 @@
                 await window.jianghuAxios({
                     data: {
                         appData: {
-                            pageId: 'materialManagement',
+                            pageId: 'materialList',
                             actionId: 'renameFile',
                             actionData: {
                                 path,

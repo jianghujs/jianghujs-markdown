@@ -9,7 +9,7 @@
   <v-main class="mt-15">
     <!-- 头部内容 >>>>>>>>>>>>> -->
     <div class="jh-page-second-bar px-8">
-      <div class="pt-3 text-h7 font-weight-bold">文章管理
+      <div class="pt-3 text-h7 font-weight-bold">文章列表
         <!-- 帮助页按钮 -->
         <v-icon @click="isHelpPageDrawerShown = true" color="success" small>mdi-help-circle-outline</v-icon>
       </div>
@@ -95,7 +95,7 @@
     <!-- 帮助页抽屉 >>>>>>>>>>>>> -->
     <v-navigation-drawer v-model="isHelpPageDrawerShown" v-click-outside="drawerClickOutside" fixed temporary right width="80%" class="elevation-24">
       <iframe
-        style="border: 0" :src="`/${appInfo.appId}/pageDoc#1.articleManagement.md`" width="100%"
+        style="border: 0" :src="`/${appInfo.appId}/pageDoc#1.articleList.md`" width="100%"
         height="100%"></iframe>
 
       <v-btn
@@ -141,7 +141,7 @@ new Vue({
         disabled: true,
       },
       {
-        text: '文章管理',
+        text: '文章列表',
         disabled: true,
       }
     ],
@@ -235,7 +235,7 @@ new Vue({
       const result = await window.jianghuAxios({
         data: {
           appData: {
-            pageId: 'articleManagement',
+            pageId: 'articleList',
             actionId: 'selectItemList',
             orderBy: [
               { column: 'articleUpdateTime', order: 'desc' }, 
@@ -287,7 +287,7 @@ new Vue({
       await window.jianghuAxios({
         data: {
           appData: {
-            pageId: 'articleManagement',
+            pageId: 'articleList',
             actionId: 'deletedArticle',
             actionData: { articleId: this.deleteItemId }
           }
@@ -319,7 +319,7 @@ new Vue({
       await window.jianghuAxios({
         data: {
           appData: {
-            pageId: 'articleManagement',
+            pageId: 'articleList',
             actionId: 'restoreArticle',
             actionData: { articleId: this.restoreItemId }
           }
