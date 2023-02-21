@@ -127,9 +127,7 @@ class CloudDriveService extends Service {
     const cloudDriveList = [{
       groupId: "cloudDemo"
     }];
-    return {
-      rows: cloudDriveList
-    };
+    return cloudDriveList;
   }
 
   async prepareCloudDriveStorage(groupStorage) {
@@ -159,17 +157,17 @@ class CloudDriveService extends Service {
     const actionData = this.ctx.request.body.appData.actionData;
     validateUtil.validate(actionDataScheme.getDirItemList, actionData);
     const {cloudDriveDir} = this.app.config;
-    let {path} = actionData;
+    let {path, cloudDriveList} = actionData;
     if (path !== '/') {
       await this.prepareCloudDriveStorage(path.substring(1).split('/')[0]);
     }
     pathCheck(path);
-   
-    const userCloudDriveList = await this.getUserCloudDriveList()
+
+    const userCloudDriveList = cloudDriveList ? cloudDriveList : await this.getUserCloudDriveList();
     // 权限检查
     if (path !== '/') {
       const pathList = path.split('/')
-      const hasPath = userCloudDriveList.rows.some(group => pathList[1] === group.groupId)
+      const hasPath = userCloudDriveList.some(group => pathList[1] === group.groupId)
       if (!hasPath) {
         throw new BizError(errorInfoEnum.path_no_permissions);
       }
@@ -218,7 +216,7 @@ class CloudDriveService extends Service {
     let rows = dirs.concat(files);
     // 过滤无权限数据
     if (path === '/') {
-      rows = rows.filter(row => userCloudDriveList.rows.some(group => row.name === group.groupId))
+      rows = rows.filter(row => userCloudDriveList.some(group => row.name === group.groupId))
     }
 
     return {rows};
