@@ -17,27 +17,27 @@
         <!--✅图片-->
         <v-img
           v-if="fileType === 'image'" min-width="30" max-width="500" min-height="30" max-height="500"
-          :src="`/<$ ctx.app.config.appId $>/upload/cloudDrive${currentPath}?v=${new Date().getTime()}`" :key="currentPath"
+          :src="`/<$ ctx.app.config.appId $>/upload/${rootDirectory}${currentPath}?v=${new Date().getTime()}`" :key="currentPath"
           class="d-inline-block"
-          @click="doUiAction('openFile', `/<$ ctx.app.config.appId $>/upload/cloudDrive${currentPath}?v=${new Date().getTime()}`)">
+          @click="doUiAction('openFile', `/<$ ctx.app.config.appId $>/upload/${rootDirectory}${currentPath}?v=${new Date().getTime()}`)">
         </v-img>
         <!--✅视频-->
         <video
           v-if="fileType === 'video'" width="80%" min-width="30" max-width="500" min-height="30" max-height="500"
-          :src="`/<$ ctx.app.config.appId $>/upload/cloudDrive${currentPath}?v=${new Date().getTime()}`" :key="currentPath"
+          :src="`/<$ ctx.app.config.appId $>/upload/${rootDirectory}${currentPath}?v=${new Date().getTime()}`" :key="currentPath"
           class="d-inline-block" controls>
-          <source :src="`/<$ ctx.app.config.appId $>/upload/cloudDrive${currentPath}?v=${new Date().getTime()}`" type="video/mp4">
+          <source :src="`/<$ ctx.app.config.appId $>/upload/${rootDirectory}${currentPath}?v=${new Date().getTime()}`" type="video/mp4">
         </video>
         <!--✅音频-->
         <audio
           v-if="fileType === 'audio'" min-width="30" max-width="500" min-height="30" max-height="500"
-          :src="`/<$ ctx.app.config.appId $>/upload/cloudDrive${currentPath}?v=${new Date().getTime()}`" :key="currentPath"
+          :src="`/<$ ctx.app.config.appId $>/upload/${rootDirectory}${currentPath}?v=${new Date().getTime()}`" :key="currentPath"
           class="my-10" controls>
-          <source :src="`/<$ ctx.app.config.appId $>/upload/cloudDrive${currentPath}?v=${new Date().getTime()}`" type="audio/mpeg">
+          <source :src="`/<$ ctx.app.config.appId $>/upload/${rootDirectory}${currentPath}?v=${new Date().getTime()}`" type="audio/mpeg">
         </audio>
       </div>
       <!--✅路径-->
-      <div class="text-center mt-4"><$ constantUiMap.btn.file $>：{{ `${host}/<$ ctx.app.config.appId $>/upload/cloudDrive${currentPath}` }}</div>
+      <div class="text-center mt-4"><$ constantUiMap.btn.file $>：{{ `${host}/<$ ctx.app.config.appId $>/upload${rootDirectory}${currentPath}` }}</div>
     </v-card-text>
   </v-card>
   <!-- <<<<<<<<<<<<< 文件详情 -->
@@ -51,6 +51,7 @@ Vue.component("file-detail", {
   props: {
     currentPath: String,
     option: Object,
+    rootDirectory: String,
   },
   data: () => ({
     host: window.location.host,
@@ -62,7 +63,6 @@ Vue.component("file-detail", {
     }
   },
   mounted() {
-    console.log("wocao")
     this.fixedDetailWrapperHeight();
   },
   computed: {
@@ -121,11 +121,13 @@ Vue.component("file-detail", {
       window.open(path)
     },
     // ---------- <<<<<<<<<<< 打开文件 uiAction  --------
+
+    // ---------- 公共方法 >>>>>>>>>> --------
     fixedDetailWrapperHeight() {
       const detailWrapper = document.querySelector('.jh-file-detail-wrapper');
       detailWrapper.style.height = window.innerHeight - detailWrapper.getBoundingClientRect().y + 'px';
-      console.dir(detailWrapper.getBoundingClientRect())
     }
+    // ---------- <<<<<<<<<<< 公共方法  --------
   }
 });
 </script>

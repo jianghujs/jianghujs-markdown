@@ -21,8 +21,10 @@
         <div class="jh-page-body-container px-8">
           <file-browser
             :operation-config="operationConfig"
-            :cloud-drive-list="cloudDriveList"
-            :path="path"></file-browser>
+            :accessible-folder="accessibleFolder"
+            :access-path="accessPath"
+            :root-directory="rootDirectory"
+            :root-directory-name="rootDirectoryName"></file-browser>
         </div>
         <!-- <<<<<<<<<<<<< 页面主体内容 -->
 
@@ -59,7 +61,6 @@
 {% block vueScript %}
 
 <!-- 加载页面组件 >>>>>>>>>>>>> -->
-{% include 'common/jianghuJs/fixedTableHeightV4.html' %}
 {% include 'component/fileBrowser/FileBrowser.html' %}
 <!-- <<<<<<<<<<<<< 加载页面组件 -->
 
@@ -84,9 +85,11 @@ new Vue({
     isHelpPageDrawerShown: false,
 
     // file-browser 配置
-    operationConfig: { 'markdown': false, },
-    cloudDriveList: [{ groupId: "materialRepo" }],
-    path: "/materialRepo/",
+    operationConfig: { 'markdown': false, 'use': false },
+    accessibleFolder: [{ groupId: "materialRepo" }],
+    accessPath: "/materialRepo/",
+    rootDirectory:  "",
+    rootDirectoryName:  "素材",
   }
 })
 </script>

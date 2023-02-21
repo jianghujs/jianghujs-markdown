@@ -130,12 +130,11 @@ class CloudDriveService extends Service {
     return cloudDriveList;
   }
 
-  async prepareCloudDriveStorage(groupStorage) {
+  async prepareCloudDriveStorage(groupStorage, rootDirectory) {
     const {config: {uploadDir}} = this.app;
-    const cloudDrive = 'cloudDrive';
     const upload = nodePath.join(uploadDir);
     // 网盘根目录
-    const targetPath = nodePath.join(upload, cloudDrive);
+    const targetPath = nodePath.join(upload, rootDirectory);
     if (!await exists(targetPath)) {
       await fsPromises.mkdir(targetPath, {recursive: true});
     }
@@ -157,13 +156,13 @@ class CloudDriveService extends Service {
     const actionData = this.ctx.request.body.appData.actionData;
     validateUtil.validate(actionDataScheme.getDirItemList, actionData);
     const {cloudDriveDir} = this.app.config;
-    let {path, cloudDriveList} = actionData;
+    let {path, accessibleFolder, rootDirectory} = actionData;
     if (path !== '/') {
-      await this.prepareCloudDriveStorage(path.substring(1).split('/')[0]);
+      await this.prepareCloudDriveStorage(path.substring(1).split('/')[0], rootDirectory);
     }
     pathCheck(path);
 
-    const userCloudDriveList = cloudDriveList ? cloudDriveList : await this.getUserCloudDriveList();
+    const userCloudDriveList = accessibleFolder ? accessibleFolder : await this.getUserCloudDriveList();
     // 权限检查
     if (path !== '/') {
       const pathList = path.split('/')

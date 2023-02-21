@@ -110,6 +110,7 @@
     props: {
       currentPath: String,
       fileIconList: Object,
+      rootDirectory: String,
     },
     data() {
       return {
@@ -216,7 +217,7 @@
         await window.jianghuAxios.httpUploadByStream({
           file: this.uploadFileItem,
           filenameStorage: this.uploadFileItemName,
-          fileDirectory: '/cloudDrive' + this.currentPath,
+          fileDirectory: `/${this.rootDirectory}${this.currentPath}`,
           onProgress: (total, loaded) => {
             this.progress = Number((loaded * 100 / total).toFixed(2));
             window.vtoast.loading(`${this.uploadFileItemName} <$ constantUiMap.btn.uploadProgress $>: ${this.progress}%`);

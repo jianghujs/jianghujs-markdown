@@ -30,7 +30,7 @@
             <template>
               <!--✅图片-->
               <v-avatar tile v-if="checkIsImg(item.basename)" size="25">
-                <v-img :src="`/<$ ctx.app.config.appId $>/upload/cloudDrive${currentPath}/${item.basename}`"></v-img>
+                <v-img :src="`/<$ ctx.app.config.appId $>/upload/${rootDirectory}${currentPath}/${item.basename}`"></v-img>
               </v-avatar>
               <!--✅其他文件-->
               <v-icon v-else>{{ fileIconList[item.extension.toLowerCase()] || fileIconList['other'] }}</v-icon>
@@ -189,6 +189,7 @@
       currentPath: String,
       refreshing: Boolean,
       tableSearchText: String,
+      rootDirectory: String,
       itemList: []
     },
     data() {

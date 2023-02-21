@@ -15,11 +15,15 @@ const idGenerateUtil = require("@jianghujs/jianghu/app/common/idGenerateUtil");
 const validateUtil = require("@jianghujs/jianghu/app/common/validateUtil");
 const { BizError, errorInfoEnum } = require("../constant/error");
 const fs = require("fs"),
-    fsPromises = require("fs").promises,
-    unlink = fsPromises.unlink,
-    rename = fsPromises.rename,
-    util = require("util"),
-    exists = util.promisify(fs.exists);
+  nodePath = require("path"),
+  fsPromises = require("fs").promises,
+  unlink = fsPromises.unlink,
+  rename = fsPromises.rename,
+  lstat = fsPromises.lstat,
+  util = require("util"),
+  exists = util.promisify(fs.exists),
+  copyFile = util.promisify(fs.copyFile);
+
 const actionDataScheme = Object.freeze({
   deletedArticle: {
     type: "object",
@@ -37,7 +41,25 @@ const actionDataScheme = Object.freeze({
       articleId: { anyOf: [{ type: "string" }, { type: "number" }] },
     },
   },
+  useMaterial: {
+    type: "object",
+    additionalProperties: true,
+    required: ["path", "articleId"],
+    properties: {
+        path: { anyOf: [{ type: "string" }, { type: "number" }] },
+        articleId: { anyOf: [{ type: "string" }, { type: "number" }] },
+    },
+  },
 });
+
+function pathCheck (path) {
+  if (path.indexOf("../") > -1) {
+      throw new BizError(errorInfoEnum.path_invalid);
+  }
+  if (path.endsWith("..")) {
+      throw new BizError(errorInfoEnum.path_invalid);
+  }
+}
 
 class ArticleService extends Service {
 
@@ -196,8 +218,33 @@ class ArticleService extends Service {
     article.articleList = newArticleList;
     return article;
   }
+  
+  async useMaterial() {
+    const actionData = this.ctx.request.body.appData.actionData;
+    validateUtil.validate(actionDataScheme.useMaterial, actionData);
+    const { cloudDriveDir, articleMaterialDir } = this.app.config;
+    const { path, articleId } = actionData;
+    pathCheck(path);
+    const targetPath = nodePath.join(cloudDriveDir, path);
+    const stat = await lstat(targetPath);
+    const isFile = stat.isFile();
+    if (!isFile) {
+        throw new BizError(errorInfoEnum.material_is_not_file);
+    }
 
+    const filename = path.substring(path.lastIndexOf('/')+1);
+    const filenameStorage = `${Date.now()}_${filename}`;
+    const fileStoragePath = nodePath.join(articleMaterialDir, `${articleId}`);
+    const isFileStorageExists = await exists(fileStoragePath);
+    if (!isFileStorageExists) {
+        await fileUtil.checkAndPrepareFilePath(fileStoragePath);
+    }
 
+    const articleMaterialPath = nodePath.join(articleMaterialDir, `${articleId}`, filenameStorage);
+    await copyFile(targetPath, articleMaterialPath);
+    const downloadPath = nodePath.join('/articleMaterial', `${articleId}`, filenameStorage);
+    return { filename, downloadPath };
+  }
 }
 
 module.exports = ArticleService;

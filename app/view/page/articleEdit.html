@@ -112,10 +112,10 @@
                       </v-toolbar>
                       <v-card-text class="px-0 text-center">
                         <audio style="max-width: 100%;" v-if="editItem.articleAudioUrl"
-                          :src="`/<$ ctx.app.config.appId $>/upload/${editItem.articleAudioUrl}?v=${new Date().getTime()}`"
+                          :src="`/<$ ctx.app.config.appId $>/upload${editItem.articleAudioUrl}?v=${new Date().getTime()}`"
                           controls>
                           <source
-                            :src="`/<$ ctx.app.config.appId $>/upload/${editItem.articleAudioUrl}?v=${new Date().getTime()}`"
+                            :src="`/<$ ctx.app.config.appId $>/upload${editItem.articleAudioUrl}?v=${new Date().getTime()}`"
                             type="audio/mpeg">
                         </audio>
                         <p v-else class="text-center">暂无音频~</p>
@@ -139,10 +139,10 @@
                       </v-toolbar>
                       <v-card-text class="px-0">
                         <video style="max-width: 100%;" v-if="editItem.articleVideoUrl"
-                          :src="`/<$ ctx.app.config.appId $>/upload/${editItem.articleVideoUrl}?v=${new Date().getTime()}`"
+                          :src="`/<$ ctx.app.config.appId $>/upload${editItem.articleVideoUrl}?v=${new Date().getTime()}`"
                           controls>
                           <source
-                            :src="`/<$ ctx.app.config.appId $>/upload/${editItem.articleVideoUrl}?v=${new Date().getTime()}`"
+                            :src="`/<$ ctx.app.config.appId $>/upload${editItem.articleVideoUrl}?v=${new Date().getTime()}`"
                             type="video/mp4">
                         </video>
                         <p v-else class="text-center">暂无视频~</p>
@@ -164,7 +164,7 @@
 
           <!-- 选择素材弹窗 -->
           <v-dialog v-model="isMaterialDialogShown" hide-overlay fullscreen transition="dialog-bottom-transition">
-            <v-card>
+            <v-card flat class="rounded-0">
               <v-toolbar dark width="100%" style="background-color: #fff;">
                 <div class="black--text ml-2 font-weight-medium text-subtitle-2">选择素材</div>
                 <v-spacer></v-spacer>
@@ -178,12 +178,11 @@
               <file-browser
                 v-if="isMaterialDialogShown"
                 :operation-config="operationConfig"
-                :cloud-drive-list="cloudDriveList"
-                :path="path"
+                :accessible-folder="accessibleFolder"
+                :access-path="accessPath"
+                :root-directory="rootDirectory"
+                :root-directory-name="rootDirectoryName"
                 @use-file="doUiAction('useMaterial', $event)"></file-browser>
-              <!-- <file-browser v-if="isMaterialDialogShown" v-on:use-material="obj => doUiAction('useMaterial', obj)"
-                v-on:close-material-picker="isMaterialDialogShown = false" :material-type="materialType">
-              </file-browser> -->
             </v-card>
           </v-dialog>
         </div>
@@ -222,7 +221,6 @@
 {% block vueScript %}
 
 <!-- 加载页面组件 >>>>>>>>>>>>> -->
-{% include 'common/jianghuJs/fixedTableHeightV4.html' %}
 {% include 'component/fileBrowser/FileBrowser.html' %}
 {% include 'component/articleEditor/articleEditorCss.html' %}
 <!-- <<<<<<<<<<<<< 加载页面组件 -->
@@ -264,8 +262,10 @@
         'edit': false,
         'rename': false,
       },
-      cloudDriveList: [{ groupId: "materialRepo" }],
-      path: "/materialRepo/",
+      accessibleFolder: [{ groupId: "materialRepo" }],
+      accessPath: "/materialRepo/",
+      rootDirectory:  "",
+      rootDirectoryName:  "素材",
 
       // 下拉选项
       constantObj: {
@@ -598,7 +598,7 @@
       async prepareSelectImageData() {
         this.materialType = 'image';
         this.writeBackType = 'attachment';
-        this.path = "/materialRepo/image"
+        this.accessPath = "/materialRepo/image/";
       },
       // ---------- <<<<<<<<<<< 文章选择封面 uiAction  --------
 
@@ -606,6 +606,7 @@
       async prepareSelectAudioData() {
         this.materialType = 'audio';
         this.writeBackType = 'attachment';
+        this.accessPath = "/materialRepo/audio/";
       },
       // ---------- <<<<<<<<<<< 文章选择音频 uiAction  --------
 
@@ -613,6 +614,7 @@
       async prepareSelectVideoData() {
         this.materialType = 'video';
         this.writeBackType = 'attachment';
+        this.accessPath = "/materialRepo/video/";
       },
       // ---------- <<<<<<<<<<< 文章选择视频 uiAction  --------
 
@@ -707,6 +709,7 @@
       async prepareMDSelectImageData() {
         this.materialType = 'image';
         this.writeBackType = 'editor';
+        this.accessPath = "/materialRepo/image/";
       },
       // ---------- <<<<<<<<<<< markdown 选择图片 uiAction  --------
 
@@ -714,6 +717,7 @@
       async prepareMDSelectAudioData() {
         this.materialType = 'audio';
         this.writeBackType = 'editor';
+        this.accessPath = "/materialRepo/audio/";
       },
       // ---------- <<<<<<<<<<< markdown 选择音频 uiAction  --------
 
@@ -721,6 +725,7 @@
       async prepareMDSelectVideoData() {
         this.materialType = 'video';
         this.writeBackType = 'editor';
+        this.accessPath = "/materialRepo/video/";
       },
       // ---------- <<<<<<<<<<< markdown 选择视频 uiAction  --------
 
@@ -728,6 +733,7 @@
       async prepareMDSelectAttachmentData() {
         this.materialType = 'attachment';
         this.writeBackType = 'editor';
+        this.accessPath = "/materialRepo/attachment/";
       },
       // ---------- <<<<<<<<<<< markdown 选择附件 uiAction  --------
 
@@ -760,7 +766,7 @@
           this.materialDownloadPath = resultData.downloadPath;
         } else {
           this.materialFilename = path.substring(path.lastIndexOf('/') + 1);
-          this.materialDownloadPath = `/materialRepo${path}`;
+          this.materialDownloadPath = `${this.rootDirectory}${path}`;
         }
       },
       async renderMaterial() {

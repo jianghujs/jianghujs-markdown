@@ -1,6 +1,6 @@
 <template id="file-browser">
   <!-- fileBrowser >>>>>>>>>>>>> -->
-  <v-card class="rounded-lg pt-4 file-browser">
+  <v-card class="rounded-0 pt-4 file-browser">
     <!-- 操作按钮 >>>>>>>>>>>>> -->
     <v-row class="ma-0 px-4 mb-2" v-if="currentPathIsDir">
       <!-- ✅新建目录 -->
@@ -14,6 +14,7 @@
         v-if="operation.upload"
         :current-path="currentPath"
         :file-icon-list="fileIconList"
+        :root-directory="rootDirectory"
         @refresh-directory="doUiAction('getDirectoryData')"></file-upload>
       <!--✅新建markdown -->
       <markdown-editor
@@ -49,6 +50,7 @@
       <breadcrumbs
         :current-path="currentPath"
         :current-path-is-dir="currentPathIsDir"
+        :root-directory-name="rootDirectoryName"
         @change-path="doUiAction('changeCurrentPath', $event)">
       </breadcrumbs>
       <!-- ✅分隔 -->
@@ -98,6 +100,7 @@
         :refreshing="isRefreshDirectory"
         :item-list="currentDataList"
         :table-search-text="tableSearchText"
+        :root-directory="rootDirectory"
 
         @path-changed="doUiAction('changeCurrentPath', $event)"
         @copy-item="doUiAction('copyItem', $event)"
@@ -106,7 +109,7 @@
         @refresh-directory="doUiAction('getDirectoryData')">
       </directory-list>
       <!--✅文件详情-->
-      <file-detail v-else :option="operation" :current-path="currentPath"></file-detail>
+      <file-detail v-else :option="operation" :current-path="currentPath" :root-directory="rootDirectory"></file-detail>
     </v-row>
     <!-- <<<<<<<<<<<<< 主内容 -->
   </v-card>
@@ -140,16 +143,24 @@ Vue.component("file-browser", {
       type: Object,
       default: () => ({})
     },
-    cloudDriveList: {
+    accessibleFolder: {
       type: Array,
       default: () => ([{
         groupId: "cloudDemo"
       }])
     },
-    path: {
+    accessPath: {
       type: String,
       default: "/cloudDemo/"
-    }
+    },
+    rootDirectory: {
+      type: String,
+      default: "cloudDrive"
+    },
+    rootDirectoryName: {
+      type: String,
+      default: "网盘"
+    },
   },
   data: () => ({
     defaultOperation: {
@@ -195,7 +206,6 @@ Vue.component("file-browser", {
     isRefreshDirectory: false,
     tableSearchText: "",
     currentPath: "/cloudDemo/",
-    currentDirectory: 'cloudDrive',
     currentMarkdownItem: null,
     currentCopyPath: '',
     currentPasteMode: null,
@@ -230,21 +240,20 @@ Vue.component("file-browser", {
     }
   },
   watch: {
-    path: {
+    accessPath: {
       handler(value) {
         this.currentPath = value
       },
       immediate: true,
     },
-    currentPath() {
-      this.doUiAction('getDirectoryData');
-      // table高度铺满
-      resetTableMaxHeight();
-    }
+    currentPath: {
+      handler(value) {
+        this.doUiAction('getDirectoryData');
+      },
+      immediate: true,
+    },
   },
-  async created() {
-    this.doUiAction('getDirectoryData');
-  },
+  async created() {},
   methods: {
     async doUiAction(uiActionId, uiActionData) {
       switch (uiActionId) {
@@ -254,6 +263,7 @@ Vue.component("file-browser", {
           await this.getDirectoryBackendData();
           await this.saveDirectoryDataToCache();
           await this.stopRefresh();
+          await resetTableMaxHeight();
           break;
         case 'changeCurrentPath':
           await this.changeCurrentPath(uiActionData);
@@ -305,7 +315,8 @@ Vue.component("file-browser", {
               actionId: 'getDirItemList',
               actionData: {
                 path: this.currentPath,
-                cloudDriveList: this.cloudDriveList
+                accessibleFolder: this.accessibleFolder,
+                rootDirectory: this.rootDirectory
               },
             }
           }
@@ -365,14 +376,14 @@ Vue.component("file-browser", {
 
     // ---------- 复制路径 uiAction >>>>>>>>>> --------
     async copyPath() {
-      await navigator.clipboard.writeText(`${location.origin}${window.appInfo.upload}/${this.currentDirectory}${this.currentPath}`);
+      await navigator.clipboard.writeText(`${location.origin}${window.appInfo.upload}${this.rootDirectory}${this.currentPath}`);
       window.vtoast.success("文件地址已复制到粘贴板")
     },
     // ---------- <<<<<<<<<<< 复制路径 uiAction --------
 
     // ---------- 使用文件 uiAction >>>>>>>>>> --------
     useFile() {
-      this.$emit('use-file', `${window.appInfo.upload}/${this.currentDirectory}${this.currentPath}`);
+      this.$emit('use-file', this.currentPath);
     },
     // ---------- <<<<<<<<<<< 使用文件 uiAction --------
 
