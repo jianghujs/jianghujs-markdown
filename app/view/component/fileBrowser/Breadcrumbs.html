@@ -70,7 +70,7 @@
 
       // ---------- 生成路径列表 uiAction >>>>>>>>>> --------
       buildPathList() {
-        if (!_.isEmpty(this.currentPath)){
+        if (!_.isEmpty(this.currentPath)) {
           let path = "/";
           let pathItemList = this.currentPath.split("/").filter(item => !_.isEmpty(item));
           pathItemList = pathItemList.map((item, index) => {

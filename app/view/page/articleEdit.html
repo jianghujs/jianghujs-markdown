@@ -265,7 +265,7 @@
       accessibleFolder: [{ groupId: "materialRepo" }],
       accessPath: "/materialRepo/",
       rootDirectory:  "",
-      rootDirectoryName:  "素材",
+      rootDirectoryName:  "<$ constantUiMap.fileExplorer.material $>",
 
       // 下拉选项
       constantObj: {
@@ -442,7 +442,7 @@
             data: {
               appData: {
                 pageId: 'articleEdit',
-                actionId: 'selectArticleWithCategory',
+                actionId: 'selectArticleInfo',
                 actionData: {
                   articleId: this.articleId
                 },
@@ -456,12 +456,12 @@
 
       // ---------- 删除数据 uiAction >>>>>>>>>>>> --------
       async confirmDeleteItemDialog() {
-        if (await window.confirmDialog({ title: "<$ constantUiMap.common.recycle $>", content: "<$ constantUiMap.article.recyclingConfirmation $>？" }) === false) {
+        if (await window.confirmDialog({ title: "<$ constantUiMap.common.recycle $>", content: "<$ constantUiMap.article.recycleArticleConfirm $>？" }) === false) {
           throw new Error("[confirmDeleteItemDialog] 否");
         }
       },
       async doDeleteItem() {
-        await window.vtoast.loading("<$ constantUiMap.article.recyclingArticles $>");
+        await window.vtoast.loading("<$ constantUiMap.article.recycleArticle $>");
         await window.jianghuAxios({
           data: {
             appData: {
@@ -471,13 +471,13 @@
             }
           }
         });
-        await window.vtoast.success("<$ constantUiMap.article.recyclingArticlesSuccess $>");
+        await window.vtoast.success("<$ constantUiMap.article.recycleArticleSuccess $>");
       },
       // ---------- <<<<<<<<<<< 删除数据 uiAction  --------
 
       // ---------- 恢复数据 uiAction >>>>>>>>>>>> --------
       async confirmRestoreItemDialog() {
-        if (await window.confirmDialog({ title: "<$ constantUiMap.common.recover $>", content: "<$ constantUiMap.article.restoreArticleConfirm $>？" }) === false) {
+        if (await window.confirmDialog({ title: "<$ constantUiMap.common.recover $>", content: "<$ constantUiMap.article.recoverArticleConfirm $>？" }) === false) {
           throw new Error("[confirmRestoreItemDialog] 否");
         }
       },
@@ -486,13 +486,13 @@
         await window.jianghuAxios({
           data: {
             appData: {
-              pageId: 'articleList',
+              pageId: 'articleEdit',
               actionId: 'restoreArticle',
               actionData: { articleId: this.articleId }
             }
           }
         });
-        await window.vtoast.success("<$ constantUiMap.article.recoverArticlesSuccessfully $>");
+        await window.vtoast.success("<$ constantUiMap.article.recoverArticleSuccess $>");
       },
       // ---------- <<<<<<<<<<< 恢复数据 uiAction  --------
 
@@ -824,25 +824,31 @@
 </script>
 
 <style scoped>
-  /* 容器 */
+  /* ---------- 容器 >>>>>>>>>> -------- */
   .article-wrapper-card{
     min-height: calc(100vh - 150px);
     background-color: #F2F2F2 !important;
   }
-  /* btn */
+  /* ---------- <<<<<<<<<<< 容器 -------- */
+
+  /* ---------- btn >>>>>>>>>> -------- */
   .mdi-upload-outline,
   .mdi-trash-can-outline{
     width: 20px !important;
     height: 20px !important;
   }
-  /* 弹窗 */
+  /* ---------- <<<<<<<<<<< btn -------- */
+
+  /* ---------- 弹窗 >>>>>>>>>> -------- */
   .v-dialog--fullscreen .v-sheet {
     height: auto;
     position: relative;
     background: #fff;
     display: block;
   }
-  /* 编辑器 */
+  /* ---------- <<<<<<<<<<< 弹窗 -------- */
+
+  /* ---------- 编辑器 >>>>>>>>>> -------- */
   .editormd, .CodeMirror-gutters, .editormd-toolbar, .editormd .CodeMirror, .editormd-menu > li.divider, .editormd-menu > li > a:hover, .editormd-menu > li > a.active{
     border-color: #eff2f5 !important;
   }
@@ -862,5 +868,6 @@
       color: #999;
       padding-left: 0;
   }
+  /* ---------- <<<<<<<<<<< 编辑器 -------- */
 </style>
 {% endblock %}

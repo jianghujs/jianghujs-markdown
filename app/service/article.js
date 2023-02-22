@@ -13,6 +13,7 @@ dayjs.extend(timezone)
 
 const idGenerateUtil = require("@jianghujs/jianghu/app/common/idGenerateUtil");
 const validateUtil = require("@jianghujs/jianghu/app/common/validateUtil");
+const fileUtil = require('@jianghujs/jianghu/app/common/fileUtil');
 const { BizError, errorInfoEnum } = require("../constant/error");
 const fs = require("fs"),
   nodePath = require("path"),

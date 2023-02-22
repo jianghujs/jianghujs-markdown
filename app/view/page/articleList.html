@@ -211,8 +211,8 @@
         { text: "<$ constantUiMap.article.articleTitle $>", value: "articleTitle", width: 250 },
         { text: "<$ constantUiMap.article.publishStatus $>", value: "articlePublishStatus", width: 120, type: 'select', required: true },
         { text: "<$ constantUiMap.article.releaseTime $>", value: "articlePublishTime", width: 220 },
-        { text: "<$ constantUiMap.article.audioURL $>", value: "articleAudioUrl", width: 200 },
-        { text: "<$ constantUiMap.article.videoURL $>", value: "articleVideoUrl", width: 200 },
+        { text: "<$ constantUiMap.article.audioURL $>", value: "articleAudioUrl", width: 300 },
+        { text: "<$ constantUiMap.article.videoURL $>", value: "articleVideoUrl", width: 300 },
         { text: "<$ constantUiMap.article.editor $>", value: "articleUpdateUsername", width: 120, edit: false },
         { text: "<$ constantUiMap.article.updateTime $>", value: "articleUpdateTime", width: 220, edit: false },
         { text: "<$ constantUiMap.article.creator $>", value: "articleCreateUsername", width: 120, edit: false },
@@ -311,7 +311,7 @@
         this.deleteItem = _.cloneDeep(funObj);
       },
       async confirmDeleteItemDialog() {
-        if (await window.confirmDialog({ title: "<$ constantUiMap.common.recycle $>", content: "<$ constantUiMap.article.recyclingConfirmation $>？" }) === false) {
+        if (await window.confirmDialog({ title: "<$ constantUiMap.common.recycle $>", content: "<$ constantUiMap.article.recycleArticleConfirm $>？" }) === false) {
           throw new Error("[confirmDeleteItemDialog] 否");
         }
       },
@@ -320,7 +320,7 @@
         this.deleteItemId = articleId;
       },
       async doDeleteItem() {
-        await window.vtoast.loading("<$ constantUiMap.article.recyclingArticles $>");
+        await window.vtoast.loading("<$ constantUiMap.article.recycleArticle $>");
         await window.jianghuAxios({
           data: {
             appData: {
@@ -330,7 +330,7 @@
             }
           }
         });
-        await window.vtoast.success("<$ constantUiMap.article.recyclingArticlesSuccess $>");
+        await window.vtoast.success("<$ constantUiMap.article.recycleArticleSuccess $>");
       },
       async clearDeleteItem() {
         this.deleteItem = {};
@@ -343,7 +343,7 @@
         this.restoreItem = _.cloneDeep(funObj);
       },
       async confirmRestoreItemDialog() {
-        if (await window.confirmDialog({ title: "<$ constantUiMap.common.recover $>", content: "<$ constantUiMap.article.restoreArticleConfirm $>？" }) === false) {
+        if (await window.confirmDialog({ title: "<$ constantUiMap.common.recover $>", content: "<$ constantUiMap.article.recoverArticleConfirm $>？" }) === false) {
           throw new Error("[confirmRestoreItemDialog] 否");
         }
       },
@@ -362,7 +362,7 @@
             }
           }
         });
-        await window.vtoast.success("<$ constantUiMap.article.recoverArticlesSuccessfully $>");
+        await window.vtoast.success("<$ constantUiMap.article.recoverArticleSuccess $>");
       },
       async clearRestoreItem() {
         this.restoreItem = {};

@@ -21,14 +21,6 @@ class BizError extends Error {
 }
 
 const errorInfoEnum = Object.freeze({
-  data_expection: {
-    errorCode: "data_expection",
-    errorReason: "数据异常",
-  },
-  album_queryType_error: {
-    errorCode: "album_queryType_error",
-    errorReason: "查询类型不匹配",
-  },
   article_not_found: {
     errorCode: "article_not_found",
     errorReason: "文章找不到",
@@ -45,11 +37,6 @@ const errorInfoEnum = Object.freeze({
     errorCode: "target_file_not_exist",
     errorReason: "文件不存在",
   },
-  target_folder_invalid: {
-    errorCode: "target_folder_invalid",
-    errorReason: "粘贴目录不存在",
-  },
-
 });
 
 module.exports = {
