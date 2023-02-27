@@ -165,14 +165,12 @@
           <!-- 选择素材弹窗 -->
           <v-dialog v-model="isMaterialDialogShown" hide-overlay fullscreen transition="dialog-bottom-transition">
             <v-card flat class="rounded-0">
-              <v-toolbar dark width="100%" style="background-color: #fff;">
+              <v-toolbar width="100%">
                 <div class="black--text ml-2 font-weight-medium text-subtitle-2">选择素材</div>
                 <v-spacer></v-spacer>
-                <v-toolbar-items>
-                  <v-btn text @click="isMaterialDialogShown = false">
-                    <v-icon class="black--text">mdi-close</v-icon>
-                  </v-btn>
-                </v-toolbar-items>
+                <v-btn fab text small class="mr-2" @click="isMaterialDialogShown = false">
+                  <v-icon class="black--text">mdi-close</v-icon>
+                </v-btn>
               </v-toolbar>
               <v-divider style="border-color: #eff2f5;opacity:0.8;"></v-divider>
               <file-browser
