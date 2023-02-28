@@ -24,7 +24,7 @@
   },
   "scripts": {
     "start": "egg-scripts start --daemon  --workers=1 --port=8318 --title=jianghujs-markdown",
-    "stop": "egg-scripts stop --title=openjianghu_admin",
+    "stop": "egg-scripts stop --title=jianghujs-markdown",
     "dev": "egg-bin dev --port=8318",
     "restart": "npm run stop && npm run start",
     "start:cn": "egg-scripts start --daemon  --port=9306 --title=jianghujs-markdown",
