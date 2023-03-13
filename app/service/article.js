@@ -1,6 +1,5 @@
 'use strict';
 const Service = require('egg').Service;
-const { tableEnum, articlePublishStatusEnum } = require("../constant/constant");
 const _ = require("lodash");
 const path = require("path");
 
@@ -21,9 +20,9 @@ const fs = require("fs"),
   unlink = fsPromises.unlink,
   rename = fsPromises.rename,
   lstat = fsPromises.lstat,
+  copyFile = fsPromises.copyFile,
   util = require("util"),
-  exists = util.promisify(fs.exists),
-  copyFile = util.promisify(fs.copyFile);
+  exists = util.promisify(fs.exists);
 
 const actionDataScheme = Object.freeze({
   deletedArticle: {
@@ -118,7 +117,7 @@ class ArticleService extends Service {
     if (articleId) {
       // 保存新版本
       const {id, ...history} = this.ctx.request.body.appData.actionData;
-      await this.app.jianghuKnex(tableEnum.article_history).insert(history);
+      await this.app.jianghuKnex('article_history').insert(history);
     }
   }
 
@@ -129,7 +128,7 @@ class ArticleService extends Service {
     const { articleId } = actionData;
     const { articleMaterialDir } = this.app.config;
 
-    await jianghuKnex(tableEnum.article, this.ctx).where({ articleId }).update({ articlePublishStatus: articlePublishStatusEnum.deleted });
+    await jianghuKnex('article', this.ctx).where({ articleId }).update({ articlePublishStatus: 'deleted' });
 
     const articleDirPath = path.join(articleMaterialDir, `${articleId}`);
     const articleRecycleDirPath = path.join(articleMaterialDir, '_recycle', `${articleId}`);
@@ -149,7 +148,7 @@ class ArticleService extends Service {
     const { articleId } = actionData;
     const { articleMaterialDir } = this.app.config;
 
-    await jianghuKnex(tableEnum.article, this.ctx).where({ articleId }).update({ articlePublishStatus: articlePublishStatusEnum.login });
+    await jianghuKnex('article', this.ctx).where({ articleId }).update({ articlePublishStatus: 'login' });
 
     const articleDirPath = path.join(articleMaterialDir, `${articleId}`);
     const articleRecycleDirPath = path.join(articleMaterialDir, '_recycle', `${articleId}`);
@@ -163,7 +162,7 @@ class ArticleService extends Service {
     const { ctx, app } = this;
     const { jianghuKnex } = app;
     const {articleId} = this.ctx.request.body.appData.actionData;
-    const article = await jianghuKnex(tableEnum.article)
+    const article = await jianghuKnex('article')
       .where({ articleId })
       .first();
     if (!article) {
@@ -171,7 +170,7 @@ class ArticleService extends Service {
     }
 
     const { categoryId } = article;
-    let articlelist = await jianghuKnex(tableEnum.view01_article)
+    let articlelist = await jianghuKnex('view01_article')
       .where({
         categoryId,
       })
